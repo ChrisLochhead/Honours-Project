@@ -7,7 +7,7 @@ public class Map : MonoBehaviour {
     //// Use this for initialization
     void Start()
     {
-        mapItems = new List<GameObject>();
+
     }
 
     // Update is called once per frame
@@ -29,13 +29,16 @@ public class Map : MonoBehaviour {
     public void addWallItem(int t, float px, float py, float r)
     {
         GameObject temp = new GameObject();
-      //  Instantiate(temp, transform.position, Quaternion.identity);
+
         temp.AddComponent<Wall>();
 
         temp.GetComponent<Wall>().pos.x = px;
         temp.GetComponent<Wall>().pos.y = py;
         temp.GetComponent<Wall>().rot = r;
         temp.GetComponent<Wall>().type = t;
+
+        if(mapItems == null)
+            mapItems = new List<GameObject>();
 
         mapItems.Add(temp);
     }
@@ -51,6 +54,11 @@ public class Map : MonoBehaviour {
         temp.GetComponent<Coin>().type = t;
 
         mapItems.Add(temp);
+    }
+
+    public List<GameObject> GetMapItems()
+    {
+        return mapItems;
     }
 
     private Vector2 mapSize;

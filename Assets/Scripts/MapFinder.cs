@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
 using System.Text.RegularExpressions;
+using UnityEngine.SceneManagement;
 
 public class MapFinder : MonoBehaviour {
 
@@ -15,6 +16,7 @@ public class MapFinder : MonoBehaviour {
         int fileIterator = 0;
 
         map.AddComponent<Map>();
+        selectedMap.AddComponent<Map>();
         maps = new List<GameObject>();
 
         foreach (FileInfo f in info)
@@ -24,7 +26,6 @@ public class MapFinder : MonoBehaviour {
             reader = f.OpenText();
            while(text != null)
            {
-                bool isCoins = false;
                 text = reader.ReadLine();
                 if (text != null)
                 {
@@ -55,14 +56,20 @@ public class MapFinder : MonoBehaviour {
            }
 
             maps.Add(map);
-            GetComponent<Dropdown>().options.Add(new Dropdown.OptionData() { text = map.name });
+            GameObject.Find("MapLoader").GetComponent<Dropdown>().options.Add(new Dropdown.OptionData() { text = map.name });
             fileIterator++;
         }
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
+
+    void Awake()
+    {
+        DontDestroyOnLoad(transform.root.gameObject);
+    }
+
+    // Update is called once per frame
+    void Update () {
+        if(SceneManager.GetActiveScene().buildIndex == 0)
+        selectedMap = maps[GameObject.Find("MapLoader").GetComponent<Dropdown>().value];
 	}
    
     protected DirectoryInfo path = null;
@@ -71,4 +78,5 @@ public class MapFinder : MonoBehaviour {
 
     public List<GameObject> maps;
     public GameObject map;
+    public GameObject selectedMap;
 }
