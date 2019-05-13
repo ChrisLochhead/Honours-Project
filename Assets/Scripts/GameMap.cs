@@ -25,9 +25,16 @@ public class GameMap : MonoBehaviour {
 
     void InitMap()
     {
-        //create the ground and set its scale
+        //create the ground 9X9 cube 
         Instantiate(ground, new Vector3(0, 0, 0), Quaternion.identity);
-        ground.transform.localScale = new Vector3(mapSize.x, 1, mapSize.y);
+        Instantiate(ground, new Vector3(200, 0, 0), Quaternion.identity);
+        Instantiate(ground, new Vector3(-200, 0, 0), Quaternion.identity);
+        Instantiate(ground, new Vector3(0, 200, 0), Quaternion.identity);
+        Instantiate(ground, new Vector3(0, -200, 0), Quaternion.identity);
+        Instantiate(ground, new Vector3(200, 200, 0), Quaternion.identity);
+        Instantiate(ground, new Vector3(-200, -200, 0), Quaternion.identity);
+        Instantiate(ground, new Vector3(200, 200, 0), Quaternion.identity);
+        Instantiate(ground, new Vector3(-200, -200, 0), Quaternion.identity);
         //get the size and then draw the floor
         for (int i = 0; i < mapInfo.Count; i++) {
             if (mapInfo[i].GetComponent<Wall>())
@@ -39,12 +46,12 @@ public class GameMap : MonoBehaviour {
                 else
                 if (mapInfo[i].GetComponent<Wall>().type == 1)
                 {
-                    Instantiate(orangeWall, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, 3), Quaternion.identity);
+                    Instantiate(orangeWall, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, 3), Quaternion.identity * Quaternion.Euler(0, 0, mapInfo[i].GetComponent<Wall>().rot));
                 }
                 else
                 if (mapInfo[i].GetComponent<Wall>().type == 2)
                 {
-                    Instantiate(greenWall, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, 3), Quaternion.identity);
+                    Instantiate(greenWall, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, 3), Quaternion.identity * Quaternion.Euler(0, 0, mapInfo[i].GetComponent<Wall>().rot));
                 }
             }else
                 if (mapInfo[i].GetComponent<Coin>())
