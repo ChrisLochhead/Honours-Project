@@ -7,7 +7,7 @@ public class Map : MonoBehaviour {
     //// Use this for initialization
     void Start()
     {
-
+        mapItems = new List<GameObject>();
     }
 
     // Update is called once per frame
@@ -29,6 +29,7 @@ public class Map : MonoBehaviour {
     public void addWallItem(int t, float px, float py, float r)
     {
         GameObject temp = new GameObject();
+      //  Instantiate(temp, transform.position, Quaternion.identity);
         temp.AddComponent<Wall>();
 
         temp.GetComponent<Wall>().pos.x = px;
@@ -39,9 +40,10 @@ public class Map : MonoBehaviour {
         mapItems.Add(temp);
     }
 
-    public void addCoinItem(int t, float px, float py, float r)
+    public void addCoinItem(int t, float px, float py)
     {
         GameObject temp = new GameObject();
+    //    Instantiate(temp, transform.position, Quaternion.identity);
         temp.AddComponent<Coin>();
 
         temp.GetComponent<Coin>().pos.x = px;

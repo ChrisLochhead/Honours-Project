@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -10,7 +11,7 @@ public class MapFinder : MonoBehaviour {
     void Start () {
 
         path = new DirectoryInfo("D:/repos/Honours Project/Code/Honours-Project/Assets/Maps");
-        FileInfo[] info = path.GetFiles("*.*");
+        FileInfo[] info = path.GetFiles("*.txt");
         int fileIterator = 0;
 
         map.AddComponent<Map>();
@@ -41,17 +42,11 @@ public class MapFinder : MonoBehaviour {
                         }
                         else {
 
-                            if(lines[0] == "-----")
-                            {
-                                isCoins = true;
-                            }
-                            if (isCoins == false)
+                            if (lines.Length > 3)
                             map.GetComponent<Map>().addWallItem(int.Parse(lines[0]), float.Parse(lines[1]), float.Parse(lines[2]), float.Parse(lines[3]));
                             else
-                            
+                            map.GetComponent<Map>().addCoinItem(int.Parse(lines[0]), float.Parse(lines[1]), float.Parse(lines[2]));
                         }
-
-
 
                         Debug.Log(text);
                         lineIterator++;
@@ -60,6 +55,7 @@ public class MapFinder : MonoBehaviour {
            }
 
             maps.Add(map);
+            GetComponent<Dropdown>().options.Add(new Dropdown.OptionData() { text = map.name });
             fileIterator++;
         }
     }
