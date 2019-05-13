@@ -11,9 +11,14 @@ public class Wall : MonoBehaviour {
 	void Start () {
 		
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+    private void Awake()
+    {
+        DontDestroyOnLoad(this);
+    }
+
+    // Update is called once per frame
+    void Update () {
 		
 	}
 }

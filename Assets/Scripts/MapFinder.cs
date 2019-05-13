@@ -48,7 +48,6 @@ public class MapFinder : MonoBehaviour {
                             else
                             map.GetComponent<Map>().addCoinItem(int.Parse(lines[0]), float.Parse(lines[1]), float.Parse(lines[2]));
                         }
-
                         Debug.Log(text);
                         lineIterator++;
                     }
@@ -63,7 +62,8 @@ public class MapFinder : MonoBehaviour {
 
     void Awake()
     {
-        DontDestroyOnLoad(transform.root.gameObject);
+        DontDestroyOnLoad(this);
+        //DontDestroyOnLoad(transform.root.gameObject);
     }
 
     // Update is called once per frame
