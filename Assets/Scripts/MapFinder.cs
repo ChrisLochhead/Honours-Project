@@ -55,7 +55,7 @@ public class MapFinder : MonoBehaviour {
            }
 
             maps.Add(map);
-            GameObject.Find("MapLoader").GetComponent<Dropdown>().options.Add(new Dropdown.OptionData() { text = map.name });
+           // GameObject.Find("MapLoader").GetComponent<Dropdown>().options.Add(new Dropdown.OptionData() { text = map.name });
             fileIterator++;
         }
     }
@@ -68,10 +68,23 @@ public class MapFinder : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        if(SceneManager.GetActiveScene().buildIndex == 0)
-        selectedMap = maps[GameObject.Find("MapLoader").GetComponent<Dropdown>().value];
-	}
-   
+        if (SceneManager.GetActiveScene().buildIndex == 0)
+        {
+            if (GameObject.Find("MapLoader"))
+            {
+                selectedMap = maps[GameObject.Find("MapLoader").GetComponent<Dropdown>().value];
+
+                if (listAdded == false)
+                {
+                    for (int i = 0; i < maps.Count; i++)
+                        GameObject.Find("MapLoader").GetComponent<Dropdown>().options.Add(new Dropdown.OptionData() { text = maps[i].name });
+
+                    listAdded = true;
+                }
+            }
+        }
+    }
+
     protected DirectoryInfo path = null;
     protected StreamReader reader = null;
     protected string text = " "; // assigned to allow first line to be read below
@@ -79,4 +92,6 @@ public class MapFinder : MonoBehaviour {
     public List<GameObject> maps;
     public GameObject map;
     public GameObject selectedMap;
+
+    protected bool listAdded = false;
 }
