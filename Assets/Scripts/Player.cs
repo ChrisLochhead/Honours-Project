@@ -18,15 +18,23 @@ public class Player : MonoBehaviour {
         Plane ground = new Plane(Vector3.up, Vector3.zero);
         float rayLength;
 
-        if(ground.Raycast(cameraRay, out rayLength))
-        {
-            transform.LookAt(new Vector3(cameraRay.GetPoint(rayLength).x, transform.position.y, cameraRay.GetPoint(rayLength).z));
-        }
+        //if(ground.Raycast(cameraRay, out rayLength))
+        //{
+        //    transform.LookAt(new Vector3(cameraRay.GetPoint(rayLength).x, transform.position.y, -10));
+        //}
+        Vector3 mPos = Input.mousePosition;
+        mPos.z = 190.0f;
+
+        mPos = Camera.main.ScreenToWorldPoint(mPos);
 
         if (Input.GetKey("w"))
         {
-            Vector3 movementTarget = playerCam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -10));
-            transform.position = Vector3.MoveTowards(transform.position, movementTarget, 20 * Time.deltaTime);
+
+           // Vector3 movementTarget = Camera.main.ScreenToWorldPoint(Input.mousePosition);// playerCam.ScreenToWorldPoint(Input.mousePosition);
+            transform.position = Vector3.MoveTowards(transform.position, mPos, 2);
+           // Vector3 pos = transform.position;
+            //pos.z = -10.0f;
+           // transform.position = pos;
         }
 
         
