@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: ef2d9fdba945e194f8f379fb41a39ad5
+guid: 538dbfc1d764e20478d2ed34f7180b6c
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
@@ -23,14 +23,13 @@ ModelImporter:
     400016: //RootNode
     2100000: Material.002
     4300000: CharacterModel
-    7400000: Armature|Armature.001|Armature|ArmatureAction.001|Armature|ArmatureActio
-    7400002: Armature|Armature.001|Armature|ArmatureAction|Armature|ArmatureAction
-    7400004: Armature|ArmatureAction
-    7400006: Armature|ArmatureAction.001
-    7400008: Armature|Armature.001|Armature|Armature.001|Armature|ArmatureAction.001|
-    7400010: Armature|Armature.001|Armature|Armature.001|Armature|ArmatureAction|Arma
-    7400012: Armature|Armature.001|Armature|ArmatureAction.001|Armature|ArmatureA.000
-    7400014: Armature|Armature.001|Armature|ArmatureAction|Armature|ArmatureActio.000
+    7400000: Armature|Armature.001|Armature|Armature.001|Armature|ArmatureAction.001|
+    7400002: Armature|Armature.001|Armature|Armature.001|Armature|ArmatureAction|Arma
+    7400004: Armature|Armature.001|Armature|ArmatureAction.001|Armature|ArmatureA.000
+    7400006: Armature|Armature.001|Armature|ArmatureAction.001|Armature|ArmatureActio
+    7400008: Armature|Armature.001|Armature|ArmatureAction|Armature|ArmatureActio.000
+    7400010: Armature|Armature.001|Armature|ArmatureAction|Armature|ArmatureAction
+    7400012: Armature|ArmatureAction.001
     9500000: //RootNode
     13700000: CharacterModel
   externalObjects: {}
