@@ -6,29 +6,38 @@ public class Player : MonoBehaviour {
 
     public Camera playerCam;
     public Animator anim;
-    public GameObject weapon;
+
+    public GameObject [] guns;
+
     public GameObject muzzleFlash;
     public GameObject bullet;
 
+
+    float velocity;
+    int weapon;
     Vector3 currentDirection;
 
     Animator weaponAnim;
 
     // Use this for initialization
     void Start () {
+
+        weapon = 0;
+        velocity = 0.2f; 
+
         transform.position = new Vector3(playerCam.transform.position.x, playerCam.transform.position.y, -10);
         anim.enabled = false;
-        weapon.transform.position = this.transform.position;
-        weapon.transform.rotation = this.transform.rotation;
+        guns[weapon].transform.position = this.transform.position;
+        guns[weapon].transform.rotation = this.transform.rotation;
 
-       weaponAnim = weapon.GetComponent<Animator>();
+       weaponAnim = guns[weapon].GetComponent<Animator>();
        weaponAnim.enabled = false;
 
         muzzleFlash.SetActive(false);
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update () {
 
         Ray cameraRay = playerCam.ScreenPointToRay(Input.mousePosition);
         Plane ground = new Plane(Vector3.forward, Vector3.zero);
@@ -51,10 +60,17 @@ public class Player : MonoBehaviour {
 
         }
 
+        if (Input.GetKey("1")) SetWeapon(0);
+        if (Input.GetKey("2")) SetWeapon(1);
+        if (Input.GetKey("3")) SetWeapon(2);
+        if (Input.GetKey("4")) SetWeapon(3);
+        if (Input.GetKey("5")) SetWeapon(4);
+
+
         if (Input.GetKey("w"))
         {
             //apply the move toward function using this position
-            transform.position = Vector3.MoveTowards(transform.position, mPos, 0.2f);
+            transform.position = Vector3.MoveTowards(transform.position, mPos, velocity);
             anim.enabled = true;
         }
         else
@@ -64,7 +80,7 @@ public class Player : MonoBehaviour {
 
         if(Input.GetMouseButtonDown(0))
         {
-            Instantiate(bullet, transform.position, Quaternion.identity);
+            Instantiate(bullet, transform.position, Quaternion.identity * Quaternion.Euler(new Vector3(-90,0,0)));
             muzzleFlash.SetActive(true);
         }
         else
@@ -77,5 +93,18 @@ public class Player : MonoBehaviour {
     public Vector3 getDirection()
     {
         return currentDirection;
+    }
+
+    public void SetWeapon(int type)
+    {
+        weapon = type;
+
+        for(int i = 0; i < guns.Length; i++)
+        {
+            if (i == type)
+                guns[i].SetActive(true);
+            else
+                guns[i].SetActive(false);
+        }
     }
 }
