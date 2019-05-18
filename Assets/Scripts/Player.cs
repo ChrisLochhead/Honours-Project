@@ -9,12 +9,13 @@ public class Player : MonoBehaviour {
 
     public GameObject [] guns;
 
-    public GameObject muzzleFlash;
+    public GameObject [] muzzleFlashes;
     public GameObject bullet;
 
 
+    int currentWeapon;
+
     float velocity;
-    int weapon;
     Vector3 currentDirection;
 
     Animator weaponAnim;
@@ -22,18 +23,19 @@ public class Player : MonoBehaviour {
     // Use this for initialization
     void Start () {
 
-        weapon = 0;
+        currentWeapon = 0;
         velocity = 0.2f; 
 
         transform.position = new Vector3(playerCam.transform.position.x, playerCam.transform.position.y, -10);
         anim.enabled = false;
-        guns[weapon].transform.position = this.transform.position;
-        guns[weapon].transform.rotation = this.transform.rotation;
+        guns[currentWeapon].transform.position = this.transform.position;
+        guns[currentWeapon].transform.rotation = this.transform.rotation;
 
-       weaponAnim = guns[weapon].GetComponent<Animator>();
+       weaponAnim = guns[currentWeapon].GetComponent<Animator>();
        weaponAnim.enabled = false;
-
-        muzzleFlash.SetActive(false);
+    
+       for(int i = 0; i < muzzleFlashes.Length; i++)
+       muzzleFlashes[i].SetActive(false);
     }
 
     // Update is called once per frame
@@ -78,14 +80,15 @@ public class Player : MonoBehaviour {
             anim.enabled = false;
         }
 
+
         if(Input.GetMouseButtonDown(0))
         {
             Instantiate(bullet, transform.position, Quaternion.identity * Quaternion.Euler(new Vector3(-90,0,0)));
-            muzzleFlash.SetActive(true);
+            muzzleFlashes[currentWeapon].SetActive(true);
         }
         else
         {
-            muzzleFlash.SetActive(false);
+            muzzleFlashes[currentWeapon].SetActive(false);
         }
 
     }
@@ -97,7 +100,7 @@ public class Player : MonoBehaviour {
 
     public void SetWeapon(int type)
     {
-        weapon = type;
+        currentWeapon = type;
 
         for(int i = 0; i < guns.Length; i++)
         {
