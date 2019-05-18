@@ -8,6 +8,9 @@ public class Player : MonoBehaviour {
     public Animator anim;
     public GameObject weapon;
     public GameObject muzzleFlash;
+    public GameObject bullet;
+
+    Vector3 currentDirection;
 
     Animator weaponAnim;
 
@@ -42,6 +45,7 @@ public class Player : MonoBehaviour {
         {
             Vector3 target = cameraRay.GetPoint(rayLength);
             Vector3 direction = target - transform.position;
+            currentDirection = direction;
             float rotation = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.Euler(0, 0, -rotation);
 
@@ -60,7 +64,7 @@ public class Player : MonoBehaviour {
 
         if(Input.GetMouseButtonDown(0))
         {
-            Debug.Log("correct button");
+            Instantiate(bullet, transform.position, Quaternion.identity);
             muzzleFlash.SetActive(true);
         }
         else
@@ -68,5 +72,10 @@ public class Player : MonoBehaviour {
             muzzleFlash.SetActive(false);
         }
 
+    }
+
+    public Vector3 getDirection()
+    {
+        return currentDirection;
     }
 }

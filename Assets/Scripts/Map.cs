@@ -46,7 +46,6 @@ public class Map : MonoBehaviour {
     public void addCoinItem(int t, float px, float py)
     {
         GameObject temp = new GameObject();
-    //    Instantiate(temp, transform.position, Quaternion.identity);
         temp.AddComponent<Coin>();
 
         temp.GetComponent<Coin>().pos.x = px;
