@@ -5,10 +5,23 @@ using UnityEngine;
 public class Player : MonoBehaviour {
 
     public Camera playerCam;
+    public Animator anim;
+    public GameObject weapon;
+    public GameObject muzzleFlash;
 
-	// Use this for initialization
-	void Start () {
+    Animator weaponAnim;
+
+    // Use this for initialization
+    void Start () {
         transform.position = new Vector3(playerCam.transform.position.x, playerCam.transform.position.y, -10);
+        anim.enabled = false;
+        weapon.transform.position = this.transform.position;
+        weapon.transform.rotation = this.transform.rotation;
+
+       weaponAnim = weapon.GetComponent<Animator>();
+       weaponAnim.enabled = false;
+
+        muzzleFlash.SetActive(false);
     }
 	
 	// Update is called once per frame
@@ -30,7 +43,6 @@ public class Player : MonoBehaviour {
             Vector3 target = cameraRay.GetPoint(rayLength);
             Vector3 direction = target - transform.position;
             float rotation = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
-            //transform.rotation = Quaternion.Euler(-90, 0, 0);
             transform.rotation = Quaternion.Euler(0, 0, -rotation);
 
         }
@@ -38,10 +50,23 @@ public class Player : MonoBehaviour {
         if (Input.GetKey("w"))
         {
             //apply the move toward function using this position
-            transform.position = Vector3.MoveTowards(transform.position, mPos, 2);
+            transform.position = Vector3.MoveTowards(transform.position, mPos, 0.2f);
+            anim.enabled = true;
+        }
+        else
+        {
+            anim.enabled = false;
         }
 
-        
-		
-	}
+        if(Input.GetMouseButtonDown(0))
+        {
+            Debug.Log("correct button");
+            muzzleFlash.SetActive(true);
+        }
+        else
+        {
+            muzzleFlash.SetActive(false);
+        }
+
+    }
 }

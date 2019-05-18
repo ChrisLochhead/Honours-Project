@@ -13,6 +13,13 @@ ModelImporter:
     100014: Cylinder.002
     100016: //RootNode
     100018: Sun
+    100020: Arm.Left_end_end
+    100022: Arm.Right_end_end
+    100024: Armature.002
+    100026: Body_end_end
+    100028: Arm.Left_end_end_end
+    100030: Arm.Right_end_end_end
+    100032: Body_end_end_end
     400000: Arm.Left
     400002: Arm.Left_end
     400004: Arm.Right
@@ -23,7 +30,15 @@ ModelImporter:
     400014: Cylinder.002
     400016: //RootNode
     400018: Sun
+    400020: Arm.Left_end_end
+    400022: Arm.Right_end_end
+    400024: Armature.002
+    400026: Body_end_end
+    400028: Arm.Left_end_end_end
+    400030: Arm.Right_end_end_end
+    400032: Body_end_end_end
     2100000: Material
+    2100002: No Name
     4300000: Cylinder.002
     7400000: Armature.001|Armature.001|Armature|Armature.001|Armature|ArmatureAction.001|
     7400002: Armature.001|Armature.001|Armature|Armature.001|Armature|ArmatureAction|Arma
@@ -32,6 +47,96 @@ ModelImporter:
     7400008: Armature.001|Armature.001|Armature|ArmatureAction|Armature|ArmatureActio.000
     7400010: Armature.001|Armature.001|Armature|ArmatureAction|Armature|ArmatureAction
     7400012: Armature.001|ArmatureAction.000
+    7400014: Armature.002|Armature.001|Armature|Armature.001|Armature|ArmatureAction.001|
+    7400016: Armature.002|Armature.001|Armature|Armature.001|Armature|ArmatureAction|Arma
+    7400018: Armature.002|Armature.001|Armature|ArmatureAction.001|Armature|ArmatureA.000
+    7400020: Armature.002|Armature.001|Armature|ArmatureAction.001|Armature|ArmatureActio
+    7400022: Armature.002|Armature.001|Armature|ArmatureAction|Armature|ArmatureActio.000
+    7400024: Armature.002|Armature.001|Armature|ArmatureAction|Armature|ArmatureAction
+    7400026: Armature.002|ArmatureAction.000
+    7400028: Armature.002|Armature|Armature|Armature.001|Armature|Armature.001|Armatu.000
+    7400030: Armature.002|Armature|Armature|Armature.001|Armature|Armature.001|Armatu.001
+    7400032: Armature.002|Armature|Armature|Armature.001|Armature|Armature.001|Armatu.002
+    7400034: Armature.002|Armature|Armature|Armature.001|Armature|Armature.001|Armatu.003
+    7400036: Armature.002|Armature|Armature|Armature.001|Armature|Armature.001|Armatu.004
+    7400038: Armature.002|Armature|Armature|Armature.001|Armature|Armature.001|Armatu.005
+    7400040: Armature.002|Armature|Armature|Armature.001|Armature|Armature.001|Armatu.006
+    7400042: Armature.002|Armature|Armature|Armature.001|Armature|Armature.001|Armatu.007
+    7400044: Armature.002|Armature|Armature|Armature.001|Armature|Armature.001|Armatu.008
+    7400046: Armature.002|Armature|Armature|Armature.001|Armature|Armature.001|Armatu.009
+    7400048: Armature.002|Armature|Armature|Armature.001|Armature|Armature.001|Armatu.010
+    7400050: Armature.002|Armature|Armature|Armature.001|Armature|Armature.001|Armatu.011
+    7400052: Armature.002|Armature|Armature|Armature.001|Armature|Armature.001|Armatu.012
+    7400054: Armature.002|Armature|Armature|Armature.001|Armature|Armature.001|Armatu.013
+    7400056: Armature.002|Armature|Armature|Armature.001|Armature|Armature.001|Armatu.014
+    7400058: Armature.002|Armature|Armature|Armature.001|Armature|Armature.001|Armature|A
+    7400060: Armature.002|Armature|Armature|Armature.001|Armature|ArmatureAction.001|.000
+    7400062: Armature.002|Armature|Armature|Armature.001|Armature|ArmatureAction.001|.001
+    7400064: Armature.002|Armature|Armature|Armature.001|Armature|ArmatureAction.001|.002
+    7400066: Armature.002|Armature|Armature|Armature.001|Armature|ArmatureAction.001|.003
+    7400068: Armature.002|Armature|Armature|Armature.001|Armature|ArmatureAction.001|.004
+    7400070: Armature.002|Armature|Armature|Armature.001|Armature|ArmatureAction.001|.005
+    7400072: Armature.002|Armature|Armature|Armature.001|Armature|ArmatureAction.001|Arma
+    7400074: Armature.002|Armature|Armature|Armature.001|Armature|ArmatureAction|Arma.000
+    7400076: Armature.002|Armature|Armature|Armature.001|Armature|ArmatureAction|Arma.001
+    7400078: Armature.002|Armature|Armature|Armature.001|Armature|ArmatureAction|Arma.002
+    7400080: Armature.002|Armature|Armature|Armature.001|Armature|ArmatureAction|Arma.003
+    7400082: Armature.002|Armature|Armature|Armature.001|Armature|ArmatureAction|Arma.004
+    7400084: Armature.002|Armature|Armature|Armature.001|Armature|ArmatureAction|Arma.005
+    7400086: Armature.002|Armature|Armature|Armature.001|Armature|ArmatureAction|Arma.006
+    7400088: Armature.002|Armature|Armature|Armature.001|Armature|ArmatureAction|Armature
+    7400090: Armature.002|Armature|Armature|ArmatureAction.001|Armature|ArmatureActio.000
+    7400092: Armature.002|Armature|Armature|ArmatureAction.001|Armature|ArmatureActio.001
+    7400094: Armature.002|Armature|Armature|ArmatureAction.001|Armature|ArmatureAction.00
+    7400096: Armature.002|Armature|Armature|ArmatureAction|Armature|ArmatureAction
+    7400098: Armature.002|Armature|Armature|ArmatureAction|Armature|ArmatureAction.001
+    7400100: Armature.002|Armature|Armature|ArmatureAction|Armature|ArmatureAction.002
+    7400102: Armature.002|Armature.002|Armature.002|Armature.001|Armature|Armature.00.000
+    7400104: Armature.002|Armature.002|Armature.002|Armature.001|Armature|Armature.001|Ar
+    7400106: Armature.002|Armature.002|Armature.002|Armature.001|Armature|ArmatureAct.000
+    7400108: Armature.002|Armature.002|Armature.002|Armature.001|Armature|ArmatureAct.001
+    7400110: Armature.002|Armature.002|Armature.002|Armature.001|Armature|ArmatureAction.
+    7400112: Armature.002|Armature.002|Armature.002|Armature.001|Armature|ArmatureAction|
+    7400114: Armature.002|Armature.002|Armature.002|ArmatureAction.000|Armature.002|Armat
+    7400116: Armature.002|Armature.002|Armature.002|Armature|Armature|Armature.001|Ar.000
+    7400118: Armature.002|Armature.002|Armature.002|Armature|Armature|Armature.001|Ar.001
+    7400120: Armature.002|Armature.002|Armature.002|Armature|Armature|Armature.001|Ar.002
+    7400122: Armature.002|Armature.002|Armature.002|Armature|Armature|Armature.001|Ar.003
+    7400124: Armature.002|Armature.002|Armature.002|Armature|Armature|Armature.001|Ar.004
+    7400126: Armature.002|Armature.002|Armature.002|Armature|Armature|Armature.001|Ar.005
+    7400128: Armature.002|Armature.002|Armature.002|Armature|Armature|Armature.001|Ar.006
+    7400130: Armature.002|Armature.002|Armature.002|Armature|Armature|Armature.001|Ar.007
+    7400132: Armature.002|Armature.002|Armature.002|Armature|Armature|Armature.001|Ar.008
+    7400134: Armature.002|Armature.002|Armature.002|Armature|Armature|Armature.001|Ar.009
+    7400136: Armature.002|Armature.002|Armature.002|Armature|Armature|Armature.001|Ar.010
+    7400138: Armature.002|Armature.002|Armature.002|Armature|Armature|Armature.001|Ar.011
+    7400140: Armature.002|Armature.002|Armature.002|Armature|Armature|Armature.001|Ar.012
+    7400142: Armature.002|Armature.002|Armature.002|Armature|Armature|Armature.001|Ar.013
+    7400144: Armature.002|Armature.002|Armature.002|Armature|Armature|Armature.001|Ar.014
+    7400146: Armature.002|Armature.002|Armature.002|Armature|Armature|Armature.001|Ar.015
+    7400148: Armature.002|Armature.002|Armature.002|Armature|Armature|Armature.001|Ar.016
+    7400150: Armature.002|Armature.002|Armature.002|Armature|Armature|Armature.001|Ar.017
+    7400152: Armature.002|Armature.002|Armature.002|Armature|Armature|Armature.001|Ar.018
+    7400154: Armature.002|Armature.002|Armature.002|Armature|Armature|Armature.001|Ar.019
+    7400156: Armature.002|Armature.002|Armature.002|Armature|Armature|Armature.001|Ar.020
+    7400158: Armature.002|Armature.002|Armature.002|Armature|Armature|Armature.001|Ar.021
+    7400160: Armature.002|Armature.002|Armature.002|Armature|Armature|Armature.001|Ar.022
+    7400162: Armature.002|Armature.002|Armature.002|Armature|Armature|Armature.001|Ar.023
+    7400164: Armature.002|Armature.002|Armature.002|Armature|Armature|Armature.001|Ar.024
+    7400166: Armature.002|Armature.002|Armature.002|Armature|Armature|Armature.001|Ar.025
+    7400168: Armature.002|Armature.002|Armature.002|Armature|Armature|Armature.001|Ar.026
+    7400170: Armature.002|Armature.002|Armature.002|Armature|Armature|Armature.001|Ar.027
+    7400172: Armature.002|Armature.002|Armature.002|Armature|Armature|Armature.001|Ar.028
+    7400174: Armature.002|Armature.002|Armature.002|Armature|Armature|Armature.001|Ar.029
+    7400176: Armature.002|Armature.002|Armature.002|Armature|Armature|Armature.001|Armatu
+    7400178: Armature.002|Armature.002|Armature.002|Armature|Armature|ArmatureAction..000
+    7400180: Armature.002|Armature.002|Armature.002|Armature|Armature|ArmatureAction..001
+    7400182: Armature.002|Armature.002|Armature.002|Armature|Armature|ArmatureAction..002
+    7400184: Armature.002|Armature.002|Armature.002|Armature|Armature|ArmatureAction.001|
+    7400186: Armature.002|Armature.002|Armature.002|Armature|Armature|ArmatureAction|.000
+    7400188: Armature.002|Armature.002|Armature.002|Armature|Armature|ArmatureAction|.001
+    7400190: Armature.002|Armature.002|Armature.002|Armature|Armature|ArmatureAction|Arma
+    7400192: Armature.002|ArmatureAction.002
     9500000: //RootNode
     10800000: Sun
     13700000: Cylinder.002

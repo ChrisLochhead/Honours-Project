@@ -1,37 +1,14 @@
 fileFormatVersion: 2
-guid: 538dbfc1d764e20478d2ed34f7180b6c
+guid: 9577318bcf2c4b046a55d87168a3d236
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
-    100000: Arm.Left
-    100002: Arm.Left_end
-    100004: Arm.Right
-    100006: Arm.Right_end
-    100008: Armature
-    100010: Body
-    100012: Body_end
-    100014: CharacterModel
-    100016: //RootNode
-    400000: Arm.Left
-    400002: Arm.Left_end
-    400004: Arm.Right
-    400006: Arm.Right_end
-    400008: Armature
-    400010: Body
-    400012: Body_end
-    400014: CharacterModel
-    400016: //RootNode
-    2100000: Material.002
-    4300000: CharacterModel
-    7400000: Armature|Armature.001|Armature|Armature.001|Armature|ArmatureAction.001|
-    7400002: Armature|Armature.001|Armature|Armature.001|Armature|ArmatureAction|Arma
-    7400004: Armature|Armature.001|Armature|ArmatureAction.001|Armature|ArmatureA.000
-    7400006: Armature|Armature.001|Armature|ArmatureAction.001|Armature|ArmatureActio
-    7400008: Armature|Armature.001|Armature|ArmatureAction|Armature|ArmatureActio.000
-    7400010: Armature|Armature.001|Armature|ArmatureAction|Armature|ArmatureAction
-    7400012: Armature|ArmatureAction.001
-    9500000: //RootNode
-    13700000: CharacterModel
+    100000: //RootNode
+    400000: //RootNode
+    2100000: Material.003
+    2300000: //RootNode
+    3300000: //RootNode
+    4300000: Cube
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -107,7 +84,7 @@ ModelImporter:
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 2
+  animationType: 0
   humanoidOversampling: 1
   additionalBone: 0
   userData: 
