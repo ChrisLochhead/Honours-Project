@@ -17,10 +17,14 @@ public class CameraMovement : MonoBehaviour {
 	void Update () {
 
         Vector3 pos = transform.position;
-
-		if(Input.GetKey("w"))
+        Quaternion rot = transform.rotation;
+        if (Input.GetKey("p"))
         {
-            //pos.y += panSpeed * Time.deltaTime * ;
+            rot *= Quaternion.Euler(0.1f, 0, 0);
+        }
+        if (Input.GetKey("w"))
+        {
+          //  pos.y += panSpeed * Time.deltaTime;
         }
         if (Input.GetKey("s"))
         {
@@ -40,5 +44,6 @@ public class CameraMovement : MonoBehaviour {
         pos.z += scrollButton * scrollRate * 100.0f * Time.deltaTime;
 
         transform.position = pos;
+        transform.rotation = rot;
     }
 }

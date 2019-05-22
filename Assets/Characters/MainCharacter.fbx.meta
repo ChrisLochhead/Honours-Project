@@ -29,7 +29,7 @@ ModelImporter:
     7400006: Armature|Armature.001|Armature|ArmatureAction.001|Armature|ArmatureActio
     7400008: Armature|Armature.001|Armature|ArmatureAction|Armature|ArmatureActio.000
     7400010: Armature|Armature.001|Armature|ArmatureAction|Armature|ArmatureAction
-    7400012: Armature|ArmatureAction.001
+    7400012: Armature|ArmatureAction
     9500000: //RootNode
     13700000: CharacterModel
   externalObjects: {}
@@ -52,7 +52,7 @@ ModelImporter:
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
     importConstraints: 0
-    animationCompression: 3
+    animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
@@ -229,10 +229,10 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|ArmatureAction.001
-      takeName: Armature|ArmatureAction.001
+      name: Armature|ArmatureAction
+      takeName: Armature|ArmatureAction
       firstFrame: 0
-      lastFrame: 30
+      lastFrame: 20
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -285,7 +285,7 @@ ModelImporter:
     tangentImportMode: 3
     normalCalculationMode: 4
   importAnimation: 1
-  copyAvatar: 1
+  copyAvatar: 0
   humanDescription:
     serializedVersion: 2
     human: []
