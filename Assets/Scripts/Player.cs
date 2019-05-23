@@ -12,12 +12,15 @@ public class Player : MonoBehaviour {
     public GameObject [] muzzleFlashes;
     public GameObject bullet;
 
+    public GameObject crosshair;
+    public GameObject crosshairMarker;
 
     int currentWeapon;
 
     float velocity;
     float movementSpeed;
     Vector3 currentDirection;
+    Vector3 crosshairDirection;
 
     Animator weaponAnim;
     Rigidbody body;
@@ -26,8 +29,8 @@ public class Player : MonoBehaviour {
     void Start () {
 
         currentWeapon = 0;
-        velocity = 0.8f;
-        movementSpeed = 0.8f;
+        velocity = 0.3f;
+        movementSpeed = 0.3f;
 
         body = GetComponent<Rigidbody>();
 
@@ -58,7 +61,7 @@ public class Player : MonoBehaviour {
 
         if(Input.GetMouseButtonDown(0))
         {
-            GameObject b = Instantiate(bullet, transform.position, Quaternion.identity * Quaternion.Euler(new Vector3(-90,0,0)));
+            GameObject b = Instantiate(bullet, crosshairMarker.transform.position, Quaternion.identity * Quaternion.Euler(new Vector3(-90,0,0)));
             b.GetComponent<Bullet>().isTemplate = false;
             muzzleFlashes[currentWeapon].SetActive(true);
         }
@@ -71,6 +74,10 @@ public class Player : MonoBehaviour {
 
     private void FixedUpdate()
     {
+
+        //first do crosshair position
+        crosshair.transform.position = Input.mousePosition;
+
         Ray cameraRay = playerCam.ScreenPointToRay(Input.mousePosition);
         Plane ground = new Plane(Vector3.forward, Vector3.zero);
         float rayLength;
@@ -96,6 +103,7 @@ public class Player : MonoBehaviour {
         {
             //apply the move toward function using this position
             transform.position = Vector3.MoveTowards(transform.position, mPos, velocity);
+            playerCam.transform.position = new Vector3(transform.position.x, transform.position.y, playerCam.transform.position.z);
             Debug.Log(transform.position);
             anim.enabled = true;
         }
@@ -103,6 +111,9 @@ public class Player : MonoBehaviour {
         {
             anim.enabled = false;
         }
+
+
+        crosshair.transform.position = playerCam.WorldToScreenPoint(crosshairMarker.transform.position) + currentDirection.normalized * 200;//transform.position;
 
         body.velocity = new Vector3(0, 0, 0);
         body.angularVelocity = new Vector3(0, 0, 0);// movementSpeed * currentDirection;
