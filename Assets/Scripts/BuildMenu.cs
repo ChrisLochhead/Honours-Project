@@ -16,6 +16,7 @@ public class BuildMenu : MonoBehaviour {
 
     private Transform objectToDrag;
     private Image dragObjectImage;
+    private GameObject dragObjectModel;
 
     List<RaycastResult> hitObjects = new List<RaycastResult>();
 
@@ -45,6 +46,7 @@ public class BuildMenu : MonoBehaviour {
 
                 originalPos = objectToDrag.position;
                 dragObjectImage = objectToDrag.GetComponent<Image>();
+                dragObjectModel = Instantiate(objectToDrag.GetComponent<Buildbutton>().correspondingObject);
                 dragObjectImage.raycastTarget = false;
             }
         }
@@ -52,6 +54,11 @@ public class BuildMenu : MonoBehaviour {
         if (isDragging)
         {
             objectToDrag.position = Input.mousePosition;
+
+            dragObjectModel.transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 p = dragObjectModel.transform.position;
+            p.z = -5;
+            dragObjectModel.transform.position = p;
         }
 
         if(Input.GetMouseButtonUp(0))
@@ -72,6 +79,7 @@ public class BuildMenu : MonoBehaviour {
 
                 dragObjectImage.raycastTarget = true;
                 objectToDrag = null;
+                dragObjectModel = null;
             }
 
             isDragging = false;
