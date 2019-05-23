@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
+
+
 public class BuildMenu : MonoBehaviour {
 
     public GameObject openState;
@@ -45,39 +48,42 @@ public class BuildMenu : MonoBehaviour {
                 objectToDrag.SetAsLastSibling();
 
                 originalPos = objectToDrag.position;
-                dragObjectImage = objectToDrag.GetComponent<Image>();
-                dragObjectModel = Instantiate(objectToDrag.GetComponent<Buildbutton>().correspondingObject);
-                dragObjectImage.raycastTarget = false;
+                if (objectToDrag.GetComponent<Buildbutton>())
+                {
+                    dragObjectModel = Instantiate(objectToDrag.GetComponent<Buildbutton>().correspondingObject);
+                    dragObjectModel.tag = "draggable";
+                }
+                else
+                    dragObjectModel = objectToDrag.gameObject;
+
             }
         }
 
         if (isDragging)
         {
-            objectToDrag.position = Input.mousePosition;
 
-            dragObjectModel.transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            dragObjectModel.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x,Input.mousePosition.y, 145));
             Vector3 p = dragObjectModel.transform.position;
             p.z = -5;
             dragObjectModel.transform.position = p;
+
+            if(Input.GetKeyDown("r"))
+            {
+                dragObjectModel.transform.rotation *= Quaternion.Euler(0, 0, 90);
+            }
+            if (Input.GetKeyDown("d"))
+            {
+                Destroy(dragObjectModel);
+                dragObjectModel = null;
+                objectToDrag = null;
+                isDragging = false;
+            }
         }
 
         if(Input.GetMouseButtonUp(0))
         {
             if(objectToDrag)
             {
-                Transform replaceableObject = getTransformFromMouse();
-
-                if(replaceableObject)
-                {
-                    objectToDrag.position = replaceableObject.position;
-                    replaceableObject.position = originalPos;
-                }
-                else
-                {
-                    objectToDrag.position = originalPos;
-                }
-
-                dragObjectImage.raycastTarget = true;
                 objectToDrag = null;
                 dragObjectModel = null;
             }
@@ -110,7 +116,21 @@ public class BuildMenu : MonoBehaviour {
 
         EventSystem.current.RaycastAll(eventPointer, hitObjects);
 
-        if (hitObjects.Count <= 0) return null;
+        if (hitObjects.Count <= 0)
+        {
+            //check if a 3D object being clicked instead
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit))
+            {
+                return hit.transform.gameObject;
+            }
+            else
+            {
+                return null;
+            }
+        }
 
         return hitObjects[0].gameObject;
     }
@@ -125,5 +145,20 @@ public class BuildMenu : MonoBehaviour {
         }
 
         return null;
+    }
+
+    public void ExitButtonPressed()
+    {
+        SceneManager.LoadScene(0);
+    }
+
+    public void LoadButtonPressed()
+    {
+
+    }
+
+    public void SaveButtonPressed()
+    {
+
     }
 }
