@@ -24,7 +24,7 @@ public class CameraMovement : MonoBehaviour {
         }
         if (Input.GetKey("w"))
         {
-          //  pos.y += panSpeed * Time.deltaTime;
+            pos.y += panSpeed * Time.deltaTime;
         }
         if (Input.GetKey("s"))
         {
