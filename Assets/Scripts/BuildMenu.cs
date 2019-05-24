@@ -1,9 +1,11 @@
 ﻿using System.Collections;
+using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+
 
 
 public class BuildMenu : MonoBehaviour {
@@ -31,7 +33,9 @@ public class BuildMenu : MonoBehaviour {
 
     public Sprite[] buttons;
 
-    public GameObject saveField;
+    public InputField saveField;
+
+    public bool isSaving = false;
 
 	// Use this for initialization
 	void Start () {
@@ -168,8 +172,18 @@ public class BuildMenu : MonoBehaviour {
 
     public void SaveButton()
     {
-        string filename = saveField.GetComponent<Text>().text;
+        string filename = saveField.text;
+        StreamWriter sr = File.CreateText(Application.dataPath + "/Maps/" + filename + ".txt");
+        sr.WriteLine(filename);
+        sr.WriteLine("1,1");
+        sr.Close();
+        
+    }
 
+    public void CancelSave()
+    {
+       saveField.text = "";
+       GameObject.Find("Save Menu").SetActive(false);
 
     }
 }
