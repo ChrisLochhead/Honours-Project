@@ -8,6 +8,8 @@ using UnityEngine.SceneManagement;
 
 public class BuildMenu : MonoBehaviour {
 
+    public List<GameObject> mapItems = new List<GameObject>();
+
     public GameObject openState;
     public GameObject closedState;
 
@@ -29,6 +31,8 @@ public class BuildMenu : MonoBehaviour {
 
     public Sprite[] buttons;
 
+    public GameObject saveField;
+
 	// Use this for initialization
 	void Start () {
         currentState = 0;
@@ -36,7 +40,9 @@ public class BuildMenu : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+
+        Debug.Log(mapItems.Count);
+
         if(Input.GetMouseButtonDown(0))
         {
             objectToDrag = getTransformFromMouse();
@@ -52,6 +58,8 @@ public class BuildMenu : MonoBehaviour {
                 {
                     dragObjectModel = Instantiate(objectToDrag.GetComponent<Buildbutton>().correspondingObject);
                     dragObjectModel.tag = "draggable";
+                    dragObjectModel.GetComponent<mapItem>().listPlace = mapItems.Count;
+                    mapItems.Add(dragObjectModel);
                 }
                 else
                     dragObjectModel = objectToDrag.gameObject;
@@ -73,6 +81,7 @@ public class BuildMenu : MonoBehaviour {
             }
             if (Input.GetKeyDown("d"))
             {
+                mapItems.RemoveAt(dragObjectModel.GetComponent<mapItem>().listPlace);
                 Destroy(dragObjectModel);
                 dragObjectModel = null;
                 objectToDrag = null;
@@ -157,8 +166,10 @@ public class BuildMenu : MonoBehaviour {
 
     }
 
-    public void SaveButtonPressed()
+    public void SaveButton()
     {
+        string filename = saveField.GetComponent<Text>().text;
+
 
     }
 }

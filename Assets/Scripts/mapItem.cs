@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Buildbutton : MonoBehaviour {
+public class mapItem : MonoBehaviour {
 
+    public int listPlace;
 
-    public GameObject correspondingObject;
-    
 	// Use this for initialization
 	void Start () {
 		
