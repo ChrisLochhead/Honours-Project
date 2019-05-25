@@ -15,15 +15,19 @@ public class MapFinder : MonoBehaviour {
         FileInfo[] info = path.GetFiles("*.txt");
         int fileIterator = 0;
 
-        map.AddComponent<Map>();
         selectedMap.AddComponent<Map>();
         maps = new List<GameObject>();
 
         foreach (FileInfo f in info)
         {
 
+            map = new GameObject();
+            map.transform.parent = this.transform;
+            map.AddComponent<Map>();
+
             int lineIterator = 0;
             reader = f.OpenText();
+            text = "";
            while(text != null)
            {
                 text = reader.ReadLine();
