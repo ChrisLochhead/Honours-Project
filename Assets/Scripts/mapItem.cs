@@ -5,6 +5,7 @@ using UnityEngine;
 public class mapItem : MonoBehaviour {
 
     public int listPlace;
+    public string type;
 
 	// Use this for initialization
 	void Start () {
