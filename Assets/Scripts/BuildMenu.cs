@@ -222,7 +222,7 @@ public class BuildMenu : MonoBehaviour {
             }
         }
         sr.Close();
-        
+        CancelSave();
     }
 
     public void CancelSave()

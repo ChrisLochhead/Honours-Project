@@ -62,17 +62,17 @@ public class GameMap : MonoBehaviour {
             else
                 if (mapInfo[i].GetComponent<Coin>().type == 4)
             {
-                Instantiate(goldCoin, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, -5), Quaternion.identity);
+                Instantiate(goldCoin, new Vector3(mapInfo[i].GetComponent<Coin>().pos.x, mapInfo[i].GetComponent<Coin>().pos.y, -5), Quaternion.identity);
             }
             else
                 if (mapInfo[i].GetComponent<Coin>().type == 5)
             {
-                Instantiate(silverCoin, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, -5), Quaternion.identity);
+                Instantiate(silverCoin, new Vector3(mapInfo[i].GetComponent<Coin>().pos.x, mapInfo[i].GetComponent<Coin>().pos.y, -5), Quaternion.identity);
             }
             else
                 if (mapInfo[i].GetComponent<Coin>().type == 6)
             {
-                Instantiate(bronzeCoin, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, -5), Quaternion.identity);
+                Instantiate(bronzeCoin, new Vector3(mapInfo[i].GetComponent<Coin>().pos.x, mapInfo[i].GetComponent<Coin>().pos.y, -5), Quaternion.identity);
             }
         }
     }

@@ -77,8 +77,8 @@ public class MapFinder : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        if (SceneManager.GetActiveScene().buildIndex == 0)
-        {
+       // if (SceneManager.GetActiveScene().buildIndex == 0 || SceneManager.GetActiveScene().buildIndex == 2)
+       // {
             if (GameObject.Find("MapLoader"))
             {
                 selectedMap = maps[GameObject.Find("MapLoader").GetComponent<Dropdown>().value];
@@ -91,7 +91,7 @@ public class MapFinder : MonoBehaviour {
                     listAdded = true;
                 }
             }
-        }
+       // }
     }
 
     protected DirectoryInfo path = null;
