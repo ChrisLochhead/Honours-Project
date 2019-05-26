@@ -174,11 +174,11 @@ public class BuildMenu : MonoBehaviour {
     public int FindType(GameObject gameObj)
     {
         if (gameObj.name == "GreenWall(Clone)")
-            return 0;
+            return 2;
         else if (gameObj.name == "OrangeWall(Clone)")
             return 1;
         else if (gameObj.name == "RedWall(Clone)")
-            return 2;
+            return 0;
         else if (gameObj.name == "GreyWall(Clone)")
             return 3;
         else if (gameObj.name == "GoldCoin(Clone)")
@@ -193,11 +193,11 @@ public class BuildMenu : MonoBehaviour {
 
     public int FindRot(GameObject gameObj)
     {
-        //if 90 or 270 its 0, if 180 or 360 its 90
+        //if 90 or 270 its 90, if 180 or 360 its 0
         if (gameObj.transform.localEulerAngles.z == 90 || gameObj.transform.localEulerAngles.z == 270)
-            return 0;
-        else
             return 90;
+        else
+            return 0;
     }
     public void SaveButton()
     {
