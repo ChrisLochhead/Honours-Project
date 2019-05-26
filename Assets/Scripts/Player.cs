@@ -101,8 +101,8 @@ public class Player : MonoBehaviour {
 
         if (Input.GetKey("w"))
         {
-            //apply the move toward function using this position
-            transform.position = Vector3.MoveTowards(transform.position, mPos, velocity);
+            //apply the move toward function using this position             //was mpos
+            transform.position = Vector3.MoveTowards(transform.position, crosshair.transform.position, velocity);
             playerCam.transform.position = new Vector3(transform.position.x, transform.position.y, playerCam.transform.position.z);
             Debug.Log(transform.position);
             anim.enabled = true;
