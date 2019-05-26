@@ -37,8 +37,17 @@ public class BuildMenu : MonoBehaviour {
 
     public bool isSaving = false;
 
-	// Use this for initialization
-	void Start () {
+    //templates
+    public GameObject redWall;
+    public GameObject orangeWall;
+    public GameObject greenWall;
+    public GameObject greyWall;
+    public GameObject goldCoin;
+    public GameObject silverCoin;
+    public GameObject bronzeCoin;
+
+    // Use this for initialization
+    void Start () {
         currentState = 0;
 	}
 	
@@ -230,5 +239,51 @@ public class BuildMenu : MonoBehaviour {
        saveField.text = "";
        GameObject.Find("Save Menu").SetActive(false);
 
+    }
+
+    public void LoadMap()
+    {
+
+        List<GameObject> mapInfo = GameObject.Find("MapLoader").GetComponent<MapFinder>().selectedMap.GetComponent<Map>().GetMapItems();
+
+        for (int i = 0; i < mapInfo.Count; i++)
+        {
+            if (mapInfo[i].GetComponent<Wall>())
+            {
+                if (mapInfo[i].GetComponent<Wall>().type == 0)
+                {
+                    Instantiate(redWall, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, -5), Quaternion.identity * Quaternion.Euler(0, 0, mapInfo[i].GetComponent<Wall>().rot));
+                }
+                else
+                if (mapInfo[i].GetComponent<Wall>().type == 1)
+                {
+                    Instantiate(orangeWall, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, -5), Quaternion.identity * Quaternion.Euler(0, 0, mapInfo[i].GetComponent<Wall>().rot));
+                }
+                else
+                if (mapInfo[i].GetComponent<Wall>().type == 2)
+                {
+                    Instantiate(greenWall, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, -5), Quaternion.identity * Quaternion.Euler(0, 0, mapInfo[i].GetComponent<Wall>().rot));
+                }
+                if (mapInfo[i].GetComponent<Wall>().type == 3)
+                {
+                    Instantiate(greyWall, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, -5), Quaternion.identity * Quaternion.Euler(0, 0, mapInfo[i].GetComponent<Wall>().rot));
+                }
+            }
+            else
+                if (mapInfo[i].GetComponent<Coin>().type == 4)
+            {
+                Instantiate(goldCoin, new Vector3(mapInfo[i].GetComponent<Coin>().pos.x, mapInfo[i].GetComponent<Coin>().pos.y, -5), Quaternion.identity);
+            }
+            else
+                if (mapInfo[i].GetComponent<Coin>().type == 5)
+            {
+                Instantiate(silverCoin, new Vector3(mapInfo[i].GetComponent<Coin>().pos.x, mapInfo[i].GetComponent<Coin>().pos.y, -5), Quaternion.identity);
+            }
+            else
+                if (mapInfo[i].GetComponent<Coin>().type == 6)
+            {
+                Instantiate(bronzeCoin, new Vector3(mapInfo[i].GetComponent<Coin>().pos.x, mapInfo[i].GetComponent<Coin>().pos.y, -5), Quaternion.identity);
+            }
+        }
     }
 }
