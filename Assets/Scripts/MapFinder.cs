@@ -77,10 +77,13 @@ public class MapFinder : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-       // if (SceneManager.GetActiveScene().buildIndex == 0 || SceneManager.GetActiveScene().buildIndex == 2)
-       // {
+        // if (SceneManager.GetActiveScene().buildIndex == 0 || SceneManager.GetActiveScene().buildIndex == 2)
+        // {
+        int counter = 0;
+
             if (GameObject.Find("MapLoader"))
             {
+            counter++;
                 selectedMap = maps[GameObject.Find("MapLoader").GetComponent<Dropdown>().value];
 
                 if (listAdded == false)
@@ -102,5 +105,5 @@ public class MapFinder : MonoBehaviour {
     public GameObject map;
     public GameObject selectedMap;
 
-    protected bool listAdded = false;
+    protected bool listAdded;
 }

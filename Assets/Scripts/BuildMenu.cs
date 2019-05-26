@@ -244,46 +244,59 @@ public class BuildMenu : MonoBehaviour {
     public void LoadMap()
     {
 
-        List<GameObject> mapInfo = GameObject.Find("MapLoader").GetComponent<MapFinder>().selectedMap.GetComponent<Map>().GetMapItems();
+        //clear first
+        Destroy(GameObject.Find("CurrentMapState"));
+
+        GameObject newState = new GameObject();
+        newState.name = "CurrentMapState";
+
+
+
+        List<GameObject> mapInfo = GameObject.Find("PersistentObject").GetComponent<MapFinder>().selectedMap.GetComponent<Map>().GetMapItems();
+
 
         for (int i = 0; i < mapInfo.Count; i++)
         {
+            GameObject tmp = new GameObject();
+
             if (mapInfo[i].GetComponent<Wall>())
             {
                 if (mapInfo[i].GetComponent<Wall>().type == 0)
                 {
-                    Instantiate(redWall, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, -5), Quaternion.identity * Quaternion.Euler(0, 0, mapInfo[i].GetComponent<Wall>().rot));
+                    tmp = Instantiate(redWall, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, -5), Quaternion.identity * Quaternion.Euler(0, 0, mapInfo[i].GetComponent<Wall>().rot));
                 }
                 else
                 if (mapInfo[i].GetComponent<Wall>().type == 1)
                 {
-                    Instantiate(orangeWall, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, -5), Quaternion.identity * Quaternion.Euler(0, 0, mapInfo[i].GetComponent<Wall>().rot));
+                    tmp = Instantiate(orangeWall, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, -5), Quaternion.identity * Quaternion.Euler(0, 0, mapInfo[i].GetComponent<Wall>().rot));
                 }
                 else
                 if (mapInfo[i].GetComponent<Wall>().type == 2)
                 {
-                    Instantiate(greenWall, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, -5), Quaternion.identity * Quaternion.Euler(0, 0, mapInfo[i].GetComponent<Wall>().rot));
+                    tmp = Instantiate(greenWall, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, -5), Quaternion.identity * Quaternion.Euler(0, 0, mapInfo[i].GetComponent<Wall>().rot));
                 }
                 if (mapInfo[i].GetComponent<Wall>().type == 3)
                 {
-                    Instantiate(greyWall, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, -5), Quaternion.identity * Quaternion.Euler(0, 0, mapInfo[i].GetComponent<Wall>().rot));
+                    tmp = Instantiate(greyWall, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, -5), Quaternion.identity * Quaternion.Euler(0, 0, mapInfo[i].GetComponent<Wall>().rot));
                 }
             }
             else
                 if (mapInfo[i].GetComponent<Coin>().type == 4)
             {
-                Instantiate(goldCoin, new Vector3(mapInfo[i].GetComponent<Coin>().pos.x, mapInfo[i].GetComponent<Coin>().pos.y, -5), Quaternion.identity);
+                tmp = Instantiate(goldCoin, new Vector3(mapInfo[i].GetComponent<Coin>().pos.x, mapInfo[i].GetComponent<Coin>().pos.y, -5), Quaternion.identity);
             }
             else
                 if (mapInfo[i].GetComponent<Coin>().type == 5)
             {
-                Instantiate(silverCoin, new Vector3(mapInfo[i].GetComponent<Coin>().pos.x, mapInfo[i].GetComponent<Coin>().pos.y, -5), Quaternion.identity);
+                tmp = Instantiate(silverCoin, new Vector3(mapInfo[i].GetComponent<Coin>().pos.x, mapInfo[i].GetComponent<Coin>().pos.y, -5), Quaternion.identity);
             }
             else
                 if (mapInfo[i].GetComponent<Coin>().type == 6)
             {
-                Instantiate(bronzeCoin, new Vector3(mapInfo[i].GetComponent<Coin>().pos.x, mapInfo[i].GetComponent<Coin>().pos.y, -5), Quaternion.identity);
+                tmp = Instantiate(bronzeCoin, new Vector3(mapInfo[i].GetComponent<Coin>().pos.x, mapInfo[i].GetComponent<Coin>().pos.y, -5), Quaternion.identity);
             }
+
+            tmp.transform.parent = newState.transform;
         }
     }
 }
