@@ -173,12 +173,12 @@ public class BuildMenu : MonoBehaviour {
 
     public int FindType(GameObject gameObj)
     {
-        if (gameObj.name == "GreenWall(Clone)")
-            return 2;
+        if (gameObj.name == "RedWall(Clone)")
+            return 0;
         else if (gameObj.name == "OrangeWall(Clone)")
             return 1;
-        else if (gameObj.name == "RedWall(Clone)")
-            return 0;
+        else if (gameObj.name == "GreenWall(Clone)")
+            return 2;
         else if (gameObj.name == "GreyWall(Clone)")
             return 3;
         else if (gameObj.name == "GoldCoin(Clone)")
@@ -210,7 +210,16 @@ public class BuildMenu : MonoBehaviour {
         {
             int t = FindType(mapItems[i]);
             int rot = FindRot(mapItems[i]);
-            sr.WriteLine(t + "," + mapItems[i].transform.position.x + "," + mapItems[i].transform.position.y + "," + rot);
+            if (t <= 3)
+            {
+                //add in wall format
+                sr.WriteLine(t + "," + mapItems[i].transform.position.x + "," + mapItems[i].transform.position.y + "," + rot);
+            }
+            else
+            {
+                //add in coin format
+                sr.WriteLine(t + "," + mapItems[i].transform.position.x + "," + mapItems[i].transform.position.y);
+            }
         }
         sr.Close();
         

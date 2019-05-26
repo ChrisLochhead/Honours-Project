@@ -10,7 +10,11 @@ public class MapFinder : MonoBehaviour {
 
                                  // Use this for initialization
     void Start () {
+        FindFiles();   
+    }
 
+    public void FindFiles()
+    {
         path = new DirectoryInfo("D:/repos/Honours Project/Code/Honours-Project/Assets/Maps");
         FileInfo[] info = path.GetFiles("*.txt");
         int fileIterator = 0;
@@ -28,8 +32,8 @@ public class MapFinder : MonoBehaviour {
             int lineIterator = 0;
             reader = f.OpenText();
             text = "";
-           while(text != null)
-           {
+            while (text != null)
+            {
                 text = reader.ReadLine();
                 if (text != null)
                 {
@@ -45,29 +49,30 @@ public class MapFinder : MonoBehaviour {
                             map.GetComponent<Map>().setMapSize(new Vector2(int.Parse(lines[0]), int.Parse(lines[1])));
                             // Debug.Log(map.GetComponent<Map>().getMapSize().x.ToString() + " , " + map.GetComponent<Map>().getMapSize().y.ToString());
                         }
-                        else {
+                        else
+                        {
 
                             if (lines.Length > 3)
-                            map.GetComponent<Map>().addWallItem(int.Parse(lines[0]), float.Parse(lines[1]), float.Parse(lines[2]), float.Parse(lines[3]));
+                                map.GetComponent<Map>().addWallItem(int.Parse(lines[0]), float.Parse(lines[1]), float.Parse(lines[2]), float.Parse(lines[3]));
                             else
-                            map.GetComponent<Map>().addCoinItem(int.Parse(lines[0]), float.Parse(lines[1]), float.Parse(lines[2]));
+                                map.GetComponent<Map>().addCoinItem(int.Parse(lines[0]), float.Parse(lines[1]), float.Parse(lines[2]));
                         }
                         Debug.Log(text);
                         lineIterator++;
                     }
                 }
-           }
+            }
 
             maps.Add(map);
-           // GameObject.Find("MapLoader").GetComponent<Dropdown>().options.Add(new Dropdown.OptionData() { text = map.name });
+            // GameObject.Find("MapLoader").GetComponent<Dropdown>().options.Add(new Dropdown.OptionData() { text = map.name });
             fileIterator++;
+            reader.Close();
         }
     }
 
     void Awake()
     {
         DontDestroyOnLoad(this);
-        //DontDestroyOnLoad(transform.root.gameObject);
     }
 
     // Update is called once per frame

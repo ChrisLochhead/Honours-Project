@@ -7,8 +7,11 @@ public class MainMenu : MonoBehaviour {
 
     private void Start()
     {
-        if (!GameObject.Find("PersistentObject"))
+        if (GameObject.Find("PersistentObject"))
         {
+            Destroy(GameObject.Find("PersistentObject"));
+        }
+
             GameObject PersistentObject = new GameObject();
             PersistentObject.AddComponent<MapFinder>();
             PersistentObject.name = "PersistentObject";
@@ -24,7 +27,7 @@ public class MainMenu : MonoBehaviour {
 
             PersistentObject.GetComponent<MapFinder>().selectedMap = selectedMap;
             PersistentObject.GetComponent<MapFinder>().map = Map;
-        }
+
     }
     public void PlayButton()
     {

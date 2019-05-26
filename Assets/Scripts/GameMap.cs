@@ -11,6 +11,7 @@ public class GameMap : MonoBehaviour {
     public GameObject redWall;
     public GameObject orangeWall;
     public GameObject greenWall;
+    public GameObject greyWall;
     public GameObject goldCoin;
     public GameObject silverCoin;
     public GameObject bronzeCoin;
@@ -53,10 +54,25 @@ public class GameMap : MonoBehaviour {
                 {
                     Instantiate(greenWall, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, -5), Quaternion.identity * Quaternion.Euler(0, 0, mapInfo[i].GetComponent<Wall>().rot));
                 }
-            }else
-                if (mapInfo[i].GetComponent<Coin>())
+                if (mapInfo[i].GetComponent<Wall>().type == 3)
+                {
+                    Instantiate(greyWall, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, -5), Quaternion.identity * Quaternion.Euler(0, 0, mapInfo[i].GetComponent<Wall>().rot));
+                }
+            }
+            else
+                if (mapInfo[i].GetComponent<Coin>().type == 4)
             {
-                Debug.Log("My nama jeff");
+                Instantiate(goldCoin, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, -5), Quaternion.identity);
+            }
+            else
+                if (mapInfo[i].GetComponent<Coin>().type == 5)
+            {
+                Instantiate(silverCoin, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, -5), Quaternion.identity);
+            }
+            else
+                if (mapInfo[i].GetComponent<Coin>().type == 6)
+            {
+                Instantiate(bronzeCoin, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, -5), Quaternion.identity);
             }
         }
     }
