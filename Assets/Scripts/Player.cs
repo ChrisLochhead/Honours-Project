@@ -49,6 +49,10 @@ public class Player : MonoBehaviour {
     // Update is called once per frame
     void Update () {
 
+        if(playerCam.GetComponent<CameraMovement>().canMove == true)
+        {
+            playerCam.GetComponent<CameraMovement>().canMove = false;
+        }
 
         Physics.IgnoreLayerCollision(9,10);
 
@@ -75,6 +79,9 @@ public class Player : MonoBehaviour {
     private void FixedUpdate()
     {
 
+        Vector3 p = transform.position;
+        p.z = -10;
+        transform.position = p;
         //first do crosshair position
         crosshair.transform.position = Input.mousePosition;
 
@@ -102,7 +109,7 @@ public class Player : MonoBehaviour {
         if (Input.GetKey("w"))
         {
             //apply the move toward function using this position             //was mpos
-            transform.position = Vector3.MoveTowards(transform.position, crosshair.transform.position, velocity);
+            transform.position = Vector3.MoveTowards(transform.position, new Vector3(mPos.x, mPos.y, -10), velocity);
             playerCam.transform.position = new Vector3(transform.position.x, transform.position.y, playerCam.transform.position.z);
             Debug.Log(transform.position);
             anim.enabled = true;
@@ -111,7 +118,6 @@ public class Player : MonoBehaviour {
         {
             anim.enabled = false;
         }
-
 
         crosshair.transform.position = playerCam.WorldToScreenPoint(crosshairMarker.transform.position) + currentDirection.normalized * 200;//transform.position;
 
