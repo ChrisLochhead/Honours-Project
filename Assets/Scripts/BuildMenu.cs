@@ -46,6 +46,7 @@ public class BuildMenu : MonoBehaviour {
     public GameObject silverCoin;
     public GameObject bronzeCoin;
 
+    public GameObject errorMessage;
     // Use this for initialization
     void Start () {
         currentState = 0;
@@ -93,9 +94,11 @@ public class BuildMenu : MonoBehaviour {
             {
                 dragObjectModel.transform.rotation *= Quaternion.Euler(0, 0, 90);
             }
-            if (Input.GetKeyDown("d"))
+            if (Input.GetKeyDown("t"))
             {
+                Debug.Log(mapItems.Count);
                 mapItems.RemoveAt(dragObjectModel.GetComponent<mapItem>().listPlace);
+                Debug.Log(mapItems.Count);
                 Destroy(dragObjectModel);
                 dragObjectModel = null;
                 objectToDrag = null;
@@ -210,6 +213,12 @@ public class BuildMenu : MonoBehaviour {
     }
     public void SaveButton()
     {
+        if(mapItems.Count == 0)
+        {
+            errorMessage.SetActive(true);
+            return;
+        }
+
         string filename = saveField.text;
         StreamWriter sr = File.CreateText(Application.dataPath + "/Maps/" + filename + ".txt");
         sr.WriteLine(filename);
@@ -217,21 +226,27 @@ public class BuildMenu : MonoBehaviour {
         
         for(int i = 0; i < mapItems.Count; i++)
         {
-            int t = FindType(mapItems[i]);
-            int rot = FindRot(mapItems[i]);
-            if (t <= 3)
+            if (mapItems[i])
             {
-                //add in wall format
-                sr.WriteLine(t + "," + mapItems[i].transform.position.x + "," + mapItems[i].transform.position.y + "," + rot);
-            }
-            else
-            {
-                //add in coin format
-                sr.WriteLine(t + "," + mapItems[i].transform.position.x + "," + mapItems[i].transform.position.y);
+                int t = FindType(mapItems[i]);
+                int rot = FindRot(mapItems[i]);
+                if (t <= 3)
+                {
+                    //add in wall format
+                    sr.WriteLine(t + "," + mapItems[i].transform.position.x + "," + mapItems[i].transform.position.y + "," + rot);
+                }
+                else
+                {
+                    //add in coin format
+                    sr.WriteLine(t + "," + mapItems[i].transform.position.x + "," + mapItems[i].transform.position.y);
+                }
             }
         }
         sr.Close();
         CancelSave();
+
+        GameObject.Find("PersistentObject").GetComponent<MapFinder>().FindFiles();
+        errorMessage.SetActive(false);
     }
 
     public void CancelSave()
@@ -246,6 +261,11 @@ public class BuildMenu : MonoBehaviour {
 
         //clear first
         Destroy(GameObject.Find("CurrentMapState"));
+        
+        for(int i = 0; i < mapItems.Count; i++)
+        {
+            Destroy(mapItems[i]);
+        }
 
         GameObject newState = new GameObject();
         newState.name = "CurrentMapState";
@@ -297,6 +317,7 @@ public class BuildMenu : MonoBehaviour {
             }
 
             tmp.transform.parent = newState.transform;
+            mapItems.Add(tmp);
         }
     }
 }
