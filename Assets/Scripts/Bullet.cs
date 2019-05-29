@@ -10,11 +10,13 @@ public class Bullet : MonoBehaviour {
     public GameObject shooter;
 
     public bool isTemplate;
+    bool templateSet;
 
 	// Use this for initialization
 	void Start () {
         transform.localScale = new Vector3(8.1f, 8.1f, 23.1f);
         velocity = 3.5f;
+        templateSet = false;
 
         if(shooter)
         {
@@ -28,6 +30,7 @@ public class Bullet : MonoBehaviour {
             direction = transform.position - Camera.main.ScreenToWorldPoint(shooter.GetComponent<Player>().crosshair.transform.position);
 
         }
+
     }
 	
 	// Update is called once per frame
@@ -38,8 +41,11 @@ public class Bullet : MonoBehaviour {
         if (isTemplate == false)
         {
 
+            if (!templateSet)
+                this.gameObject.AddComponent<MeshRenderer>();
             // Debug.Log(transform.position);
             //transform.position = Vector3.MoveTowards(transform.position, direction, velocity);
+
             Vector3 pos;
             pos = transform.position;
             pos += velocity * -direction * Time.deltaTime;
