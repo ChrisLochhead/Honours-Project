@@ -33,23 +33,15 @@ public class Player : MonoBehaviour {
     public GameObject[] muzzleFlashes;
     public GameObject bullet;
 
-    //weapon ammunition
-    const int fullPistolClip = 16;
-    const int fullShotgunClip = 10;
-    const int fullRifleClip = 30;
-    const int fullSMGClip = 50;
-    const int fullSniperClip = 1;
+    //weapon clips
+    int[] clipSize = { 16, 10, 30, 50, 1 };
+    int[] currentAmmo = { 16, 10, 30, 50, 1 };
 
     //reload timers (in seconds)
-    const int PistolReload = 2;
-    const int ShotgunReload = 5;
-    const int RifleReload = 4;
-    const int SMGReload = 3;
-    const int SniperReload = 3;
+    int[] reloadTimer = { 2, 5, 4, 3, 3 };
 
     //HUD stuff
     int score = 230;
-    int ammo = 16;
     int health = 150;
     int rank = 3;
 
@@ -63,6 +55,12 @@ public class Player : MonoBehaviour {
 
     public Sprite[] rankIcons;
     public int[] rankHealthValues;
+
+    //reloading and timer
+    bool isReloading = false;
+    bool initialReload = true;
+    float reloadStartTime = 0.0f;
+    float reloadTargetTime = 0.0f;
 
     // Use this for initialization
     void Start () {
@@ -98,7 +96,7 @@ public class Player : MonoBehaviour {
         scoreText.text = score.ToString();
 
         //Ammo
-        ammoText.text = ammo.ToString() + "/" + "";
+        ammoText.text = currentAmmo[currentWeapon].ToString() + "/" + clipSize[currentWeapon];
 
         //Rank
         rankImage.GetComponent<Image>().sprite = rankIcons[rank];
@@ -119,16 +117,49 @@ public class Player : MonoBehaviour {
         if (Input.GetKey("4")) SetWeapon(3);
         if (Input.GetKey("5")) SetWeapon(4);
 
+        //Cancel reload if reloading mid-weapon switch
+        if(Input.GetKey("1") || Input.GetKey("2") || Input.GetKey("3") || Input.GetKey("4") || Input.GetKey("5"))
+        {
+            isReloading = false;
+            initialReload = true;
+        }
+
         //Shooting
-        if(Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && currentAmmo[currentWeapon] > 0)
         {
             GameObject b = Instantiate(bullet, crosshairMarker.transform.position, Quaternion.identity * Quaternion.Euler(new Vector3(-90,0,0)));
             b.GetComponent<Bullet>().isTemplate = false;
             muzzleFlashes[currentWeapon].SetActive(true);
+            --currentAmmo[currentWeapon];
         }
         else
         {
             muzzleFlashes[currentWeapon].SetActive(false);
+        }
+
+        //Reloading
+        if(Input.GetKey("r") && initialReload == true || currentAmmo[currentWeapon] == 0 && initialReload == true || Input.GetKey("r") && isReloading == false)
+        {
+            reloadStartTime = Time.time;
+            reloadTargetTime = reloadStartTime + reloadTimer[currentWeapon];
+            isReloading = true;
+            initialReload = false;
+        }
+
+        //Reload sequence
+        if(isReloading)
+        {
+            if(reloadStartTime >= reloadTargetTime)
+            {
+                currentAmmo[currentWeapon] = clipSize[currentWeapon];
+                reloadStartTime = 0.0f;
+                isReloading = false;
+                initialReload = true;
+            }
+            else
+            {
+                reloadStartTime = Time.time;
+            }
         }
 
     }
