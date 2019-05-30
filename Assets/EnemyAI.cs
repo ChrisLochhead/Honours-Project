@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 using UnityEngine.UI;
+using TMPro;
 
-public class Player : MonoBehaviour {
+public class EnemyAI : MonoBehaviour {
 
     //Camera
     public Camera playerCam;
@@ -46,9 +46,7 @@ public class Player : MonoBehaviour {
     int rank = 3;
 
     //HUD objects
-    public TextMeshProUGUI scoreText;
-    public TextMeshProUGUI ammoText;
-    public TextMeshProUGUI healthText;
+    public TextMeshPro healthText;
 
     public GameObject healthBar;
     public GameObject rankImage;
@@ -63,7 +61,8 @@ public class Player : MonoBehaviour {
     float reloadTargetTime = 0.0f;
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
 
         currentWeapon = 0;
         velocity = 0.3f;
@@ -76,15 +75,16 @@ public class Player : MonoBehaviour {
         guns[currentWeapon].transform.position = this.transform.position;
         guns[currentWeapon].transform.rotation = this.transform.rotation;
 
-       weaponAnim = guns[currentWeapon].GetComponent<Animator>();
-       weaponAnim.enabled = false;
-    
-       for(int i = 0; i < muzzleFlashes.Length; i++)
-       muzzleFlashes[i].SetActive(false);
+        weaponAnim = guns[currentWeapon].GetComponent<Animator>();
+        weaponAnim.enabled = false;
+
+        for (int i = 0; i < muzzleFlashes.Length; i++)
+            muzzleFlashes[i].SetActive(false);
     }
 
     // Update is called once per frame
-    void Update () {
+    void Update()
+    {
 
         //Update the HUD
         //Health
@@ -92,33 +92,27 @@ public class Player : MonoBehaviour {
         healthBar.GetComponent<Slider>().value = health;
         healthText.text = health.ToString() + "/" + rankHealthValues[rank];
 
-        //Score
-        scoreText.text = score.ToString();
-
-        //Ammo
-        ammoText.text = currentAmmo[currentWeapon].ToString() + "/" + clipSize[currentWeapon];
-
         //Rank
         rankImage.GetComponent<Image>().sprite = rankIcons[rank];
 
         //Initialisation for the camera
-        if(playerCam.GetComponent<CameraMovement>().canMove == true)
+        if (playerCam.GetComponent<CameraMovement>().canMove == true)
         {
             playerCam.GetComponent<CameraMovement>().canMove = false;
         }
 
         //Ignore player bullet collisions for now
-        Physics.IgnoreLayerCollision(9,10);
+        Physics.IgnoreLayerCollision(9, 10);
 
         //Weapon switching
-        if (Input.GetKey("1")) SetWeapon(0);
-        if (Input.GetKey("2")) SetWeapon(1);
-        if (Input.GetKey("3")) SetWeapon(2);
-        if (Input.GetKey("4")) SetWeapon(3);
-        if (Input.GetKey("5")) SetWeapon(4);
+        if (Input.GetKey("b")) SetWeapon(0);
+        if (Input.GetKey("b")) SetWeapon(1);
+        if (Input.GetKey("b")) SetWeapon(2);
+        if (Input.GetKey("b")) SetWeapon(3);
+        if (Input.GetKey("b")) SetWeapon(4);
 
         //Cancel reload if reloading mid-weapon switch
-        if(Input.GetKey("1") || Input.GetKey("2") || Input.GetKey("3") || Input.GetKey("4") || Input.GetKey("5"))
+        if (Input.GetKey("b") || Input.GetKey("b") || Input.GetKey("b") || Input.GetKey("b") || Input.GetKey("b"))
         {
             isReloading = false;
             initialReload = true;
@@ -127,7 +121,7 @@ public class Player : MonoBehaviour {
         //Shooting
         if (Input.GetMouseButtonDown(0) && currentAmmo[currentWeapon] > 0)
         {
-            GameObject b = Instantiate(bullet, crosshairMarker.transform.position, Quaternion.identity * Quaternion.Euler(new Vector3(-90,0,0)));
+            GameObject b = Instantiate(bullet, crosshairMarker.transform.position, Quaternion.identity * Quaternion.Euler(new Vector3(-90, 0, 0)));
             b.GetComponent<Bullet>().isTemplate = false;
             muzzleFlashes[currentWeapon].SetActive(true);
             --currentAmmo[currentWeapon];
@@ -138,7 +132,7 @@ public class Player : MonoBehaviour {
         }
 
         //Reloading
-        if(Input.GetKey("r") && initialReload == true || currentAmmo[currentWeapon] == 0 && initialReload == true || Input.GetKey("r") && isReloading == false)
+        if (Input.GetKey("b") && initialReload == true || currentAmmo[currentWeapon] == 0 && initialReload == true || Input.GetKey("r") && isReloading == false)
         {
             reloadStartTime = Time.time;
             reloadTargetTime = reloadStartTime + reloadTimer[currentWeapon];
@@ -147,9 +141,9 @@ public class Player : MonoBehaviour {
         }
 
         //Reload sequence
-        if(isReloading)
+        if (isReloading)
         {
-            if(reloadStartTime >= reloadTargetTime)
+            if (reloadStartTime >= reloadTargetTime)
             {
                 currentAmmo[currentWeapon] = clipSize[currentWeapon];
                 reloadStartTime = 0.0f;
@@ -194,7 +188,7 @@ public class Player : MonoBehaviour {
 
         }
 
-        if (Input.GetKey("w"))
+        if (Input.GetKey("b"))
         {
             //apply the move toward function using this position             //was mpos
             transform.position = Vector3.MoveTowards(transform.position, new Vector3(mPos.x, mPos.y, -10), velocity);
@@ -228,7 +222,7 @@ public class Player : MonoBehaviour {
     {
         currentWeapon = type;
 
-        for(int i = 0; i < guns.Length; i++)
+        for (int i = 0; i < guns.Length; i++)
         {
             if (i == type)
                 guns[i].SetActive(true);
