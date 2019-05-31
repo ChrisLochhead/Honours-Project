@@ -32,10 +32,10 @@ public class GameMap : MonoBehaviour {
         Instantiate(ground, new Vector3(-200, 0, 0), Quaternion.identity);
         Instantiate(ground, new Vector3(0, 200, 0), Quaternion.identity);
         Instantiate(ground, new Vector3(0, -200, 0), Quaternion.identity);
+        Instantiate(ground, new Vector3(200, -200, 0), Quaternion.identity);
         Instantiate(ground, new Vector3(200, 200, 0), Quaternion.identity);
         Instantiate(ground, new Vector3(-200, -200, 0), Quaternion.identity);
-        Instantiate(ground, new Vector3(200, 200, 0), Quaternion.identity);
-        Instantiate(ground, new Vector3(-200, -200, 0), Quaternion.identity);
+        Instantiate(ground, new Vector3(-200, 200, 0), Quaternion.identity);
         //get the size and then draw the floor
         for (int i = 0; i < mapInfo.Count; i++) {
             if (mapInfo[i].GetComponent<Wall>())

@@ -8,26 +8,18 @@ public class Bullet : MonoBehaviour {
     Vector3 direction;
     public GameObject shooter;
 
-    int type;
-
     public bool isTemplate;
     bool templateSet;
 
 	// Use this for initialization
 	void Start () {
         transform.localScale = new Vector3(8.1f, 8.1f, 23.1f);
-        velocity = 3.5f;
+        velocity = 0.15f;
         templateSet = false;
 
        
         if(shooter)
         {
-
-            //find out who shot this bullet
-            if (shooter.name == "Adversary")
-                type = 0;
-            else
-                type = 1;
 
             //calculate rotation
             Quaternion rot = transform.rotation;
@@ -36,7 +28,7 @@ public class Bullet : MonoBehaviour {
             transform.rotation = rot;
 
             //calculate trajectory
-            direction = transform.position - Camera.main.ScreenToWorldPoint(shooter.GetComponent<Player>().crosshair.transform.position);
+            direction = transform.position - shooter.GetComponent<Player>().playerCam.ScreenToWorldPoint(shooter.GetComponent<Player>().crosshair.transform.position);
 
         }
 
@@ -44,12 +36,6 @@ public class Bullet : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
-        //make players immune to their own respective bullets
-        if (type == 1)
-            Physics.IgnoreLayerCollision(10, 10);
-        else
-            Physics.IgnoreLayerCollision(11, 12);
 
         if (isTemplate == false)
         {
@@ -62,7 +48,7 @@ public class Bullet : MonoBehaviour {
             Vector3 pos;
             pos = transform.position;
             pos += velocity * -direction * Time.deltaTime;
-           // pos.z = -10;
+            pos.z = -10;
             transform.position = pos;
         }
 
@@ -74,7 +60,7 @@ public class Bullet : MonoBehaviour {
     }
     private void OnCollisionEnter(Collision collision)
     {
-        if (isTemplate == false)
+        if (isTemplate == false && collision.gameObject.GetComponent<Player>().GetPlayerNo() != shooter.gameObject.GetComponent<Player>().GetPlayerNo())
         {
             Debug.Log("hit");
             if (collision.gameObject.tag == "Obstacle")
@@ -95,16 +81,7 @@ public class Bullet : MonoBehaviour {
     void CheckEnemyCollision(Collision collision)
     {
         Debug.Log("in enemy collision");
-
-        if(type == 0 && collision.gameObject.tag == "Player1" )
-        {
             Debug.Log("called damage");
             collision.gameObject.GetComponent<Player>().setHealth(15);
-        }
-
-        if (type == 1 && collision.gameObject.tag == "Adversary")
-        {
-
-        }
     }
 }

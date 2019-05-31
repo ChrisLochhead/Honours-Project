@@ -56,14 +56,24 @@ public class Player : MonoBehaviour {
     public Sprite[] rankIcons;
     public int[] rankHealthValues;
 
-    //reloading and timer
+    //Reloading and timer
     bool isReloading = false;
     bool initialReload = true;
     float reloadStartTime = 0.0f;
     float reloadTargetTime = 0.0f;
 
+    //For multiplayer
+    int playerNo;
+
     // Use this for initialization
     void Start () {
+
+        //get the number of players currently in game
+        foreach (GameObject g in GameObject.FindGameObjectsWithTag("Player"))
+        {
+            //assign this instances player count for identification in other functions
+            playerNo++;
+        }
 
         currentWeapon = 0;
         velocity = 0.3f;
@@ -108,7 +118,7 @@ public class Player : MonoBehaviour {
         }
 
         //Ignore player bullet collisions for now
-        Physics.IgnoreLayerCollision(9,10);
+        //Physics.IgnoreLayerCollision(9,10);
 
         //Weapon switching
         if (Input.GetKey("1")) SetWeapon(0);
@@ -182,7 +192,7 @@ public class Player : MonoBehaviour {
         mPos.z = 140.0f;
 
         //get its position in world space
-        mPos = Camera.main.ScreenToWorldPoint(mPos);
+        mPos = playerCam.ScreenToWorldPoint(mPos);
 
         if (ground.Raycast(cameraRay, out rayLength))
         {
@@ -235,6 +245,11 @@ public class Player : MonoBehaviour {
             else
                 guns[i].SetActive(false);
         }
+    }
+
+    public int GetPlayerNo()
+    {
+        return playerNo;
     }
 
 }
