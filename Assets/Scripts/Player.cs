@@ -38,7 +38,7 @@ public class Player : MonoBehaviour {
     int[] currentAmmo = { 16, 10, 30, 50, 1 };
 
     //reload timers (in seconds)
-    int[] reloadTimer = { 2, 5, 4, 3, 3 };
+    public int[] reloadTimer = { 2, 5, 4, 3, 3 };
 
     //HUD stuff
     int score = 230;
@@ -57,13 +57,16 @@ public class Player : MonoBehaviour {
     public int[] rankHealthValues;
 
     //Reloading and timer
-    bool isReloading = false;
-    bool initialReload = true;
-    float reloadStartTime = 0.0f;
-    float reloadTargetTime = 0.0f;
+    public bool isReloading = false;
+    public bool initialReload = true;
+    public float reloadStartTime = 0.0f;
+    public float reloadTargetTime = 0.0f;
 
     //For multiplayer
     int playerNo;
+
+    //for interaction with the controller script
+    public Vector3 currentMPos;
 
     // Use this for initialization
     void Start () {
@@ -117,45 +120,6 @@ public class Player : MonoBehaviour {
             playerCam.GetComponent<CameraMovement>().canMove = false;
         }
 
-        //Ignore player bullet collisions for now
-        //Physics.IgnoreLayerCollision(9,10);
-
-        //Weapon switching
-        if (Input.GetKey("1")) SetWeapon(0);
-        if (Input.GetKey("2")) SetWeapon(1);
-        if (Input.GetKey("3")) SetWeapon(2);
-        if (Input.GetKey("4")) SetWeapon(3);
-        if (Input.GetKey("5")) SetWeapon(4);
-
-        //Cancel reload if reloading mid-weapon switch
-        if(Input.GetKey("1") || Input.GetKey("2") || Input.GetKey("3") || Input.GetKey("4") || Input.GetKey("5"))
-        {
-            isReloading = false;
-            initialReload = true;
-        }
-
-        //Shooting
-        if (Input.GetMouseButtonDown(0) && currentAmmo[currentWeapon] > 0)
-        {
-            GameObject b = Instantiate(bullet, crosshairMarker.transform.position, Quaternion.identity * Quaternion.Euler(new Vector3(-90,0,0)));
-            b.GetComponent<Bullet>().isTemplate = false;
-            muzzleFlashes[currentWeapon].SetActive(true);
-            --currentAmmo[currentWeapon];
-        }
-        else
-        {
-            muzzleFlashes[currentWeapon].SetActive(false);
-        }
-
-        //Reloading
-        if(Input.GetKey("r") && initialReload == true || currentAmmo[currentWeapon] == 0 && initialReload == true || Input.GetKey("r") && isReloading == false)
-        {
-            reloadStartTime = Time.time;
-            reloadTargetTime = reloadStartTime + reloadTimer[currentWeapon];
-            isReloading = true;
-            initialReload = false;
-        }
-
         //Reload sequence
         if(isReloading)
         {
@@ -170,6 +134,41 @@ public class Player : MonoBehaviour {
             {
                 reloadStartTime = Time.time;
             }
+        }
+
+        //Weapon switching
+        if (Input.GetKey("1")) SetWeapon(0);
+        if (Input.GetKey("2")) SetWeapon(1);
+        if (Input.GetKey("3")) SetWeapon(2);
+        if (Input.GetKey("4")) SetWeapon(3);
+        if (Input.GetKey("5")) SetWeapon(4);
+
+        //Cancel reload if reloading mid-weapon switch
+        if (Input.GetKey("1") || Input.GetKey("2") || Input.GetKey("3") || Input.GetKey("4") || Input.GetKey("5"))
+        {
+            isReloading = false;
+            initialReload = true;
+        }
+
+        //Shooting
+        if (Input.GetMouseButtonDown(0) && GetCurrentAmmo(GetCurrentWeapon()) > 0)
+        {
+            //CmdSpawnBullet();
+            muzzleFlashes[GetCurrentWeapon()].SetActive(true);
+            SetCurrentAmmo(GetCurrentWeapon());
+        }
+        else
+        {
+            muzzleFlashes[GetCurrentWeapon()].SetActive(false);
+        }
+
+        //Reloading
+        if (Input.GetKey("r") && initialReload == true || GetCurrentAmmo(GetCurrentWeapon()) == 0 && initialReload == true || Input.GetKey("r") && isReloading == false)
+        {
+            reloadStartTime = Time.time;
+            reloadTargetTime = reloadStartTime + reloadTimer[GetCurrentWeapon()];
+            isReloading = true;
+            initialReload = false;
         }
 
     }
@@ -194,6 +193,8 @@ public class Player : MonoBehaviour {
         //get its position in world space
         mPos = playerCam.ScreenToWorldPoint(mPos);
 
+        currentMPos = mPos;
+
         if (ground.Raycast(cameraRay, out rayLength))
         {
             Vector3 target = cameraRay.GetPoint(rayLength);
@@ -207,7 +208,7 @@ public class Player : MonoBehaviour {
         if (Input.GetKey("w"))
         {
             //apply the move toward function using this position             //was mpos
-            transform.position = Vector3.MoveTowards(transform.position, new Vector3(mPos.x, mPos.y, -10), velocity);
+            transform.position = Vector3.MoveTowards(transform.position, new Vector3(currentMPos.x, currentMPos.y, -10), GetVelocity());
             playerCam.transform.position = new Vector3(transform.position.x, transform.position.y, playerCam.transform.position.z);
             Debug.Log(transform.position);
             anim.enabled = true;
@@ -252,4 +253,28 @@ public class Player : MonoBehaviour {
         return playerNo;
     }
 
+    public float GetVelocity()
+    {
+        return velocity;
+    }
+
+    public int GetCurrentAmmo(int i)
+    {
+        return currentAmmo[i];
+    }
+
+    public void SetCurrentAmmo(int i)
+    {
+        currentAmmo[i]--;
+    }
+
+    public int GetCurrentWeapon()
+    {
+        return currentWeapon;
+    }
+
+    public GameObject GetBullet()
+    {
+        return bullet;
+    }
 }

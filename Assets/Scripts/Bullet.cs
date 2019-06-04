@@ -41,7 +41,10 @@ public class Bullet : MonoBehaviour {
         {
 
             if (!templateSet)
+            {
                 this.gameObject.AddComponent<MeshRenderer>();
+                templateSet = true;
+            }
             // Debug.Log(transform.position);
             //transform.position = Vector3.MoveTowards(transform.position, direction, velocity);
 

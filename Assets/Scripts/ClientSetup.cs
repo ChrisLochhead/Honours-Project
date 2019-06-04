@@ -9,6 +9,9 @@ public class ClientSetup : NetworkBehaviour {
 
     Camera sceneCam;
 
+    public Player player;
+    public GameObject bullet;
+
 	// Use this for initialization
 	void Start () {
 
@@ -27,6 +30,22 @@ public class ClientSetup : NetworkBehaviour {
             sceneCam.gameObject.SetActive(false);
         }
 	}
+
+    public void Update()
+    {
+        if (Input.GetMouseButtonDown(0) && player.GetCurrentAmmo(player.GetCurrentWeapon()) > 0)
+        {
+           // CmdSpawnBullet();
+        }
+    }
+
+    //[Command]
+    //void CmdSpawnBullet()
+    //{
+    //    GameObject b = Instantiate(bullet, player.crosshairMarker.transform.position, Quaternion.identity * Quaternion.Euler(new Vector3(-90, 0, 0)));
+    //    b.GetComponent<Bullet>().isTemplate = false;
+    //    NetworkServer.Spawn(b);
+    //}
 
     private void OnDisable()
     {
