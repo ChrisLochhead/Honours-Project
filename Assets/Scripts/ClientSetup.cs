@@ -11,6 +11,7 @@ public class ClientSetup : NetworkBehaviour {
 
     public Player player;
     public GameObject bullet;
+    public bool isLocal;
 
 	// Use this for initialization
 	void Start () {
@@ -19,6 +20,7 @@ public class ClientSetup : NetworkBehaviour {
 
         if(!isLocalPlayer)
         {
+            isLocal = false;
             //Disable all components unique to the client
             for(int i = 0; i < clientComponents.Length; i++)
             {
@@ -27,6 +29,7 @@ public class ClientSetup : NetworkBehaviour {
         }
         else
         {
+            isLocal = true;
             sceneCam.gameObject.SetActive(false);
         }
 	}

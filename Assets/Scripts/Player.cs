@@ -71,6 +71,13 @@ public class Player : MonoBehaviour {
     // Use this for initialization
     void Start () {
 
+
+        //get the rigidbody
+        body = GetComponent<Rigidbody>();
+
+        if(body)
+        { Debug.Log("great success"); }
+
         //get the number of players currently in game
         foreach (GameObject g in GameObject.FindGameObjectsWithTag("Player"))
         {
@@ -195,29 +202,32 @@ public class Player : MonoBehaviour {
 
         currentMPos = mPos;
 
-        if (ground.Raycast(cameraRay, out rayLength))
+        if (transform.parent.gameObject.GetComponent<ClientSetup>().isLocal)
         {
-            Vector3 target = cameraRay.GetPoint(rayLength);
-            Vector3 direction = target - transform.position;
-            currentDirection = direction;
-            float rotation = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
-            transform.rotation = Quaternion.Euler(0, 0, -rotation);
+            Debug.Log("update");
+            if (ground.Raycast(cameraRay, out rayLength))
+            {
+                Vector3 target = cameraRay.GetPoint(rayLength);
+                Vector3 direction = target - transform.position;
+                currentDirection = direction;
+                float rotation = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
+                transform.rotation = Quaternion.Euler(0, 0, -rotation);
 
-        }
+            }
 
-        if (Input.GetKey("w"))
-        {
-            //apply the move toward function using this position             //was mpos
-            transform.position = Vector3.MoveTowards(transform.position, new Vector3(currentMPos.x, currentMPos.y, -10), GetVelocity());
-            playerCam.transform.position = new Vector3(transform.position.x, transform.position.y, playerCam.transform.position.z);
-            Debug.Log(transform.position);
-            anim.enabled = true;
+            if (Input.GetKey("w"))
+            {
+                //apply the move toward function using this position             //was mpos
+                transform.position = Vector3.MoveTowards(transform.position, new Vector3(currentMPos.x, currentMPos.y, -10), GetVelocity());
+                playerCam.transform.position = new Vector3(transform.position.x, transform.position.y, playerCam.transform.position.z);
+                Debug.Log(transform.position);
+                anim.enabled = true;
+            }
+            else
+            {
+                anim.enabled = false;
+            }
         }
-        else
-        {
-            anim.enabled = false;
-        }
-
         crosshair.transform.position = playerCam.WorldToScreenPoint(crosshairMarker.transform.position) + currentDirection.normalized * 200;//transform.position;
 
         body.velocity = new Vector3(0, 0, 0);
