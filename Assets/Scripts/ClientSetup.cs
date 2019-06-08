@@ -10,6 +10,8 @@ public class ClientSetup : NetworkBehaviour {
     Camera sceneCam;
 
     public Player player;
+
+    [SerializeField]
     public GameObject bullet;
     public bool isLocal;
 
@@ -103,11 +105,11 @@ public class ClientSetup : NetworkBehaviour {
     {
         GameObject b = (GameObject)Instantiate(bullet, player.crosshairMarker.transform.position, Quaternion.identity);
         b.GetComponent<Bullet>().isTemplate = false;
-        b.GetComponent<Rigidbody>().velocity = b.transform.forward * 6.0f;
+        b.GetComponent<Bullet>().shooter = player.gameObject;
         NetworkServer.Spawn(b);
 
-        SpawnBullet();
-        RpcSpawnBullet();
+       // SpawnBullet();
+       // RpcSpawnBullet();
     }
 
     public void SpawnBullet()

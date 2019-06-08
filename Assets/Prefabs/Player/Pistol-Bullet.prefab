@@ -22,9 +22,9 @@ GameObject:
   - component: {fileID: 33948497408182008}
   - component: {fileID: 54465500143029522}
   - component: {fileID: 65978878900658990}
-  - component: {fileID: 114662763020485720}
-  - component: {fileID: 114617904734586692}
   - component: {fileID: 114214732086900528}
+  - component: {fileID: 114288450345725416}
+  - component: {fileID: 114816309177610882}
   m_Layer: 10
   m_Name: Pistol-Bullet
   m_TagString: Bullet
@@ -111,7 +111,7 @@ MonoBehaviour:
     i15: 74
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
---- !u!114 &114617904734586692
+--- !u!114 &114288450345725416
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -132,7 +132,7 @@ MonoBehaviour:
   m_SnapThreshold: 5
   m_InterpolateRotation: 1
   m_InterpolateMovement: 1
---- !u!114 &114662763020485720
+--- !u!114 &114816309177610882
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
