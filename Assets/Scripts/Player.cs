@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 
-public class Player : MonoBehaviour {
+public class Player : NetworkBehaviour {
 
     //Camera
     public Camera playerCam;
@@ -143,13 +144,6 @@ public class Player : MonoBehaviour {
             }
         }
 
-        //Weapon switching
-        if (Input.GetKey("1")) SetWeapon(0);
-        if (Input.GetKey("2")) SetWeapon(1);
-        if (Input.GetKey("3")) SetWeapon(2);
-        if (Input.GetKey("4")) SetWeapon(3);
-        if (Input.GetKey("5")) SetWeapon(4);
-
         //Cancel reload if reloading mid-weapon switch
         if (Input.GetKey("1") || Input.GetKey("2") || Input.GetKey("3") || Input.GetKey("4") || Input.GetKey("5"))
         {
@@ -160,7 +154,6 @@ public class Player : MonoBehaviour {
         //Shooting
         if (Input.GetMouseButtonDown(0) && GetCurrentAmmo(GetCurrentWeapon()) > 0)
         {
-            //CmdSpawnBullet();
             muzzleFlashes[GetCurrentWeapon()].SetActive(true);
             SetCurrentAmmo(GetCurrentWeapon());
         }
@@ -245,19 +238,6 @@ public class Player : MonoBehaviour {
         health -= damage;
     }
 
-    public void SetWeapon(int type)
-    {
-        currentWeapon = type;
-
-        for(int i = 0; i < guns.Length; i++)
-        {
-            if (i == type)
-                guns[i].SetActive(true);
-            else
-                guns[i].SetActive(false);
-        }
-    }
-
     public int GetPlayerNo()
     {
         return playerNo;
@@ -281,6 +261,11 @@ public class Player : MonoBehaviour {
     public int GetCurrentWeapon()
     {
         return currentWeapon;
+    }
+
+    public void SetCurrentWeapon(int n)
+    {
+        currentWeapon = n;
     }
 
     public GameObject GetBullet()
