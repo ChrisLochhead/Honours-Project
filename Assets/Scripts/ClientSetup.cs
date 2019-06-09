@@ -35,8 +35,8 @@ public class ClientSetup : NetworkBehaviour {
                 clientComponents[i].enabled = false;
             }
 
-            //activate healthbar
-            player.floatingHealthBar.SetActive(true);
+            //Activate healthbar and rank icon
+            player.floatingHealthBar.transform.parent.gameObject.SetActive(true);
 
             foreach (GameObject g in GameObject.Find("Network Manager").GetComponent<NetworkManager>().spawnPrefabs)
             {
@@ -48,7 +48,7 @@ public class ClientSetup : NetworkBehaviour {
         {
             isLocal = true;
             sceneCam.gameObject.SetActive(false);
-            player.floatingHealthBar.SetActive(false);
+            player.floatingHealthBar.transform.parent.gameObject.SetActive(false);
         }
 	}
 

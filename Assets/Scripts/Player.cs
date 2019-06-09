@@ -79,7 +79,7 @@ public class Player : NetworkBehaviour {
 
         //Set up health and rank position so it doesnt jump on first movement
         floatingHealthBar.transform.position = new Vector3(transform.position.x, transform.position.y + 7.5f, transform.position.z);
-        floatingRankIcon.transform.position = new Vector3(transform.position.x - 5.5f, transform.position.y + 7.5f, transform.position.z);
+        floatingRankIcon.transform.position = new Vector3(transform.position.x - 5.8f, transform.position.y + 7.75f, transform.position.z);
 
         //get the rigidbody
         body = GetComponent<Rigidbody>();
@@ -212,7 +212,7 @@ public class Player : NetworkBehaviour {
                 //apply the move toward function using this position
                 transform.position = Vector3.MoveTowards(transform.position, new Vector3(currentMPos.x, currentMPos.y, -10), GetVelocity());
                 floatingHealthBar.transform.position = new Vector3(transform.position.x, transform.position.y + 7.5f, transform.position.z);
-                floatingRankIcon.transform.position = new Vector3(transform.position.x -5.5f, transform.position.y + 7.5f, transform.position.z);
+                floatingRankIcon.transform.position = new Vector3(transform.position.x -5.8f, transform.position.y + 7.75f, transform.position.z);
                 playerCam.transform.position = new Vector3(transform.position.x, transform.position.y, playerCam.transform.position.z);
                 anim.enabled = true;
             }
