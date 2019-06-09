@@ -18,13 +18,11 @@ public class ClientSetup : NetworkBehaviour {
     [SyncVar(hook = "SetWeapon")]
     public int wepType;
 
-    //[SyncVar(hook = "SpawnBullet")]
-    //public GameObject[] bullets; 
-
 	// Use this for initialization
 	void Start () {
 
         sceneCam = Camera.main;
+        
 
         if(!isLocalPlayer)
         {
@@ -39,6 +37,7 @@ public class ClientSetup : NetworkBehaviour {
             {
                 ClientScene.RegisterPrefab(g);
             }
+
         }
         else
         {
@@ -90,6 +89,10 @@ public class ClientSetup : NetworkBehaviour {
         {
             CmdSpawnBullet();
         }
+        else
+        {
+            CmdRemoveFlash();
+        }
 
         //Weapon switching
         if (Input.GetKey("1") && isLocalPlayer) CmdSetWeapon(0);
@@ -104,25 +107,40 @@ public class ClientSetup : NetworkBehaviour {
     public void CmdSpawnBullet()
     {
         GameObject b = (GameObject)Instantiate(bullet, player.crosshairMarker.transform.position, Quaternion.identity);
-        b.GetComponent<Bullet>().isTemplate = false;
-        b.GetComponent<Bullet>().shooter = player.gameObject;
+
+        //calculate rotation
+        Quaternion rot = b.transform.rotation;
+        rot = player.transform.rotation;
+        rot *= Quaternion.Euler(-90, 0, 0);
+        b.transform.rotation = rot;
+
+        //calculate trajectory
+        b.GetComponent<Rigidbody>().velocity = b.transform.forward * 6.0f;
+
         NetworkServer.Spawn(b);
 
-       // SpawnBullet();
-       // RpcSpawnBullet();
+         MuzzleFlash(true);
+         RpcMuzzleFlash(true);
     }
 
-    public void SpawnBullet()
+    [Command]
+    public void CmdRemoveFlash()
     {
-        player.muzzleFlashes[player.GetCurrentWeapon()].SetActive(true);
-        player.SetCurrentAmmo(player.GetCurrentWeapon());
+        MuzzleFlash(false);
+        RpcMuzzleFlash(false);
+    }
+
+    public void MuzzleFlash(bool istrue)
+    {
+        player.muzzleFlashes[player.GetCurrentWeapon()].SetActive(istrue);
+        //player.SetCurrentAmmo(player.GetCurrentWeapon());
     }
 
     [ClientRpc]
-    public void RpcSpawnBullet()
+    public void RpcMuzzleFlash(bool istrue)
     {
-        player.muzzleFlashes[player.GetCurrentWeapon()].SetActive(true);
-        player.SetCurrentAmmo(player.GetCurrentWeapon());
+        player.muzzleFlashes[player.GetCurrentWeapon()].SetActive(istrue);
+       // player.SetCurrentAmmo(player.GetCurrentWeapon());
     }
 
     private void OnDisable()

@@ -154,12 +154,12 @@ public class Player : NetworkBehaviour {
         //Shooting
         if (Input.GetMouseButtonDown(0) && GetCurrentAmmo(GetCurrentWeapon()) > 0)
         {
-            muzzleFlashes[GetCurrentWeapon()].SetActive(true);
+          //  muzzleFlashes[GetCurrentWeapon()].SetActive(true);
             SetCurrentAmmo(GetCurrentWeapon());
         }
         else
         {
-            muzzleFlashes[GetCurrentWeapon()].SetActive(false);
+           // muzzleFlashes[GetCurrentWeapon()].SetActive(false);
         }
 
         //Reloading
@@ -197,7 +197,6 @@ public class Player : NetworkBehaviour {
 
         if (transform.parent.gameObject.GetComponent<ClientSetup>().isLocal)
         {
-            Debug.Log("update");
             if (ground.Raycast(cameraRay, out rayLength))
             {
                 Vector3 target = cameraRay.GetPoint(rayLength);

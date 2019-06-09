@@ -5077,7 +5077,7 @@ MonoBehaviour:
   - {fileID: 223509053943130352}
   - {fileID: 81428470592699848}
   player: {fileID: 114407553023509484}
-  bullet: {fileID: 1599502957510912, guid: 35a158ee850979c45b25b23bc9673a4a, type: 2}
+  bullet: {fileID: 1437496455166464, guid: e5579f313ea97814d98a27fc045f5c15, type: 2}
   isLocal: 0
   wepType: 0
 --- !u!114 &114656026244628660

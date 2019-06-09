@@ -122,7 +122,6 @@ public class EnemyAI : MonoBehaviour {
         if (Input.GetMouseButtonDown(0) && currentAmmo[currentWeapon] > 0)
         {
             GameObject b = Instantiate(bullet, crosshairMarker.transform.position, Quaternion.identity * Quaternion.Euler(new Vector3(-90, 0, 0)));
-            b.GetComponent<Bullet>().isTemplate = false;
             muzzleFlashes[currentWeapon].SetActive(true);
             --currentAmmo[currentWeapon];
         }
