@@ -44,6 +44,7 @@ public class Player : NetworkBehaviour {
     //HUD stuff
     int score = 230;
     int health = 150;
+    int totalHealth = 150;
     int rank = 3;
 
     //HUD objects
@@ -66,18 +67,22 @@ public class Player : NetworkBehaviour {
     //For multiplayer
     int playerNo;
 
-    //for interaction with the controller script
+    //For interaction with the controller script
     public Vector3 currentMPos;
+
+    //For manipulating the health bar
+    public GameObject floatingHealthBar;
+    public GameObject floatingRankIcon;
 
     // Use this for initialization
     void Start () {
 
+        //Set up health and rank position so it doesnt jump on first movement
+        floatingHealthBar.transform.position = new Vector3(transform.position.x, transform.position.y + 7.5f, transform.position.z);
+        floatingRankIcon.transform.position = new Vector3(transform.position.x - 5.5f, transform.position.y + 7.5f, transform.position.z);
 
         //get the rigidbody
         body = GetComponent<Rigidbody>();
-
-        if(body)
-        { Debug.Log("great success"); }
 
         //get the number of players currently in game
         foreach (GameObject g in GameObject.FindGameObjectsWithTag("Player"))
@@ -154,12 +159,7 @@ public class Player : NetworkBehaviour {
         //Shooting
         if (Input.GetMouseButtonDown(0) && GetCurrentAmmo(GetCurrentWeapon()) > 0)
         {
-          //  muzzleFlashes[GetCurrentWeapon()].SetActive(true);
             SetCurrentAmmo(GetCurrentWeapon());
-        }
-        else
-        {
-           // muzzleFlashes[GetCurrentWeapon()].SetActive(false);
         }
 
         //Reloading
@@ -209,10 +209,11 @@ public class Player : NetworkBehaviour {
 
             if (Input.GetKey("w"))
             {
-                //apply the move toward function using this position             //was mpos
+                //apply the move toward function using this position
                 transform.position = Vector3.MoveTowards(transform.position, new Vector3(currentMPos.x, currentMPos.y, -10), GetVelocity());
+                floatingHealthBar.transform.position = new Vector3(transform.position.x, transform.position.y + 7.5f, transform.position.z);
+                floatingRankIcon.transform.position = new Vector3(transform.position.x -5.5f, transform.position.y + 7.5f, transform.position.z);
                 playerCam.transform.position = new Vector3(transform.position.x, transform.position.y, playerCam.transform.position.z);
-                Debug.Log(transform.position);
                 anim.enabled = true;
             }
             else
@@ -220,7 +221,7 @@ public class Player : NetworkBehaviour {
                 anim.enabled = false;
             }
         }
-        crosshair.transform.position = playerCam.WorldToScreenPoint(crosshairMarker.transform.position) + currentDirection.normalized * 200;//transform.position;
+        crosshair.transform.position = playerCam.WorldToScreenPoint(crosshairMarker.transform.position) + currentDirection.normalized * 200;
 
         body.velocity = new Vector3(0, 0, 0);
         body.angularVelocity = new Vector3(0, 0, 0);// movementSpeed * currentDirection;
@@ -270,5 +271,15 @@ public class Player : NetworkBehaviour {
     public GameObject GetBullet()
     {
         return bullet;
+    }
+
+    public int GetHealth()
+    {
+        return health;
+    }
+
+    public int GetMaxHealth()
+    {
+        return totalHealth;
     }
 }

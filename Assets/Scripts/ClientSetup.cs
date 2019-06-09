@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 public class ClientSetup : NetworkBehaviour {
 
@@ -30,8 +31,12 @@ public class ClientSetup : NetworkBehaviour {
             //Disable all components unique to the client
             for(int i = 0; i < clientComponents.Length; i++)
             {
+                if(i != 1)
                 clientComponents[i].enabled = false;
             }
+
+            //activate healthbar
+            player.floatingHealthBar.SetActive(true);
 
             foreach (GameObject g in GameObject.Find("Network Manager").GetComponent<NetworkManager>().spawnPrefabs)
             {
@@ -43,6 +48,7 @@ public class ClientSetup : NetworkBehaviour {
         {
             isLocal = true;
             sceneCam.gameObject.SetActive(false);
+            player.floatingHealthBar.SetActive(false);
         }
 	}
 
@@ -82,9 +88,44 @@ public class ClientSetup : NetworkBehaviour {
         }
     }
 
+    [Command]
+    public void CmdUpdateHealth()
+    {
+        RpcUpdateHealth();
+    }
 
+    [ClientRpc]
+    public void RpcUpdateHealth()
+    {
+        float currentHealthPercentage = player.GetHealth() / player.GetMaxHealth();
+
+        //set size
+        Vector3 newScale = new Vector3(currentHealthPercentage, 0.1f, 1);
+
+        //set colour
+        if (currentHealthPercentage > 0.7f)
+            player.floatingHealthBar.GetComponent<Image>().color = Color.green;
+        else
+        if (currentHealthPercentage < 0.7f && currentHealthPercentage > 0.25f)
+            player.floatingHealthBar.GetComponent<Image>().color = Color.yellow;
+        else
+            player.floatingHealthBar.GetComponent<Image>().color = Color.red;
+
+        //set it to the correct gameobject
+        player.floatingHealthBar.transform.localScale = newScale;
+
+        //finally set its position
+        // player.floatingHealthBar.GetComponent<RectTransform>().position = (new Vector3(0, 60, 0));
+    }
     public void Update()
     {
+
+        //update health bar for clients
+        if (!isLocalPlayer)
+        {
+            CmdUpdateHealth();
+        }
+
         if (Input.GetMouseButtonDown(0) && player.GetCurrentAmmo(player.GetCurrentWeapon()) > 0 && isLocalPlayer)
         {
             CmdSpawnBullet();
@@ -119,8 +160,8 @@ public class ClientSetup : NetworkBehaviour {
 
         NetworkServer.Spawn(b);
 
-         MuzzleFlash(true);
-         RpcMuzzleFlash(true);
+        MuzzleFlash(true);
+        RpcMuzzleFlash(true);
     }
 
     [Command]
@@ -133,14 +174,12 @@ public class ClientSetup : NetworkBehaviour {
     public void MuzzleFlash(bool istrue)
     {
         player.muzzleFlashes[player.GetCurrentWeapon()].SetActive(istrue);
-        //player.SetCurrentAmmo(player.GetCurrentWeapon());
     }
 
     [ClientRpc]
     public void RpcMuzzleFlash(bool istrue)
     {
         player.muzzleFlashes[player.GetCurrentWeapon()].SetActive(istrue);
-       // player.SetCurrentAmmo(player.GetCurrentWeapon());
     }
 
     private void OnDisable()
