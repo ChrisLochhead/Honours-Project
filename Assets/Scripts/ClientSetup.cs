@@ -99,10 +99,10 @@ public class ClientSetup : NetworkBehaviour {
     {
         float currentHealthPercentage = player.GetHealth() / player.GetMaxHealth();
 
-        //set size
+        //Set size
         Vector3 newScale = new Vector3(currentHealthPercentage, 0.1f, 1);
 
-        //set colour
+        //Set colour
         if (currentHealthPercentage > 0.7f)
             player.floatingHealthBar.GetComponent<Image>().color = Color.green;
         else
@@ -111,20 +111,22 @@ public class ClientSetup : NetworkBehaviour {
         else
             player.floatingHealthBar.GetComponent<Image>().color = Color.red;
 
-        //set it to the correct gameobject
+        //Set it to the correct gameobject
         player.floatingHealthBar.transform.localScale = newScale;
 
-        //finally set its position
-        // player.floatingHealthBar.GetComponent<RectTransform>().position = (new Vector3(0, 60, 0));
+        //And finally set it's position
+        player.floatingHealthBar.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 7.5f, player.transform.position.z);
+        player.floatingRankIcon.transform.position = new Vector3(player.transform.position.x - 5.8f, player.transform.position.y + 7.75f, player.transform.position.z);
+
     }
     public void Update()
     {
 
         //update health bar for clients
-        if (!isLocalPlayer)
-        {
+       // if (!isLocalPlayer)
+       // {
             CmdUpdateHealth();
-        }
+       // }
 
         if (Input.GetMouseButtonDown(0) && player.GetCurrentAmmo(player.GetCurrentWeapon()) > 0 && isLocalPlayer)
         {
@@ -141,6 +143,12 @@ public class ClientSetup : NetworkBehaviour {
         if (Input.GetKey("3") && isLocalPlayer) CmdSetWeapon(2);
         if (Input.GetKey("4") && isLocalPlayer) CmdSetWeapon(3);
         if (Input.GetKey("5") && isLocalPlayer) CmdSetWeapon(4);
+
+    }
+
+    [Command]
+    public void CmdUpdateHealthBar()
+    {
 
     }
 
