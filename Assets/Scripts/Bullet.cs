@@ -5,7 +5,8 @@ using UnityEngine.Networking;
 
 public class Bullet : NetworkBehaviour {
 
-
+    public int shooter;
+    public int damageAmount;
 	// Use this for initialization
 	void Start () {
         transform.localScale = new Vector3(8.1f, 8.1f, 23.1f);

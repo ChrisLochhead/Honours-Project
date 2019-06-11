@@ -34,9 +34,16 @@ public class Player : NetworkBehaviour {
     public GameObject[] muzzleFlashes;
     public GameObject bullet;
 
+    //Armour
+    public int[] armourRatings = { 0, 1, 2, 3, 5, 7, 8, 10, 15 };
+    public int armour;
+
     //weapon clips
     int[] clipSize = { 16, 10, 30, 50, 1 };
     int[] currentAmmo = { 16, 10, 30, 50, 1 };
+
+    //weapon damage
+    public int[] damageAmounts = { 12, 15, 8, 6, 40 };
 
     //reload timers (in seconds)
     public int[] reloadTimer = { 2, 5, 4, 3, 3 };
@@ -74,8 +81,21 @@ public class Player : NetworkBehaviour {
     public GameObject floatingHealthBar;
     public GameObject floatingRankIcon;
 
+    //Respawn screen
+    public Button respawn;
+
+    //To record kills and deaths in-game
+    public int kills = 0;
+    public int deaths = 0;
+
+    //Recording whether character is currently alive
+    public bool isDead = false;
+
     // Use this for initialization
     void Start () {
+
+        //initialise armour rating
+        armour = 0;
 
         //Set up health and rank position so it doesnt jump on first movement
         floatingHealthBar.transform.position = new Vector3(transform.position.x, transform.position.y + 7.5f, transform.position.z);
@@ -111,6 +131,14 @@ public class Player : NetworkBehaviour {
 
     // Update is called once per frame
     void Update () {
+
+
+        //Check for life
+        if(isDead)
+        {
+            Death();
+            return;
+        }
 
         //Update the HUD
         //Health
@@ -225,6 +253,71 @@ public class Player : NetworkBehaviour {
 
         body.velocity = new Vector3(0, 0, 0);
         body.angularVelocity = new Vector3(0, 0, 0);// movementSpeed * currentDirection;
+
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log("registered hit");
+        
+        //Check it is a bullet
+        if (collision.gameObject.tag == "bullet")
+        {
+            Bullet bullet = collision.gameObject.GetComponent<Bullet>();
+
+            //check its an enemy players collision
+            if (bullet.shooter != GetInstanceID())
+            {
+                //Take damage
+                TakeDamage(bullet.damageAmount);
+
+                //Tell the network about the damage taken
+                this.transform.parent.GetComponent<ClientSetup>().CmdRegisterDamage(bullet.shooter);
+
+            }
+        }
+    }
+
+    public void TakeDamage(int damage)
+    {
+        health -= damage + armour;
+
+        if(health <= 0)
+        {
+            isDead = true;
+            gameObject.GetComponent<BoxCollider>().enabled = false;
+            gameObject.GetComponent<Rigidbody>().detectCollisions = false;
+        }
+    }
+
+    public void Death()
+    {
+        if (transform.rotation.eulerAngles.x < 90)
+        {
+            Quaternion tempRot = transform.rotation;
+            tempRot *= Quaternion.Euler(Time.deltaTime, 0, 0);
+            transform.rotation = tempRot;
+        }
+        else
+        {
+
+            Color tmp = transform.GetComponentInChildren<SkinnedMeshRenderer>().material.color;
+            tmp.a -= Time.deltaTime / 4;
+            transform.GetComponentInChildren<SkinnedMeshRenderer>().material.color = tmp;
+
+            if (tmp.a <= 0.0f)
+                respawn.gameObject.SetActive(true);
+        }
+    }
+
+    public void Respawn()
+    {
+        //Reset health and ranks
+
+        //Spawn in random position
+
+        //Hide respawn button
+
 
     }
 

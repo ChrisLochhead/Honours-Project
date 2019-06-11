@@ -122,15 +122,12 @@ public class ClientSetup : NetworkBehaviour {
     public void Update()
     {
 
-        //update health bar for clients
-       // if (!isLocalPlayer)
-       // {
-            CmdUpdateHealth();
-       // }
+       CmdUpdateHealth();
 
         if (Input.GetMouseButtonDown(0) && player.GetCurrentAmmo(player.GetCurrentWeapon()) > 0 && isLocalPlayer)
         {
             CmdSpawnBullet();
+            player.TakeDamage(15);
         }
         else
         {
@@ -166,10 +163,20 @@ public class ClientSetup : NetworkBehaviour {
         //calculate trajectory
         b.GetComponent<Rigidbody>().velocity = b.transform.forward * 6.0f;
 
+        //add tag indicating whose bullet it is
+        b.GetComponent<Bullet>().shooter = player.GetInstanceID();
+        b.GetComponent<Bullet>().damageAmount = player.damageAmounts[player.GetCurrentWeapon()];
+
         NetworkServer.Spawn(b);
 
         MuzzleFlash(true);
         RpcMuzzleFlash(true);
+    }
+
+    [Command]
+    public void CmdRegisterDamage(int shooterID)
+    {
+
     }
 
     [Command]
