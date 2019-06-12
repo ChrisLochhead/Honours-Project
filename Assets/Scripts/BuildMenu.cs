@@ -42,9 +42,13 @@ public class BuildMenu : MonoBehaviour {
     public GameObject orangeWall;
     public GameObject greenWall;
     public GameObject greyWall;
+
     public GameObject goldCoin;
     public GameObject silverCoin;
     public GameObject bronzeCoin;
+
+    public GameObject teamFlag1;
+    public GameObject teamFlag2;
 
     public GameObject errorMessage;
     // Use this for initialization
@@ -199,8 +203,12 @@ public class BuildMenu : MonoBehaviour {
             return 5;
         else if (gameObj.name == "BronzeCoin(Clone)")
             return 6;
+        else if (gameObj.name == "SpawnPoint(Clone)")
+            return 7;
+        else if (gameObj.name == "SpawnPoint2(Clone)")
+            return 8;
 
-                return 0;
+        return 0;
     }
 
     public int FindRot(GameObject gameObj)
@@ -314,6 +322,16 @@ public class BuildMenu : MonoBehaviour {
                 if (mapInfo[i].GetComponent<Coin>().type == 6)
             {
                 tmp = Instantiate(bronzeCoin, new Vector3(mapInfo[i].GetComponent<Coin>().pos.x, mapInfo[i].GetComponent<Coin>().pos.y, -5), Quaternion.identity);
+            }
+            else
+                if (mapInfo[i].GetComponent<Coin>().type == 7)
+            {
+                tmp = Instantiate(teamFlag1, new Vector3(mapInfo[i].GetComponent<Coin>().pos.x, mapInfo[i].GetComponent<Coin>().pos.y, -5), Quaternion.identity * Quaternion.Euler(-90,0,0));
+            }
+            else
+                if (mapInfo[i].GetComponent<Coin>().type == 8)
+            {
+                tmp = Instantiate(teamFlag2, new Vector3(mapInfo[i].GetComponent<Coin>().pos.x, mapInfo[i].GetComponent<Coin>().pos.y, -5), Quaternion.identity * Quaternion.Euler(-90, 0, 180));
             }
 
             tmp.transform.parent = newState.transform;

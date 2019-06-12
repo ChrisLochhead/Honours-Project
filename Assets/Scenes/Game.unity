@@ -153,6 +153,46 @@ MonoBehaviour:
   m_Script: {fileID: -1050975500, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &226168321
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 226168323}
+  - component: {fileID: 226168322}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &226168322
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 226168321}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3c7ecabf4af3d74e86553ef32b30af3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &226168323
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 226168321}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -571.5492, y: 689.10394, z: -9.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &399578240
 GameObject:
   m_ObjectHideFlags: 0
@@ -382,6 +422,8 @@ MonoBehaviour:
   goldCoin: {fileID: 1049524726679572, guid: e7a694650ee63464b8f81d973e4b7d04, type: 2}
   silverCoin: {fileID: 1480739355948570, guid: 3c99109154774bc408fb4bab4fb4cf06, type: 2}
   bronzeCoin: {fileID: 1684810227353058, guid: b018276685be4284aa010219e245fd24, type: 2}
+  teamFlag1: {fileID: 1059214415926398, guid: 18f9d6679c495334d80b22f48ac6e005, type: 2}
+  teamFlag2: {fileID: 1118116294114014, guid: 780e0415441fbdd43aca455e2350c2af, type: 2}
 --- !u!4 &1040102045
 Transform:
   m_ObjectHideFlags: 0
@@ -601,7 +643,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2094528832
 GameObject:

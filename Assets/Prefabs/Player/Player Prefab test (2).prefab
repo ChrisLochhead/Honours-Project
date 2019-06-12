@@ -283,7 +283,7 @@ GameObject:
   - component: {fileID: 114266898456904092}
   m_Layer: 0
   m_Name: Player Prefab test (2)
-  m_TagString: MainCamera
+  m_TagString: Client
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4991,6 +4991,9 @@ MonoBehaviour:
   - {fileID: 1206345521048384}
   - {fileID: 1188676875090132}
   bullet: {fileID: 0}
+  armourRatings: 000000000100000002000000030000000500000007000000080000000a0000000f000000
+  armour: 0
+  damageAmounts: 0c0000000f000000080000000600000028000000
   reloadTimer: 0200000005000000040000000300000003000000
   scoreText: {fileID: 114940014275785684}
   ammoText: {fileID: 114707180593355668}
@@ -5015,6 +5018,10 @@ MonoBehaviour:
   currentMPos: {x: 0, y: 0, z: 0}
   floatingHealthBar: {fileID: 1384054250836120}
   floatingRankIcon: {fileID: 1492719172626468}
+  respawn: {fileID: 0}
+  kills: 0
+  deaths: 0
+  isDead: 0
 --- !u!114 &114467517667529442
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -8,13 +8,18 @@ public class GameMap : MonoBehaviour {
     Vector2 mapSize;
 
     public GameObject ground;
+
     public GameObject redWall;
     public GameObject orangeWall;
     public GameObject greenWall;
     public GameObject greyWall;
+
     public GameObject goldCoin;
     public GameObject silverCoin;
     public GameObject bronzeCoin;
+
+    public GameObject teamFlag1;
+    public GameObject teamFlag2;
 
     // Use this for initialization
     void Start () {
@@ -73,6 +78,18 @@ public class GameMap : MonoBehaviour {
                 if (mapInfo[i].GetComponent<Coin>().type == 6)
             {
                 Instantiate(bronzeCoin, new Vector3(mapInfo[i].GetComponent<Coin>().pos.x, mapInfo[i].GetComponent<Coin>().pos.y, -5), Quaternion.identity);
+            }
+            else
+                if (mapInfo[i].GetComponent<Coin>().type == 7)
+            {
+                Instantiate(teamFlag1, new Vector3(mapInfo[i].GetComponent<Coin>().pos.x, mapInfo[i].GetComponent<Coin>().pos.y, -5), Quaternion.identity);
+                teamFlag1.GetComponent<MeshRenderer>().enabled = false;
+            }
+            else
+                if (mapInfo[i].GetComponent<Coin>().type == 8)
+            {
+                Instantiate(teamFlag2, new Vector3(mapInfo[i].GetComponent<Coin>().pos.x, mapInfo[i].GetComponent<Coin>().pos.y, -5), Quaternion.identity);
+                teamFlag2.GetComponent<MeshRenderer>().enabled = false;
             }
         }
     }

@@ -318,7 +318,6 @@ public class Player : NetworkBehaviour {
 
         //Hide respawn button
 
-
     }
 
     public Vector3 getDirection()

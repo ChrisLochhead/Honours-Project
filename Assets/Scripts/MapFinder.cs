@@ -64,7 +64,6 @@ public class MapFinder : MonoBehaviour {
             }
 
             maps.Add(map);
-            // GameObject.Find("MapLoader").GetComponent<Dropdown>().options.Add(new Dropdown.OptionData() { text = map.name });
             fileIterator++;
             reader.Close();
             listAdded = false;

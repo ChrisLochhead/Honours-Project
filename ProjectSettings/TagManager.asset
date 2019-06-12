@@ -9,6 +9,7 @@ TagManager:
   - Bullet
   - draggable
   - Adversary
+  - Client
   layers:
   - Default
   - TransparentFX
