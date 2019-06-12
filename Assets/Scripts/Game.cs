@@ -19,15 +19,11 @@ public class Game : MonoBehaviour {
     private void OnPlayerConnected(NetworkPlayer player)
     {
         players.Clear();
-        searchForPlayers();
     }
 
-    public void searchForPlayers()
+    public void  addPlayer(GameObject p)
     {
-        foreach (GameObject g in GameObject.FindGameObjectsWithTag("Client"))
-        {
-            players.Add(g);
-        }
+            players.Add(p);
     }
 
     private void Awake()
@@ -49,7 +45,7 @@ public class Game : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        Debug.Log("No of players" + players.Count);
+       // Debug.Log("No of players" + players.Count);
         checkVictory();
 	}
 

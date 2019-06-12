@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 
 public class Bullet : NetworkBehaviour {
 
-    public int shooter;
+    public GameObject shooter;
     public int damageAmount;
 	// Use this for initialization
 	void Start () {
@@ -15,28 +15,44 @@ public class Bullet : NetworkBehaviour {
 
     private void OnCollisionEnter(Collision collision)
     {
-        //if (isTemplate == false && collision.gameObject.GetComponent<Player>().GetPlayerNo() != shooter.gameObject.GetComponent<Player>().GetPlayerNo())
-        //{
-        //    Debug.Log("hit");
-        //    if (collision.gameObject.tag == "Obstacle")
-        //    {
-        //        Debug.Log("orange");
-        //        Destroy(this.gameObject);
-        //    }
 
-        //    CheckEnemyCollision(collision);
+        //Check if its hit an obstacle
+        if (collision.gameObject.tag == "Obstacle")
+        {
+            Destroy(this.gameObject);
+            return;
+        }
 
-        //    if(collision.gameObject.tag == "Bullet" || collision.gameObject.tag == shooter.gameObject.tag)
-        //    {
-        //        Physics.IgnoreCollision(collision.collider, GetComponent<Collider>());
-        //    }
-        //}
+        //Check if its hit a friendly, or another bullet
+        if (collision.gameObject.tag == "Bullet" || collision.gameObject.GetComponent<Player>().team == shooter.gameObject.GetComponent<Player>().team)
+        {
+            Physics.IgnoreCollision(collision.collider, GetComponent<Collider>());
+            return;
+        }
+
+        //Check if it has hit an enemy player
+        if (collision.gameObject.GetComponent<Player>().team != shooter.gameObject.GetComponent<Player>().team)
+        {
+            CheckEnemyCollision(collision);
+        }
+
+      
     }
 
     void CheckEnemyCollision(Collision collision)
     {
-        Debug.Log("in enemy collision");
-            Debug.Log("called damage");
-            collision.gameObject.GetComponent<Player>().setHealth(15);
+        //Apply damage
+        collision.gameObject.GetComponent<Player>().TakeDamage(15);
+
+        //If this shot killed the player, register it
+        if(collision.gameObject.GetComponent<Player>().isDead)
+        {
+            GameObject.Find("gameManager").GetComponent<Game>().OnKillRegistered(shooter, collision.gameObject);
+            shooter.GetComponent<Player>().kills++;
+            collision.gameObject.GetComponent<Player>().deaths++;
+        }
+
+        //Destroy the bullet
+        Destroy(this.gameObject);
     }
 }

@@ -96,12 +96,19 @@ public class Player : NetworkBehaviour {
     //Registers which team the player is in
     public int team;
 
+    //For maintaining score in the game
+    public GameObject gameManager;
+
     // Use this for initialization
     void Start () {
 
         //Join a random team
-        team = Random.Range(1, 2);
+        team = Random.Range(1, 200);
         transform.parent.GetComponent<ClientSetup>().Respawn();
+
+        //Notify the GameManager
+        gameManager = GameObject.Find("GameManager");
+        gameManager.GetComponent<Game>().addPlayer(this.gameObject);
 
         //initialise armour rating
         armour = 0;
@@ -140,8 +147,6 @@ public class Player : NetworkBehaviour {
 
     // Update is called once per frame
     void Update () {
-
-
 
         //Update the HUD
         //Health
@@ -271,24 +276,6 @@ public class Player : NetworkBehaviour {
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("registered hit");
-        
-        //Check it is a bullet
-        if (collision.gameObject.tag == "bullet")
-        {
-            Bullet bullet = collision.gameObject.GetComponent<Bullet>();
-
-            //check its an enemy players collision
-            if (bullet.shooter != GetInstanceID())
-            {
-                //Take damage
-                TakeDamage(bullet.damageAmount);
-
-                //Tell the network about the damage taken
-                this.transform.parent.GetComponent<ClientSetup>().CmdRegisterDamage(bullet.shooter);
-
-            }
-        }
     }
 
     public void TakeDamage(int damage)
@@ -307,9 +294,11 @@ public class Player : NetworkBehaviour {
 
     public void Death()
     {
-            transform.rotation =  Quaternion.Slerp(transform.rotation, Quaternion.Euler(90, 0, 0) * rotationAtDeath, Time.deltaTime * 0.5f);
+        //Player falls over
+        transform.rotation =  Quaternion.Slerp(transform.rotation, Quaternion.Euler(90, 0, 0) * rotationAtDeath, Time.deltaTime * 0.5f);
 
-            respawnScreen.SetActive(true);
+        //Respawn screen shows
+        respawnScreen.SetActive(true);
     }
 
     public void Respawn()
@@ -390,4 +379,5 @@ public class Player : NetworkBehaviour {
     {
         return totalHealth;
     }
+
 }

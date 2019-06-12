@@ -48,7 +48,10 @@ public class MainMenu : MonoBehaviour {
         g.AddComponent<Game>();
 
         //Set up kill count for the game
-        if(killLimitDropdown.GetComponent<Dropdown>().value == 0) g.GetComponent<Game>().killLimit = 5;
+        if (killLimitDropdown.GetComponent<Dropdown>().value == 0)
+        {
+            g.GetComponent<Game>().killLimit = 5;
+        }
         else if (killLimitDropdown.GetComponent<Dropdown>().value == 1) g.GetComponent<Game>().killLimit = 15;
         else if (killLimitDropdown.GetComponent<Dropdown>().value == 2) g.GetComponent<Game>().killLimit = 60;
 
@@ -56,7 +59,6 @@ public class MainMenu : MonoBehaviour {
         if (timeLimitDropdown.GetComponent<Dropdown>().value == 0) g.GetComponent<Game>().timeLimit = 10;
         else if (timeLimitDropdown.GetComponent<Dropdown>().value == 1) g.GetComponent<Game>().timeLimit = 15;
         else if (timeLimitDropdown.GetComponent<Dropdown>().value == 2) g.GetComponent<Game>().timeLimit = 30;
-
 
         //Move to the next scene
         SceneManager.LoadScene(1);

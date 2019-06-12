@@ -158,15 +158,9 @@ public class ClientSetup : NetworkBehaviour {
     }
 
     [Command]
-    public void CmdUpdateHealthBar()
-    {
-
-    }
-
-    [Command]
     public void CmdSpawnBullet()
     {
-        GameObject b = (GameObject)Instantiate(bullet, player.crosshairMarker.transform.position, Quaternion.identity);
+        GameObject b = (GameObject)Instantiate(bullet, new Vector3(player.crosshairMarker.transform.position.x, player.crosshairMarker.transform.position.y, -4.5f), Quaternion.identity);
 
         //calculate rotation
         Quaternion rot = b.transform.rotation;
@@ -178,7 +172,7 @@ public class ClientSetup : NetworkBehaviour {
         b.GetComponent<Rigidbody>().velocity = b.transform.forward * 6.0f;
 
         //add tag indicating whose bullet it is
-        b.GetComponent<Bullet>().shooter = player.GetInstanceID();
+        b.GetComponent<Bullet>().shooter = player.gameObject;
         b.GetComponent<Bullet>().damageAmount = player.damageAmounts[player.GetCurrentWeapon()];
 
         NetworkServer.Spawn(b);
