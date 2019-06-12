@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4714851886475516}
   - component: {fileID: 33489149404744210}
   - component: {fileID: 23623110139203774}
+  - component: {fileID: 114957679944280558}
   m_Layer: 0
   m_Name: SpawnPoint2
   m_TagString: Untagged
@@ -47,7 +48,7 @@ MeshRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1118116294114014}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -83,3 +84,14 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1118116294114014}
   m_Mesh: {fileID: 4300002, guid: a2fac3b363273a741826abdb1d4e0df3, type: 3}
+--- !u!114 &114957679944280558
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1118116294114014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1050975500, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

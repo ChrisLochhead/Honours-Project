@@ -1,4 +1,6 @@
 ﻿using System.Collections;
+using System.IO;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -19,11 +21,23 @@ public class ClientSetup : NetworkBehaviour {
     [SyncVar(hook = "SetWeapon")]
     public int wepType;
 
+    public GameObject gameManager;
+    public List<GameObject> spawnPoints;
+
 	// Use this for initialization
 	void Start () {
 
         sceneCam = Camera.main;
-        
+
+        gameManager = GameObject.Find("MapManager");
+        if(player.team == 1)
+            spawnPoints = gameManager.GetComponent<GameMap>().team1Spawns;
+        else
+            spawnPoints = gameManager.GetComponent<GameMap>().team2Spawns;
+
+        //set up spawnpoint
+        int rand = Random.Range(0, spawnPoints.Count);
+        player.transform.position = spawnPoints[rand].transform.position;
 
         if(!isLocalPlayer)
         {
@@ -201,5 +215,20 @@ public class ClientSetup : NetworkBehaviour {
     {
         if (sceneCam)
             sceneCam.gameObject.SetActive(true);
+    }
+
+    public void Respawn()
+    {
+        //set up spawnpoint
+        int rand = Random.Range(0, spawnPoints.Count);
+        Debug.Log("current : " + player.transform.position  + "new : " + spawnPoints[rand].transform.position);
+        player.transform.position = spawnPoints[rand].transform.position;
+        player.playerCam.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, player.playerCam.transform.position.z);
+        
+    }
+
+    public void exitGame()
+    {
+        NetworkManager.singleton.StopClient();
     }
 }

@@ -52,6 +52,9 @@ public class Map : MonoBehaviour {
         temp.GetComponent<Coin>().pos.y = py;
         temp.GetComponent<Coin>().type = t;
 
+        if (mapItems == null)
+            mapItems = new List<GameObject>();
+
         mapItems.Add(temp);
     }
 

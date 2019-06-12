@@ -82,7 +82,7 @@ public class Player : NetworkBehaviour {
     public GameObject floatingRankIcon;
 
     //Respawn screen
-    public Button respawn;
+    public GameObject respawnScreen;
 
     //To record kills and deaths in-game
     public int kills = 0;
@@ -90,9 +90,18 @@ public class Player : NetworkBehaviour {
 
     //Recording whether character is currently alive
     public bool isDead = false;
+    float deathRotation = 0;
+    Quaternion rotationAtDeath;
+
+    //Registers which team the player is in
+    public int team;
 
     // Use this for initialization
     void Start () {
+
+        //Join a random team
+        team = Random.Range(1, 2);
+        transform.parent.GetComponent<ClientSetup>().Respawn();
 
         //initialise armour rating
         armour = 0;
@@ -133,12 +142,6 @@ public class Player : NetworkBehaviour {
     void Update () {
 
 
-        //Check for life
-        if(isDead)
-        {
-            Death();
-            return;
-        }
 
         //Update the HUD
         //Health
@@ -155,8 +158,15 @@ public class Player : NetworkBehaviour {
         //Rank
         rankImage.GetComponent<Image>().sprite = rankIcons[rank];
 
+        //Check for life
+        if (isDead)
+        {
+            Death();
+            return;
+        }
+
         //Initialisation for the camera
-        if(playerCam.GetComponent<CameraMovement>().canMove == true)
+        if (playerCam.GetComponent<CameraMovement>().canMove == true)
         {
             playerCam.GetComponent<CameraMovement>().canMove = false;
         }
@@ -203,6 +213,9 @@ public class Player : NetworkBehaviour {
 
     private void FixedUpdate()
     {
+
+        if (isDead)
+            return;
 
         Vector3 p = transform.position;
         p.z = -10;
@@ -285,6 +298,8 @@ public class Player : NetworkBehaviour {
         if(health <= 0)
         {
             isDead = true;
+            health = 0;
+            rotationAtDeath = transform.rotation;
             gameObject.GetComponent<BoxCollider>().enabled = false;
             gameObject.GetComponent<Rigidbody>().detectCollisions = false;
         }
@@ -292,31 +307,32 @@ public class Player : NetworkBehaviour {
 
     public void Death()
     {
-        if (transform.rotation.eulerAngles.x < 90)
-        {
-            Quaternion tempRot = transform.rotation;
-            tempRot *= Quaternion.Euler(Time.deltaTime, 0, 0);
-            transform.rotation = tempRot;
-        }
-        else
-        {
+            transform.rotation =  Quaternion.Slerp(transform.rotation, Quaternion.Euler(90, 0, 0) * rotationAtDeath, Time.deltaTime * 0.5f);
 
-            Color tmp = transform.GetComponentInChildren<SkinnedMeshRenderer>().material.color;
-            tmp.a -= Time.deltaTime / 4;
-            transform.GetComponentInChildren<SkinnedMeshRenderer>().material.color = tmp;
-
-            if (tmp.a <= 0.0f)
-                respawn.gameObject.SetActive(true);
-        }
+            respawnScreen.SetActive(true);
     }
 
     public void Respawn()
     {
         //Reset health and ranks
+        health = 100;
+        rank = 0;
 
         //Spawn in random position
+        transform.parent.GetComponent<ClientSetup>().Respawn();
+
+        //Let the game loop re-commence
+        isDead = false;
+
+        //Stand the player back up
+        transform.rotation *= Quaternion.Euler(-90, 0, 0);
+
+        //Reactivate colliders
+        gameObject.GetComponent<BoxCollider>().enabled = true;
+        gameObject.GetComponent<Rigidbody>().detectCollisions = true;
 
         //Hide respawn button
+        respawnScreen.SetActive(false);
 
     }
 

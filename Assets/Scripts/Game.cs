@@ -3,36 +3,57 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class GameManager : MonoBehaviour {
+public class Game : MonoBehaviour {
 
     //Record all players in server
     List<GameObject> players = new List<GameObject>();
 
-	// Use this for initialization
-	void Start () {
+    //For recording score
+    public int team1Score = 0;
+    public int team2Score = 0;
 
-		foreach (GameObject g in GameObject.FindGameObjectsWithTag("Client"))
-        {
-            players.Add(g);
-        }
-	}
+    //To be made modifiable
+    public int timeLimit = 15;
+    public int killLimit = 25;
 
     private void OnPlayerConnected(NetworkPlayer player)
     {
         players.Clear();
+        searchForPlayers();
+    }
+
+    public void searchForPlayers()
+    {
         foreach (GameObject g in GameObject.FindGameObjectsWithTag("Client"))
         {
             players.Add(g);
         }
-
     }
 
-    public void onKillRegistered(GameObject killer, GameObject killed)
+    private void Awake()
     {
-
+        DontDestroyOnLoad(this);
     }
+
+    public void OnKillRegistered(GameObject killer, GameObject killed)
+    {
+        if (killer.gameObject.GetComponent<Player>().team == 0)
+        {
+            team1Score++;
+        }
+        else
+        {
+            team2Score++;
+        }
+    }
+
     // Update is called once per frame
     void Update () {
         Debug.Log("No of players" + players.Count);
+        checkVictory();
 	}
+
+    private void checkVictory()
+    {
+    }
 }
