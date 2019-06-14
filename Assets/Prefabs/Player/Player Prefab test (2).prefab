@@ -996,6 +996,7 @@ GameObject:
   - component: {fileID: 224670937244101830}
   - component: {fileID: 222199378680605500}
   - component: {fileID: 114206900408804002}
+  - component: {fileID: 65340524297430342}
   m_Layer: 5
   m_Name: HealthBar
   m_TagString: Untagged
@@ -4552,6 +4553,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!65 &65340524297430342
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1384054250836120}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!65 &65715581799352008
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -5024,10 +5037,10 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_Sprite: {fileID: 21300000, guid: 730067c456894124c98dfb9c336e82e7, type: 3}
-  m_Type: 0
+  m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
-  m_FillMethod: 4
+  m_FillMethod: 0
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
@@ -5378,6 +5391,7 @@ MonoBehaviour:
   deaths: 0
   isDead: 0
   team: 0
+  gameManager: {fileID: 0}
 --- !u!114 &114467517667529442
 MonoBehaviour:
   m_ObjectHideFlags: 1

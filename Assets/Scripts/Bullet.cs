@@ -42,7 +42,7 @@ public class Bullet : NetworkBehaviour {
     void CheckEnemyCollision(Collision collision)
     {
         //Apply damage
-        collision.gameObject.GetComponent<Player>().TakeDamage(15);
+        collision.gameObject.transform.parent.GetComponent<ClientSetup>().TakeDamage(15);
 
         //If this shot killed the player, register it
         if(collision.gameObject.GetComponent<Player>().isDead)
