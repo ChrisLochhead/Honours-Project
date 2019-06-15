@@ -64,8 +64,8 @@ public class Client : NetworkBehaviour {
 
     //HUD stuff
     int score = 230;
-    [SyncVar(hook = "TakeDamage")] public int health = 150;
-    int totalHealth = 150;
+    public int health = 100;
+    int totalHealth = 100;
 
 
     //HUD objects
@@ -145,11 +145,16 @@ public class Client : NetworkBehaviour {
             floatingRankIcon.GetComponent<CanvasRenderer>().SetAlpha(0);
         }
 
+
+        //Set as initially invisible until in position ( to avoid it jumping across everyones screen
+        player.GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
+
+        //ignore collisions between players
         Physics.IgnoreLayerCollision(9,9);
 
 
         //Join a random team
-        team = Random.Range(1, 2);
+        team = Random.Range(0, 200);
 
         //Get spawnpoints from team
         gameManager = GameObject.Find("MapManager");
@@ -160,6 +165,8 @@ public class Client : NetworkBehaviour {
 
         //set up spawnpoint
         Respawn();
+        //Then make it's mesh visible again
+        player.GetComponentInChildren<SkinnedMeshRenderer>().enabled = true;
 
         //Notify the GameManager
         gameManager = GameObject.Find("GameManager");
@@ -284,17 +291,50 @@ public class Client : NetworkBehaviour {
 
     }
 
+    [Command]
+    public void CmdTakeDamage(int damage)
+    {
+        TakeDamage(damage);
+        RpcTakeDamage(damage);
+    }
+
+    [ClientRpc]
+    public void RpcTakeDamage(int damage)
+    {
+        if (isLocalPlayer)
+        {
+            health -= damage + armour;
+
+            if (health <= 0)
+            {
+                isDead = true;
+                SetHealth(0);
+                rotationAtDeath = player.transform.rotation;
+                gameObject.GetComponent<BoxCollider>().enabled = false;
+                gameObject.GetComponent<Rigidbody>().detectCollisions = false;
+            }
+        }
+    }
+
+    public void Hit(int damage)
+    {
+        CmdTakeDamage(damage);
+    }
+
     public void TakeDamage(int damage)
     {
-        health -= damage + armour;
-
-        if (health <= 0)
+        if (!isLocalPlayer)
         {
-            isDead = true;
-            setHealth(0);
-            rotationAtDeath = player.transform.rotation;
-            gameObject.GetComponent<BoxCollider>().enabled = false;
-            gameObject.GetComponent<Rigidbody>().detectCollisions = false;
+            health -= damage + armour;
+
+            if (health <= 0)
+            {
+                isDead = true;
+                SetHealth(0);
+                rotationAtDeath = player.transform.rotation;
+                player.GetComponent<BoxCollider>().enabled = false;
+                player.GetComponent<Rigidbody>().detectCollisions = false;
+            }
         }
     }
 
@@ -305,7 +345,6 @@ public class Client : NetworkBehaviour {
 
         //Update the HUD
         //Health
-        Debug.Log(rankHealthValues.Length + " : " + rank);
         healthBar.GetComponent<Slider>().maxValue = rankHealthValues[rank];
         healthBar.GetComponent<Slider>().value = health;
         healthText.text = health.ToString() + "/" + rankHealthValues[rank];
@@ -331,7 +370,6 @@ public class Client : NetworkBehaviour {
         if (Input.GetMouseButtonDown(0) && currentAmmo[currentWeapon] > 0 && isLocalPlayer)
         {
             CmdSpawnBullet();
-            //UpdateHealth();
             currentAmmo[currentWeapon]--;
         }
         else
@@ -533,7 +571,7 @@ public class Client : NetworkBehaviour {
     }
 
 
-    public void setHealth(int damage)
+    public void SetHealth(int damage)
     {
         if (damage == 0)
             health = 0;

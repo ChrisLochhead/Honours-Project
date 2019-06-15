@@ -146,7 +146,7 @@ MonoBehaviour:
     i14: 92
     i15: 21
   m_ServerOnly: 0
-  m_LocalPlayerAuthority: 0
+  m_LocalPlayerAuthority: 1
 --- !u!114 &114363830132224038
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -179,5 +179,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fba18c21be5090841bff564798b2f91a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shooter: 0
+  shooter: {fileID: 0}
   damageAmount: 0
