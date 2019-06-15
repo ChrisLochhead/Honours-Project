@@ -142,8 +142,8 @@ public class Client : NetworkBehaviour {
         armour = 0;
 
         //Set up health and rank position so it doesnt jump on first movement
-        floatingHealthBar.transform.position = new Vector3(transform.position.x, transform.position.y + 7.5f, transform.position.z);
-        floatingRankIcon.transform.position = new Vector3(transform.position.x - 5.8f, transform.position.y + 7.75f, transform.position.z);
+        floatingHealthBar.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 7.5f, player.transform.position.z);
+        floatingRankIcon.transform.position = new Vector3(player.transform.position.x - 5.8f, player.transform.position.y + 7.75f, player.transform.position.z);
 
         //get the number of players currently in game
         foreach (GameObject g in GameObject.FindGameObjectsWithTag("Player"))
@@ -156,10 +156,10 @@ public class Client : NetworkBehaviour {
         velocity = 0.3f;
         movementSpeed = 0.3f;
 
-        transform.position = new Vector3(playerCam.transform.position.x, playerCam.transform.position.y, -10);
+        player.transform.position = new Vector3(playerCam.transform.position.x, playerCam.transform.position.y, -10);
         anim.enabled = false;
-        guns[currentWeapon].transform.position = this.transform.position;
-        guns[currentWeapon].transform.rotation = this.transform.rotation;
+        guns[currentWeapon].transform.position = player.transform.position;
+        guns[currentWeapon].transform.rotation = player.transform.rotation;
 
         weaponAnim = guns[currentWeapon].GetComponent<Animator>();
         weaponAnim.enabled = false;
@@ -460,7 +460,7 @@ public class Client : NetworkBehaviour {
         isDead = false;
 
         //Stand the player back up
-        transform.rotation *= Quaternion.Euler(-90, 0, 0);
+        player.transform.rotation *= Quaternion.Euler(-90, 0, 0);
 
         //Reactivate colliders
         player.gameObject.GetComponent<BoxCollider>().enabled = true;

@@ -5680,7 +5680,7 @@ MonoBehaviour:
   guns:
   - {fileID: 1052001156774242}
   - {fileID: 1110386482247226}
-  - {fileID: 1980240169360764}
+  - {fileID: 1690581661529682}
   - {fileID: 1758058091268932}
   - {fileID: 1193851704441686}
   muzzleFlashes:
