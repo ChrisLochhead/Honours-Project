@@ -118,6 +118,39 @@ public class Client : NetworkBehaviour {
     // Use this for initialization
     void Start () {
 
+        sceneCam = Camera.main;
+
+        if (!isLocalPlayer)
+        {
+            isLocal = false;
+            //Disable all components unique to the client
+            for (int i = 0; i < clientComponents.Length; i++)
+            {
+                clientComponents[i].enabled = false;
+            }
+
+            foreach (GameObject g in GameObject.Find("Network Manager").GetComponent<NetworkManager>().spawnPrefabs)
+            {
+                ClientScene.RegisterPrefab(g);
+            }
+
+        }
+        else
+        {
+            isLocal = true;
+            sceneCam.gameObject.SetActive(false);
+
+            //Hide UI elements that player shouldn't see
+            floatingHealthBar.GetComponent<CanvasRenderer>().SetAlpha(0);
+            floatingRankIcon.GetComponent<CanvasRenderer>().SetAlpha(0);
+        }
+
+        Physics.IgnoreLayerCollision(9,9);
+
+
+        //Join a random team
+        team = Random.Range(1, 2);
+
         //Get spawnpoints from team
         gameManager = GameObject.Find("MapManager");
         if (team == 1)
@@ -126,12 +159,6 @@ public class Client : NetworkBehaviour {
             spawnPoints = gameManager.GetComponent<GameMap>().team2Spawns;
 
         //set up spawnpoint
-        int rand = Random.Range(0, spawnPoints.Count);
-        player.transform.position = spawnPoints[rand].transform.position;
-
-
-        //Join a random team
-        team = Random.Range(1, 2);
         Respawn();
 
         //Notify the GameManager
@@ -166,36 +193,7 @@ public class Client : NetworkBehaviour {
 
         for (int i = 0; i < muzzleFlashes.Length; i++)
             muzzleFlashes[i].SetActive(false);
-
-        sceneCam = Camera.main;
-
-        if(!isLocalPlayer)
-        {
-            isLocal = false;
-            //Disable all components unique to the client
-            for(int i = 0; i < clientComponents.Length; i++)
-            {
-
-                clientComponents[i].enabled = false;
-            }
-
-            foreach (GameObject g in GameObject.Find("Network Manager").GetComponent<NetworkManager>().spawnPrefabs)
-            {
-                ClientScene.RegisterPrefab(g);
-            }
-
-        }
-        else
-        {
-            isLocal = true;
-            sceneCam.gameObject.SetActive(false);
-
-            //Hide UI elements that player shouldn't see
-            floatingHealthBar.GetComponent<CanvasRenderer>().SetAlpha(0);
-            floatingRankIcon.GetComponent<CanvasRenderer>().SetAlpha(0);
-        }
-
-       
+    
     }
 
     [Command]
@@ -302,25 +300,8 @@ public class Client : NetworkBehaviour {
 
     public void Update()
     {
-
-        CmdUpdateHealth();
-
-        if (Input.GetMouseButtonDown(0) && currentAmmo[currentWeapon] > 0 && isLocalPlayer)
-        {
-            CmdSpawnBullet();
-            UpdateHealth();
-        }
-        else
-        {
-            CmdRemoveFlash();
-        }
-
-        //Weapon switching
-        if (Input.GetKey("1") && isLocalPlayer) CmdSetWeapon(0);
-        if (Input.GetKey("2") && isLocalPlayer) CmdSetWeapon(1);
-        if (Input.GetKey("3") && isLocalPlayer) CmdSetWeapon(2);
-        if (Input.GetKey("4") && isLocalPlayer) CmdSetWeapon(3);
-        if (Input.GetKey("5") && isLocalPlayer) CmdSetWeapon(4);
+        //Ignore collisions from players running into eachother
+        Physics.IgnoreLayerCollision(9, 9);
 
         //Update the HUD
         //Health
@@ -344,6 +325,26 @@ public class Client : NetworkBehaviour {
             Death();
             return;
         }
+
+        CmdUpdateHealth();
+
+        if (Input.GetMouseButtonDown(0) && currentAmmo[currentWeapon] > 0 && isLocalPlayer)
+        {
+            CmdSpawnBullet();
+            //UpdateHealth();
+            currentAmmo[currentWeapon]--;
+        }
+        else
+        {
+            CmdRemoveFlash();
+        }
+
+        //Weapon switching
+        if (Input.GetKey("1") && isLocalPlayer) CmdSetWeapon(0);
+        if (Input.GetKey("2") && isLocalPlayer) CmdSetWeapon(1);
+        if (Input.GetKey("3") && isLocalPlayer) CmdSetWeapon(2);
+        if (Input.GetKey("4") && isLocalPlayer) CmdSetWeapon(3);
+        if (Input.GetKey("5") && isLocalPlayer) CmdSetWeapon(4);
 
         //Initialisation for the camera
         if (playerCam.GetComponent<CameraMovement>().canMove == true)
@@ -374,12 +375,6 @@ public class Client : NetworkBehaviour {
             initialReload = true;
         }
 
-        //Shooting
-        if (Input.GetMouseButtonDown(0) && currentAmmo[currentWeapon] > 0)
-        {
-            currentAmmo[currentWeapon]--;
-        }
-
         //Reloading
         if (Input.GetKey("r") && initialReload == true || currentAmmo[currentWeapon] == 0 && initialReload == true || Input.GetKey("r") && isReloading == false)
         {
@@ -406,19 +401,13 @@ public class Client : NetworkBehaviour {
         b.GetComponent<Rigidbody>().velocity = b.transform.forward * 6.0f;
 
         //add tag indicating whose bullet it is
-        b.GetComponent<Bullet>().shooter = player.gameObject;
+        b.GetComponent<Bullet>().shooter = player;
         b.GetComponent<Bullet>().damageAmount = damageAmounts[currentWeapon];
 
         NetworkServer.Spawn(b);
 
         MuzzleFlash(true);
         RpcMuzzleFlash(true);
-    }
-
-    [Command]
-    public void CmdRegisterDamage(int shooterID)
-    {
-
     }
 
     [Command]

@@ -12,7 +12,10 @@ public class Bullet : NetworkBehaviour {
         transform.localScale = new Vector3(8.1f, 8.1f, 23.1f);
     }
 
-
+    private void Update()
+    {
+        Debug.Log(shooter.tag);
+    }
     private void OnCollisionEnter(Collision collision)
     {
 
@@ -24,7 +27,7 @@ public class Bullet : NetworkBehaviour {
         }
 
         //Check if its hit a friendly, or another bullet
-        if (collision.gameObject.tag == "Bullet" || collision.gameObject.GetComponent<Client>().team == shooter.gameObject.GetComponent<Client>().team)
+        if (collision.gameObject.tag == "Bullet" || collision.gameObject.transform.parent.GetComponent<Client>().team == shooter.transform.parent.GetComponent<Client>().team)
         {
             Physics.IgnoreCollision(collision.collider, GetComponent<Collider>());
             return;
