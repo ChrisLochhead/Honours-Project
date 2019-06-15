@@ -24,14 +24,14 @@ public class Bullet : NetworkBehaviour {
         }
 
         //Check if its hit a friendly, or another bullet
-        if (collision.gameObject.tag == "Bullet" || collision.gameObject.GetComponent<Player>().team == shooter.gameObject.GetComponent<Player>().team)
+        if (collision.gameObject.tag == "Bullet" || collision.gameObject.GetComponent<Client>().team == shooter.gameObject.GetComponent<Client>().team)
         {
             Physics.IgnoreCollision(collision.collider, GetComponent<Collider>());
             return;
         }
 
         //Check if it has hit an enemy player
-        if (collision.gameObject.GetComponent<Player>().team != shooter.gameObject.GetComponent<Player>().team)
+        if (collision.gameObject.GetComponent<Client>().team != shooter.gameObject.GetComponent<Client>().team)
         {
             CheckEnemyCollision(collision);
         }
@@ -42,14 +42,14 @@ public class Bullet : NetworkBehaviour {
     void CheckEnemyCollision(Collision collision)
     {
         //Apply damage
-        collision.gameObject.transform.parent.GetComponent<ClientSetup>().TakeDamage(15);
+        collision.gameObject.transform.parent.GetComponent<Client>().TakeDamage(15);
 
         //If this shot killed the player, register it
-        if(collision.gameObject.GetComponent<Player>().isDead)
+        if(collision.gameObject.GetComponent<Client>().isDead)
         {
             GameObject.Find("gameManager").GetComponent<Game>().OnKillRegistered(shooter, collision.gameObject);
-            shooter.GetComponent<Player>().kills++;
-            collision.gameObject.GetComponent<Player>().deaths++;
+            shooter.GetComponent<Client>().kills++;
+            collision.gameObject.GetComponent<Client>().deaths++;
         }
 
         //Destroy the bullet

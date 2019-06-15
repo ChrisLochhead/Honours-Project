@@ -33,7 +33,7 @@ public class Game : MonoBehaviour {
 
     public void OnKillRegistered(GameObject killer, GameObject killed)
     {
-        if (killer.gameObject.GetComponent<Player>().team == 0)
+        if (killer.gameObject.GetComponent<Client>().team == 0)
         {
             team1Score++;
         }

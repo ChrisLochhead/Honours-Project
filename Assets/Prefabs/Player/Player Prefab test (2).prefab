@@ -2082,7 +2082,6 @@ GameObject:
   - component: {fileID: 95071292052873418}
   - component: {fileID: 54328200683805082}
   - component: {fileID: 65715581799352008}
-  - component: {fileID: 114407553023509484}
   m_Layer: 9
   m_Name: Player1
   m_TagString: Player1
@@ -5331,67 +5330,6 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Slider+SliderEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
---- !u!114 &114407553023509484
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1806145432638122}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6a29ba8c9dd836498dae20011a7df54, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerCam: {fileID: 20680992628442072}
-  crosshair: {fileID: 1289926224936078}
-  crosshairMarker: {fileID: 1554592227955842}
-  anim: {fileID: 95071292052873418}
-  guns:
-  - {fileID: 1052001156774242}
-  - {fileID: 1110386482247226}
-  - {fileID: 1690581661529682}
-  - {fileID: 1193851704441686}
-  - {fileID: 1758058091268932}
-  muzzleFlashes:
-  - {fileID: 1148884142658146}
-  - {fileID: 1873893700723816}
-  - {fileID: 1980240169360764}
-  - {fileID: 1206345521048384}
-  - {fileID: 1188676875090132}
-  bullet: {fileID: 0}
-  armourRatings: 000000000100000002000000030000000500000007000000080000000a0000000f000000
-  armour: 0
-  damageAmounts: 0c0000000f000000080000000600000028000000
-  reloadTimer: 0200000005000000040000000300000003000000
-  scoreText: {fileID: 114940014275785684}
-  ammoText: {fileID: 114707180593355668}
-  healthText: {fileID: 114607281472923554}
-  healthBar: {fileID: 1400912380581398}
-  rankImage: {fileID: 1777225904213068}
-  rankIcons:
-  - {fileID: 21300000, guid: 4f0e075930e05bc4894727e10d62269e, type: 3}
-  - {fileID: 21300000, guid: 6a98ec2e496f3654c93ffe1738faf109, type: 3}
-  - {fileID: 21300000, guid: c65fca89d11ebbc449b6f36542e85733, type: 3}
-  - {fileID: 21300000, guid: 50842dd79603e9244897f572d4805287, type: 3}
-  - {fileID: 21300000, guid: 0e1c7f310dc00c041b3dca8164e7e552, type: 3}
-  - {fileID: 21300000, guid: f6a8fce542b84414fb21b59e7d40f532, type: 3}
-  - {fileID: 21300000, guid: e1aa21d0aba7f7c4eaf646f891be27c1, type: 3}
-  - {fileID: 21300000, guid: 98566832bd5bb6e40ba7902ba7aab3df, type: 3}
-  - {fileID: 21300000, guid: 99e10882c49dbec41aa37b05d3d2f448, type: 3}
-  rankHealthValues: 640000006e0000007d0000008c00000096000000a5000000af000000c3000000c8000000
-  isReloading: 0
-  initialReload: 1
-  reloadStartTime: 0
-  reloadTargetTime: 0
-  currentMPos: {x: 0, y: 0, z: 0}
-  floatingHealthBar: {fileID: 1384054250836120}
-  floatingRankIcon: {fileID: 1492719172626468}
-  respawnScreen: {fileID: 1672986317417122}
-  kills: 0
-  deaths: 0
-  isDead: 0
-  team: 0
-  gameManager: {fileID: 0}
 --- !u!114 &114467517667529442
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5703,7 +5641,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114407553023509484}
+      - m_Target: {fileID: 0}
         m_MethodName: Respawn
         m_Mode: 1
         m_Arguments:
@@ -5731,12 +5669,62 @@ MonoBehaviour:
   - {fileID: 20680992628442072}
   - {fileID: 223509053943130352}
   - {fileID: 81428470592699848}
-  player: {fileID: 114407553023509484}
-  bullet: {fileID: 1437496455166464, guid: e5579f313ea97814d98a27fc045f5c15, type: 2}
+  player: {fileID: 1806145432638122}
   isLocal: 0
-  wepType: 0
-  gameManager: {fileID: 0}
   spawnPoints: []
+  playerCam: {fileID: 20680992628442072}
+  crosshair: {fileID: 1289926224936078}
+  crosshairMarker: {fileID: 1554592227955842}
+  anim: {fileID: 95071292052873418}
+  body: {fileID: 54328200683805082}
+  guns:
+  - {fileID: 1052001156774242}
+  - {fileID: 1110386482247226}
+  - {fileID: 1980240169360764}
+  - {fileID: 1758058091268932}
+  - {fileID: 1193851704441686}
+  muzzleFlashes:
+  - {fileID: 1148884142658146}
+  - {fileID: 1873893700723816}
+  - {fileID: 1980240169360764}
+  - {fileID: 1188676875090132}
+  - {fileID: 1206345521048384}
+  bullet: {fileID: 1437496455166464, guid: e5579f313ea97814d98a27fc045f5c15, type: 2}
+  armourRatings: 000000000100000002000000030000000500000007000000080000000a0000000f000000
+  armour: 0
+  damageAmounts: 0c0000000f000000080000000600000028000000
+  reloadTimer: 0200000005000000040000000300000003000000
+  health: 150
+  scoreText: {fileID: 114940014275785684}
+  ammoText: {fileID: 114707180593355668}
+  healthText: {fileID: 114607281472923554}
+  healthBar: {fileID: 1400912380581398}
+  rankImage: {fileID: 1777225904213068}
+  rankIcons:
+  - {fileID: 21300000, guid: 4f0e075930e05bc4894727e10d62269e, type: 3}
+  - {fileID: 21300000, guid: 6a98ec2e496f3654c93ffe1738faf109, type: 3}
+  - {fileID: 21300000, guid: c65fca89d11ebbc449b6f36542e85733, type: 3}
+  - {fileID: 21300000, guid: 50842dd79603e9244897f572d4805287, type: 3}
+  - {fileID: 21300000, guid: 0e1c7f310dc00c041b3dca8164e7e552, type: 3}
+  - {fileID: 21300000, guid: f6a8fce542b84414fb21b59e7d40f532, type: 3}
+  - {fileID: 21300000, guid: e1aa21d0aba7f7c4eaf646f891be27c1, type: 3}
+  - {fileID: 21300000, guid: 98566832bd5bb6e40ba7902ba7aab3df, type: 3}
+  - {fileID: 21300000, guid: 99e10882c49dbec41aa37b05d3d2f448, type: 3}
+  rankHealthValues: 640000006e00000078000000820000008c00000096000000a0000000af000000c8000000
+  isReloading: 0
+  initialReload: 1
+  reloadStartTime: 0
+  reloadTargetTime: 0
+  currentMPos: {x: 0, y: 0, z: 0}
+  floatingHealthBar: {fileID: 1384054250836120}
+  floatingRankIcon: {fileID: 1492719172626468}
+  respawnScreen: {fileID: 1672986317417122}
+  kills: 0
+  deaths: 0
+  isDead: 0
+  rotationAtDeath: {x: 0, y: 0, z: 0, w: 0}
+  team: 0
+  gameManager: {fileID: 0}
 --- !u!114 &114656026244628660
 MonoBehaviour:
   m_ObjectHideFlags: 1

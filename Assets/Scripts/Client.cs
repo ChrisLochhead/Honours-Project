@@ -6,7 +6,19 @@ using UnityEngine.Networking;
 using UnityEngine.UI;
 using TMPro;
 
-public class ClientSetup : NetworkBehaviour {
+public class Client : NetworkBehaviour {
+
+    [SerializeField]
+    Behaviour[] clientComponents;
+
+    Camera sceneCam;
+
+    public GameObject player;
+
+    public bool isLocal;
+
+    public List<GameObject> spawnPoints;
+
 
 
     //Camera
@@ -26,7 +38,7 @@ public class ClientSetup : NetworkBehaviour {
     //Animations
     Animator weaponAnim;
     public Animator anim;
-    Rigidbody body;
+    public Rigidbody body;
 
     //Weapons
     int currentWeapon;
@@ -52,9 +64,9 @@ public class ClientSetup : NetworkBehaviour {
 
     //HUD stuff
     int score = 230;
-    [SyncVar(hook = "TakeDamage")]  public int health = 150;
+    [SyncVar(hook = "TakeDamage")] public int health = 150;
     int totalHealth = 150;
-    int rank = 3;
+
 
     //HUD objects
     public TextMeshProUGUI scoreText;
@@ -66,6 +78,7 @@ public class ClientSetup : NetworkBehaviour {
 
     public Sprite[] rankIcons;
     public int[] rankHealthValues;
+    int rank = 3;
 
     //Reloading and timer
     public bool isReloading = false;
@@ -101,22 +114,24 @@ public class ClientSetup : NetworkBehaviour {
     //For maintaining score in the game
     public GameObject gameManager;
 
-    [SerializeField]
-    Behaviour[] clientComponents;
 
-    Camera sceneCam;
+    // Use this for initialization
+    void Start () {
 
-    public GameObject player;
+        //Get spawnpoints from team
+        gameManager = GameObject.Find("MapManager");
+        if (team == 1)
+            spawnPoints = gameManager.GetComponent<GameMap>().team1Spawns;
+        else
+            spawnPoints = gameManager.GetComponent<GameMap>().team2Spawns;
 
-    public bool isLocal;
+        //set up spawnpoint
+        int rand = Random.Range(0, spawnPoints.Count);
+        player.transform.position = spawnPoints[rand].transform.position;
 
-    public List<GameObject> spawnPoints;
-
-	// Use this for initialization
-	void Start () {
 
         //Join a random team
-        team = Random.Range(1, 200);
+        team = Random.Range(1, 2);
         Respawn();
 
         //Notify the GameManager
@@ -130,9 +145,6 @@ public class ClientSetup : NetworkBehaviour {
         floatingHealthBar.transform.position = new Vector3(transform.position.x, transform.position.y + 7.5f, transform.position.z);
         floatingRankIcon.transform.position = new Vector3(transform.position.x - 5.8f, transform.position.y + 7.75f, transform.position.z);
 
-        //get the rigidbody
-        body = GetComponent<Rigidbody>();
-
         //get the number of players currently in game
         foreach (GameObject g in GameObject.FindGameObjectsWithTag("Player"))
         {
@@ -143,8 +155,6 @@ public class ClientSetup : NetworkBehaviour {
         currentWeapon = 0;
         velocity = 0.3f;
         movementSpeed = 0.3f;
-
-        body = GetComponent<Rigidbody>();
 
         transform.position = new Vector3(playerCam.transform.position.x, playerCam.transform.position.y, -10);
         anim.enabled = false;
@@ -158,16 +168,6 @@ public class ClientSetup : NetworkBehaviour {
             muzzleFlashes[i].SetActive(false);
 
         sceneCam = Camera.main;
-
-        gameManager = GameObject.Find("MapManager");
-        if(team == 1)
-            spawnPoints = gameManager.GetComponent<GameMap>().team1Spawns;
-        else
-            spawnPoints = gameManager.GetComponent<GameMap>().team2Spawns;
-
-        //set up spawnpoint
-        int rand = Random.Range(0, spawnPoints.Count);
-        player.transform.position = spawnPoints[rand].transform.position;
 
         if(!isLocalPlayer)
         {
@@ -302,8 +302,29 @@ public class ClientSetup : NetworkBehaviour {
 
     public void Update()
     {
+
+        CmdUpdateHealth();
+
+        if (Input.GetMouseButtonDown(0) && currentAmmo[currentWeapon] > 0 && isLocalPlayer)
+        {
+            CmdSpawnBullet();
+            UpdateHealth();
+        }
+        else
+        {
+            CmdRemoveFlash();
+        }
+
+        //Weapon switching
+        if (Input.GetKey("1") && isLocalPlayer) CmdSetWeapon(0);
+        if (Input.GetKey("2") && isLocalPlayer) CmdSetWeapon(1);
+        if (Input.GetKey("3") && isLocalPlayer) CmdSetWeapon(2);
+        if (Input.GetKey("4") && isLocalPlayer) CmdSetWeapon(3);
+        if (Input.GetKey("5") && isLocalPlayer) CmdSetWeapon(4);
+
         //Update the HUD
         //Health
+        Debug.Log(rankHealthValues.Length + " : " + rank);
         healthBar.GetComponent<Slider>().maxValue = rankHealthValues[rank];
         healthBar.GetComponent<Slider>().value = health;
         healthText.text = health.ToString() + "/" + rankHealthValues[rank];
@@ -367,25 +388,6 @@ public class ClientSetup : NetworkBehaviour {
             isReloading = true;
             initialReload = false;
         }
-
-        CmdUpdateHealth();
-
-        if (Input.GetMouseButtonDown(0) && currentAmmo[currentWeapon] > 0 && isLocalPlayer)
-        {
-            CmdSpawnBullet();
-            UpdateHealth();
-        }
-        else
-        {
-            CmdRemoveFlash();
-        }
-
-        //Weapon switching
-        if (Input.GetKey("1") && isLocalPlayer) CmdSetWeapon(0);
-        if (Input.GetKey("2") && isLocalPlayer) CmdSetWeapon(1);
-        if (Input.GetKey("3") && isLocalPlayer) CmdSetWeapon(2);
-        if (Input.GetKey("4") && isLocalPlayer) CmdSetWeapon(3);
-        if (Input.GetKey("5") && isLocalPlayer) CmdSetWeapon(4);
 
     }
 
@@ -461,8 +463,8 @@ public class ClientSetup : NetworkBehaviour {
         transform.rotation *= Quaternion.Euler(-90, 0, 0);
 
         //Reactivate colliders
-        gameObject.GetComponent<BoxCollider>().enabled = true;
-        gameObject.GetComponent<Rigidbody>().detectCollisions = true;
+        player.gameObject.GetComponent<BoxCollider>().enabled = true;
+        player.gameObject.GetComponent<Rigidbody>().detectCollisions = true;
 
         //Hide respawn button
         respawnScreen.SetActive(false);
@@ -480,9 +482,9 @@ public class ClientSetup : NetworkBehaviour {
         if (isDead)
             return;
 
-        Vector3 p = transform.position;
+        Vector3 p = player.transform.position;
         p.z = -10;
-        transform.position = p;
+        player.transform.position = p;
         //first do crosshair position
         crosshair.transform.position = Input.mousePosition;
 
@@ -499,25 +501,25 @@ public class ClientSetup : NetworkBehaviour {
 
         currentMPos = mPos;
 
-        if (transform.parent.gameObject.GetComponent<ClientSetup>().isLocal)
+        if (isLocal)
         {
             if (ground.Raycast(cameraRay, out rayLength))
             {
                 Vector3 target = cameraRay.GetPoint(rayLength);
-                Vector3 direction = target - transform.position;
+                Vector3 direction = target - player.transform.position;
                 currentDirection = direction;
                 float rotation = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
-                transform.rotation = Quaternion.Euler(0, 0, -rotation);
+                player.transform.rotation = Quaternion.Euler(0, 0, -rotation);
 
             }
 
             if (Input.GetKey("w"))
             {
                 //apply the move toward function using this position
-                transform.position = Vector3.MoveTowards(transform.position, new Vector3(currentMPos.x, currentMPos.y, -10), velocity);
-                floatingHealthBar.transform.position = new Vector3(transform.position.x, transform.position.y + 7.5f, transform.position.z);
-                floatingRankIcon.transform.position = new Vector3(transform.position.x - 5.8f, transform.position.y + 7.75f, transform.position.z);
-                playerCam.transform.position = new Vector3(transform.position.x, transform.position.y, playerCam.transform.position.z);
+                player.transform.position = Vector3.MoveTowards(player.transform.position, new Vector3(currentMPos.x, currentMPos.y, -10), velocity);
+                floatingHealthBar.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 7.5f, player.transform.position.z);
+                floatingRankIcon.transform.position = new Vector3(player.transform.position.x - 5.8f, player.transform.position.y + 7.75f, player.transform.position.z);
+                playerCam.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, playerCam.transform.position.z);
                 anim.enabled = true;
             }
             else
@@ -528,14 +530,14 @@ public class ClientSetup : NetworkBehaviour {
         crosshair.transform.position = playerCam.WorldToScreenPoint(crosshairMarker.transform.position) + currentDirection.normalized * 200;
 
         body.velocity = new Vector3(0, 0, 0);
-        body.angularVelocity = new Vector3(0, 0, 0);// movementSpeed * currentDirection;
+        body.angularVelocity = new Vector3(0, 0, 0);
 
     }
 
     public void Death()
     {
         //Player falls over
-        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(90, 0, 0) * rotationAtDeath, Time.deltaTime * 0.5f);
+        player.transform.rotation = Quaternion.Slerp(player.transform.rotation, Quaternion.Euler(90, 0, 0) * rotationAtDeath, Time.deltaTime * 0.5f);
 
         //Respawn screen shows
         respawnScreen.SetActive(true);
