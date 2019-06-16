@@ -5681,6 +5681,8 @@ MonoBehaviour:
   armour: 0
   damageAmounts: 0c0000000f000000080000000600000028000000
   reloadTimer: 0200000005000000040000000300000003000000
+  healthPercentage: 1
+  healthColour: {r: 0, g: 1, b: 0, a: 1}
   health: 150
   scoreText: {fileID: 114940014275785684}
   ammoText: {fileID: 114707180593355668}

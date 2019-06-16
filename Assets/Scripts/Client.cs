@@ -65,6 +65,7 @@ public class Client : NetworkBehaviour {
     //HUD stuff
     int score = 230;
     [SyncVar(hook = ("ChangeHealth"))] public float healthPercentage = 1;
+    [SyncVar(hook = ("ChangeHealthColour"))] public Color healthColour = Color.green;
     public int health = 100;
     int totalHealth = 100;
 
@@ -166,6 +167,7 @@ public class Client : NetworkBehaviour {
 
         //set up spawnpoint
         Respawn();
+
         //Then make it's mesh visible again
         player.GetComponentInChildren<SkinnedMeshRenderer>().enabled = true;
 
@@ -248,12 +250,6 @@ public class Client : NetworkBehaviour {
 
     public void UpdateHealth()
     {
-
-        healthPercentage = (float)health / (float)totalHealth;
-
-        //Set the Fill Amount
-        Debug.Log("fill amount norm : " + healthPercentage);
-
         //Set colour
         if (healthPercentage > 0.7f)
             floatingHealthBar.GetComponent<Image>().color = Color.green;
@@ -271,19 +267,6 @@ public class Client : NetworkBehaviour {
     [ClientRpc]
     public void RpcUpdateHealth()
     {
-        healthPercentage = (float)health / (float)totalHealth;
-
-        //Set the Fill Amount
-       // floatingHealthBar.GetComponent<Image>().fillAmount = healthPercentage;
-
-        //Set colour
-        if (healthPercentage > 0.7f)
-            floatingHealthBar.GetComponent<Image>().color = Color.green;
-        else
-        if (healthPercentage <= 0.7f && healthPercentage > 0.25f)
-            floatingHealthBar.GetComponent<Image>().color = Color.yellow;
-        else
-            floatingHealthBar.GetComponent<Image>().color = Color.red;
 
         //And finally set it's position
         floatingHealthBar.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 7.5f, player.transform.position.z);
@@ -296,7 +279,27 @@ public class Client : NetworkBehaviour {
         //Set the Fill Amount
         floatingHealthBar.GetComponent<Image>().fillAmount = h;
 
+        //Set colour
+        if (h > 0.7f)
+            healthColour = Color.green;
+        else
+        if (h <= 0.7f && h > 0.25f)
+            healthColour = Color.yellow;
+        else
+            healthColour = Color.red;
+
     }
+
+    void ChangeHealthColour(Color c)
+    {
+        floatingHealthBar.GetComponent<Image>().color = c;
+    }
+
+    public void Hit(int damage)
+    {
+        CmdTakeDamage(damage);
+    }
+
     [Command]
     public void CmdTakeDamage(int damage)
     {
@@ -310,6 +313,7 @@ public class Client : NetworkBehaviour {
         if (isLocalPlayer)
         {
             health -= damage + armour;
+            healthPercentage = (float)health / (float)totalHealth;
 
             if (health <= 0)
             {
@@ -322,16 +326,12 @@ public class Client : NetworkBehaviour {
         }
     }
 
-    public void Hit(int damage)
-    {
-        CmdTakeDamage(damage);
-    }
-
     public void TakeDamage(int damage)
     {
         if (!isLocalPlayer)
         {
             health -= damage + armour;
+            healthPercentage = (float)health / (float)totalHealth;
 
             if (health <= 0)
             {
@@ -482,7 +482,11 @@ public class Client : NetworkBehaviour {
     {
         //Reset health and ranks
         health = 100;
+        healthPercentage = 1;
         rank = 0;
+
+        floatingHealthBar.GetComponent<Image>().fillAmount = 1;
+        healthColour = Color.green;
 
         //Spawn in random position
         int rand = Random.Range(0, spawnPoints.Count);
@@ -501,7 +505,6 @@ public class Client : NetworkBehaviour {
 
         //Hide respawn button
         respawnScreen.SetActive(false);
-
     }
 
     public void exitGame()
