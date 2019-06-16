@@ -64,6 +64,7 @@ public class Client : NetworkBehaviour {
 
     //HUD stuff
     int score = 230;
+    [SyncVar(hook = ("ChangeHealth"))] public float healthPercentage = 1;
     public int health = 100;
     int totalHealth = 100;
 
@@ -141,8 +142,8 @@ public class Client : NetworkBehaviour {
             sceneCam.gameObject.SetActive(false);
 
             //Hide UI elements that player shouldn't see
-            floatingHealthBar.GetComponent<CanvasRenderer>().SetAlpha(0);
-            floatingRankIcon.GetComponent<CanvasRenderer>().SetAlpha(0);
+            //floatingHealthBar.GetComponent<CanvasRenderer>().SetAlpha(0);
+            //floatingRankIcon.GetComponent<CanvasRenderer>().SetAlpha(0);
         }
 
 
@@ -248,16 +249,16 @@ public class Client : NetworkBehaviour {
     public void UpdateHealth()
     {
 
-        float currentHealthPercentage = (float)health / (float)totalHealth;
+        healthPercentage = (float)health / (float)totalHealth;
 
         //Set the Fill Amount
-        floatingHealthBar.GetComponent<Image>().fillAmount = currentHealthPercentage;
+        Debug.Log("fill amount norm : " + healthPercentage);
 
         //Set colour
-        if (currentHealthPercentage > 0.7f)
+        if (healthPercentage > 0.7f)
             floatingHealthBar.GetComponent<Image>().color = Color.green;
         else
-        if (currentHealthPercentage <= 0.7f && currentHealthPercentage > 0.25f)
+        if (healthPercentage <= 0.7f && healthPercentage > 0.25f)
             floatingHealthBar.GetComponent<Image>().color = Color.yellow;
         else
             floatingHealthBar.GetComponent<Image>().color = Color.red;
@@ -265,22 +266,21 @@ public class Client : NetworkBehaviour {
         //And finally set it's position
         floatingHealthBar.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 7.5f, player.transform.position.z);
         floatingRankIcon.transform.position = new Vector3(player.transform.position.x - 5.8f, player.transform.position.y + 7.75f, player.transform.position.z);
-
     }
 
     [ClientRpc]
     public void RpcUpdateHealth()
     {
-        float currentHealthPercentage = (float)health / (float)totalHealth;
+        healthPercentage = (float)health / (float)totalHealth;
 
         //Set the Fill Amount
-        floatingHealthBar.GetComponent<Image>().fillAmount = currentHealthPercentage;
+       // floatingHealthBar.GetComponent<Image>().fillAmount = healthPercentage;
 
         //Set colour
-        if (currentHealthPercentage > 0.7f)
+        if (healthPercentage > 0.7f)
             floatingHealthBar.GetComponent<Image>().color = Color.green;
         else
-        if (currentHealthPercentage <= 0.7f && currentHealthPercentage > 0.25f)
+        if (healthPercentage <= 0.7f && healthPercentage > 0.25f)
             floatingHealthBar.GetComponent<Image>().color = Color.yellow;
         else
             floatingHealthBar.GetComponent<Image>().color = Color.red;
@@ -288,9 +288,15 @@ public class Client : NetworkBehaviour {
         //And finally set it's position
         floatingHealthBar.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 7.5f, player.transform.position.z);
         floatingRankIcon.transform.position = new Vector3(player.transform.position.x - 5.8f, player.transform.position.y + 7.75f, player.transform.position.z);
-
     }
 
+
+    void ChangeHealth(float h)
+    {
+        //Set the Fill Amount
+        floatingHealthBar.GetComponent<Image>().fillAmount = h;
+
+    }
     [Command]
     public void CmdTakeDamage(int damage)
     {
