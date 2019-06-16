@@ -5629,7 +5629,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114648311287741478}
-        m_MethodName: Respawn
+        m_MethodName: OnRespawnClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -64,8 +64,8 @@ public class Client : NetworkBehaviour {
 
     //HUD stuff
     int score = 230;
-    [SyncVar(hook = ("ChangeHealth"))] public float healthPercentage = 1;
-    [SyncVar(hook = ("ChangeHealthColour"))] public Color healthColour = Color.green;
+    [SyncVar(hook = "ChangeHealth")] public float healthPercentage = 1;
+    [SyncVar(hook = "ChangeHealthColour")] public Color healthColour = Color.green;
     public int health = 100;
     int totalHealth = 100;
 
@@ -106,7 +106,7 @@ public class Client : NetworkBehaviour {
     public int deaths = 0;
 
     //Recording whether character is currently alive
-    public bool isDead = false;
+    [SyncVar (hook = "SetLiving")]public bool isDead = false;
     float deathRotation = 0;
     public Quaternion rotationAtDeath;
 
@@ -320,8 +320,8 @@ public class Client : NetworkBehaviour {
                 isDead = true;
                 SetHealth(0);
                 rotationAtDeath = player.transform.rotation;
-                gameObject.GetComponent<BoxCollider>().enabled = false;
-                gameObject.GetComponent<Rigidbody>().detectCollisions = false;
+                player.GetComponent<BoxCollider>().enabled = false;
+                player.GetComponent<Rigidbody>().detectCollisions = false;
             }
         }
     }
@@ -478,39 +478,93 @@ public class Client : NetworkBehaviour {
             sceneCam.gameObject.SetActive(true);
     }
 
+    void SetLiving(bool b)
+    {
+        Debug.Log("called");
+        isDead = b;
+    }
+
+    public void OnRespawnClicked()
+    { 
+        CmdRespawn();
+    }
+    [Command]
+    public void CmdRespawn()
+    {
+        Respawn();
+        RpcRespawn();
+    }
+
+    [ClientRpc]
+    public void RpcRespawn()
+    {
+        if (!isServer)
+        {
+            //Reset health and ranks
+            health = 100;
+            healthPercentage = 1;
+            rank = 0;
+
+            floatingHealthBar.GetComponent<Image>().fillAmount = 1;
+            healthColour = Color.green;
+
+            //Spawn in random position
+            int rand = Random.Range(0, spawnPoints.Count);
+            player.transform.position = spawnPoints[rand].transform.position;
+            playerCam.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, playerCam.transform.position.z);
+
+            //Let the game loop re-commence
+            isDead = false;
+
+            //Stand the player back up
+            player.transform.rotation *= Quaternion.Euler(-90, 0, 0);
+
+            //Reactivate colliders
+            player.GetComponent<BoxCollider>().enabled = true;
+            player.GetComponent<Rigidbody>().detectCollisions = true;
+
+            //Hide respawn button
+            respawnScreen.SetActive(false);
+        }
+    }
+
     public void Respawn()
     {
-        //Reset health and ranks
-        health = 100;
-        healthPercentage = 1;
-        rank = 0;
+        if (isServer)
+        {
+            //Reset health and ranks
+            health = 100;
+            healthPercentage = 1;
+            rank = 0;
 
-        floatingHealthBar.GetComponent<Image>().fillAmount = 1;
-        healthColour = Color.green;
+            floatingHealthBar.GetComponent<Image>().fillAmount = 1;
+            healthColour = Color.green;
 
-        //Spawn in random position
-        int rand = Random.Range(0, spawnPoints.Count);
-        player.transform.position = spawnPoints[rand].transform.position;
-        playerCam.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, playerCam.transform.position.z);
+            //Spawn in random position
+            int rand = Random.Range(0, spawnPoints.Count);
+            player.transform.position = spawnPoints[rand].transform.position;
+            playerCam.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, playerCam.transform.position.z);
 
-        //Let the game loop re-commence
-        isDead = false;
+            //Let the game loop re-commence
+            isDead = false;
 
-        //Stand the player back up
-        player.transform.rotation *= Quaternion.Euler(-90, 0, 0);
+            //Stand the player back up
+            player.transform.rotation *= Quaternion.Euler(-90, 0, 0);
 
-        //Reactivate colliders
-        player.gameObject.GetComponent<BoxCollider>().enabled = true;
-        player.gameObject.GetComponent<Rigidbody>().detectCollisions = true;
+            //Reactivate colliders
+            player.GetComponent<BoxCollider>().enabled = true;
+            player.GetComponent<Rigidbody>().detectCollisions = true;
 
-        //Hide respawn button
-        respawnScreen.SetActive(false);
+            //Hide respawn button
+            respawnScreen.SetActive(false);
+        }
     }
 
     public void exitGame()
     {
         NetworkManager.singleton.StopClient();
     }
+
 
     private void FixedUpdate()
     {
