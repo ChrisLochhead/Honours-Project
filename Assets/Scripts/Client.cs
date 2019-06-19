@@ -63,7 +63,7 @@ public class Client : NetworkBehaviour {
     public int[] reloadTimer = { 2, 5, 4, 3, 3 };
 
     //HUD stuff
-    int score = 230;
+    public int score = 0;
     [SyncVar(hook = "ChangeHealth")] public float healthPercentage = 1;
     [SyncVar(hook = "ChangeHealthColour")] public Color healthColour = Color.green;
     public int health = 100;
@@ -107,8 +107,9 @@ public class Client : NetworkBehaviour {
 
     //Recording whether character is currently alive
     [SyncVar (hook = "SetLiving")]public bool isDead = false;
+    bool reset = false;
     float deathRotation = 0;
-    public Quaternion rotationAtDeath;
+
 
     //Registers which team the player is in
     public int team;
@@ -116,6 +117,18 @@ public class Client : NetworkBehaviour {
     //For maintaining score in the game
     public GameObject gameManager;
 
+    //ScoreBoard HUD
+    public bool isScoreboardShowing = false;
+    public GameObject scoreBoard;
+    public TextMeshProUGUI team1Score;
+    public TextMeshProUGUI team2Score;
+
+    //For muzzle flash timing
+    float muzzleFlashTimer = 0.15f;
+    bool bulletShot = false;
+
+
+    //For gaining score
 
     // Use this for initialization
     void Start () {
@@ -147,16 +160,19 @@ public class Client : NetworkBehaviour {
             //floatingRankIcon.GetComponent<CanvasRenderer>().SetAlpha(0);
         }
 
-
-        //Set as initially invisible until in position ( to avoid it jumping across everyones screen
-        player.GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
+        //Notify the GameManager
+        gameManager = GameObject.Find("GameManager");
+        gameManager.GetComponent<Game>().AddPlayer(this.gameObject);
 
         //ignore collisions between players
         Physics.IgnoreLayerCollision(9,9);
 
+        //Initialise scoreboard variables
+        team1Score.text = gameManager.GetComponent<Game>().team1Score.ToString();
+        team2Score.text = gameManager.GetComponent<Game>().team1Score.ToString();
 
         //Join a random team
-        team = Random.Range(0, 200);
+        team = Random.Range(0, 2);
 
         //Get spawnpoints from team
         gameManager = GameObject.Find("MapManager");
@@ -170,10 +186,6 @@ public class Client : NetworkBehaviour {
 
         //Then make it's mesh visible again
         player.GetComponentInChildren<SkinnedMeshRenderer>().enabled = true;
-
-        //Notify the GameManager
-        gameManager = GameObject.Find("GameManager");
-        gameManager.GetComponent<Game>().addPlayer(this.gameObject);
 
         //initialise armour rating
         armour = 0;
@@ -259,6 +271,9 @@ public class Client : NetworkBehaviour {
         else
             floatingHealthBar.GetComponent<Image>().color = Color.red;
 
+        //update rank image also
+        floatingRankIcon.GetComponent<Image>().sprite = rankIcons[rank];
+
         //And finally set it's position
         floatingHealthBar.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 7.5f, player.transform.position.z);
         floatingRankIcon.transform.position = new Vector3(player.transform.position.x - 5.8f, player.transform.position.y + 7.75f, player.transform.position.z);
@@ -267,8 +282,10 @@ public class Client : NetworkBehaviour {
     [ClientRpc]
     public void RpcUpdateHealth()
     {
+        //update rank image
+        floatingRankIcon.GetComponent<Image>().sprite = rankIcons[rank];
 
-        //And finally set it's position
+        //Set it's position
         floatingHealthBar.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 7.5f, player.transform.position.z);
         floatingRankIcon.transform.position = new Vector3(player.transform.position.x - 5.8f, player.transform.position.y + 7.75f, player.transform.position.z);
     }
@@ -312,16 +329,16 @@ public class Client : NetworkBehaviour {
     {
         if (isLocalPlayer)
         {
-            health -= damage + armour;
-            healthPercentage = (float)health / (float)totalHealth;
-
-            if (health <= 0)
+            if (!isDead)
             {
-                isDead = true;
-                SetHealth(0);
-                rotationAtDeath = player.transform.rotation;
-                player.GetComponent<BoxCollider>().enabled = false;
-                player.GetComponent<Rigidbody>().detectCollisions = false;
+                health -= damage + armour;
+                healthPercentage = (float)health / (float)totalHealth;
+
+                if (health <= 0)
+                {
+                    isDead = true;
+                    SetHealth(0);
+                }
             }
         }
     }
@@ -330,16 +347,16 @@ public class Client : NetworkBehaviour {
     {
         if (!isLocalPlayer)
         {
-            health -= damage + armour;
-            healthPercentage = (float)health / (float)totalHealth;
-
-            if (health <= 0)
+            if (!isDead)
             {
-                isDead = true;
-                SetHealth(0);
-                rotationAtDeath = player.transform.rotation;
-                player.GetComponent<BoxCollider>().enabled = false;
-                player.GetComponent<Rigidbody>().detectCollisions = false;
+                health -= damage + armour;
+                healthPercentage = (float)health / (float)totalHealth;
+
+                if (health <= 0)
+                {
+                    isDead = true;
+                    SetHealth(0);
+                }
             }
         }
     }
@@ -377,19 +394,61 @@ public class Client : NetworkBehaviour {
         {
             CmdSpawnBullet();
             currentAmmo[currentWeapon]--;
+            bulletShot = true;
         }
-        else
+
+        if(bulletShot)
         {
-            CmdRemoveFlash();
+            muzzleFlashTimer -= Time.deltaTime;
+
+            if(muzzleFlashTimer <= 0.0f)
+            {
+                CmdRemoveFlash();
+                muzzleFlashTimer = 0.15f;
+                bulletShot = false;
+            }
         }
 
         //Weapon switching
         if (Input.GetKey("1") && isLocalPlayer) CmdSetWeapon(0);
-        if (Input.GetKey("2") && isLocalPlayer) CmdSetWeapon(1);
-        if (Input.GetKey("3") && isLocalPlayer) CmdSetWeapon(2);
-        if (Input.GetKey("4") && isLocalPlayer) CmdSetWeapon(3);
-        if (Input.GetKey("5") && isLocalPlayer) CmdSetWeapon(4);
+        if (Input.GetKey("2") && isLocalPlayer && score > 100) CmdSetWeapon(1);
+        if (Input.GetKey("3") && isLocalPlayer && score > 150) CmdSetWeapon(2);
+        if (Input.GetKey("4") && isLocalPlayer && score > 200) CmdSetWeapon(3);
+        if (Input.GetKey("5") && isLocalPlayer && score > 250) CmdSetWeapon(4);
 
+        //Update rank
+        if (score <= 49) rank = 0;
+        else if (score > 49 && score <= 99) rank = 1 ;
+        else if (score > 100 && score <= 149) rank = 2;
+        else if (score > 150 && score <= 199) rank = 3;
+        else if (score > 200 && score <= 249) rank = 4;
+        else if (score > 250 && score <= 299) rank = 5;
+        else if (score > 300 && score <= 349) rank = 6;
+        else if (score > 350 && score <= 399) rank = 7;
+        else if (score > 400 && score <= 449) rank = 8;
+        else if (score > 450 && score <= 499) rank = 9;
+
+        //Toggle scoreboard
+        if (Input.GetKeyDown("t"))
+        {
+            if (isScoreboardShowing)
+            {
+                scoreBoard.SetActive(false);
+                isScoreboardShowing = false;
+            }
+            else
+            {
+                scoreBoard.SetActive(true);
+                isScoreboardShowing = true;
+            }
+        }
+
+        //Update scoreboard if visible
+        if (isScoreboardShowing)
+        {
+            team1Score.text = gameManager.GetComponent<Game>().team1Score.ToString();
+            team2Score.text = gameManager.GetComponent<Game>().team1Score.ToString();
+        }
         //Initialisation for the camera
         if (playerCam.GetComponent<CameraMovement>().canMove == true)
         {
@@ -480,7 +539,6 @@ public class Client : NetworkBehaviour {
 
     void SetLiving(bool b)
     {
-        Debug.Log("called");
         isDead = b;
     }
 
@@ -504,14 +562,20 @@ public class Client : NetworkBehaviour {
             health = 100;
             healthPercentage = 1;
             rank = 0;
+            score = 0;
 
             floatingHealthBar.GetComponent<Image>().fillAmount = 1;
             healthColour = Color.green;
 
-            //Spawn in random position
-            int rand = Random.Range(0, spawnPoints.Count);
-            player.transform.position = spawnPoints[rand].transform.position;
-            playerCam.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, playerCam.transform.position.z);
+            //Make visible after in position 
+            SkinnedMeshRenderer[] r = player.GetComponentsInChildren<SkinnedMeshRenderer>();
+
+            foreach (SkinnedMeshRenderer smr in r)
+            {
+                smr.enabled = true;
+            }
+
+            floatingRankIcon.GetComponent<CanvasRenderer>().SetAlpha(255);
 
             //Let the game loop re-commence
             isDead = false;
@@ -519,12 +583,9 @@ public class Client : NetworkBehaviour {
             //Stand the player back up
             player.transform.rotation *= Quaternion.Euler(-90, 0, 0);
 
-            //Reactivate colliders
-            player.GetComponent<BoxCollider>().enabled = true;
-            player.GetComponent<Rigidbody>().detectCollisions = true;
-
             //Hide respawn button
             respawnScreen.SetActive(false);
+            reset = false;
         }
     }
 
@@ -536,14 +597,20 @@ public class Client : NetworkBehaviour {
             health = 100;
             healthPercentage = 1;
             rank = 0;
+            score = 0;
 
             floatingHealthBar.GetComponent<Image>().fillAmount = 1;
             healthColour = Color.green;
 
-            //Spawn in random position
-            int rand = Random.Range(0, spawnPoints.Count);
-            player.transform.position = spawnPoints[rand].transform.position;
-            playerCam.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, playerCam.transform.position.z);
+            //Make visible after in position 
+            SkinnedMeshRenderer[] r = player.GetComponentsInChildren<SkinnedMeshRenderer>();
+
+            foreach (SkinnedMeshRenderer smr in r)
+            {
+                smr.enabled = true;
+            }
+
+            floatingRankIcon.GetComponent<CanvasRenderer>().SetAlpha(255);
 
             //Let the game loop re-commence
             isDead = false;
@@ -551,12 +618,9 @@ public class Client : NetworkBehaviour {
             //Stand the player back up
             player.transform.rotation *= Quaternion.Euler(-90, 0, 0);
 
-            //Reactivate colliders
-            player.GetComponent<BoxCollider>().enabled = true;
-            player.GetComponent<Rigidbody>().detectCollisions = true;
-
             //Hide respawn button
             respawnScreen.SetActive(false);
+            reset = false;
         }
     }
 
@@ -572,9 +636,11 @@ public class Client : NetworkBehaviour {
         if (isDead)
             return;
 
+        //Set all players to the correct z plane
         Vector3 p = player.transform.position;
         p.z = -10;
         player.transform.position = p;
+
         //first do crosshair position
         crosshair.transform.position = Input.mousePosition;
 
@@ -603,6 +669,7 @@ public class Client : NetworkBehaviour {
 
             }
 
+
             if (Input.GetKey("w"))
             {
                 //apply the move toward function using this position
@@ -626,13 +693,29 @@ public class Client : NetworkBehaviour {
 
     public void Death()
     {
-        //Player falls over
-        player.transform.rotation = Quaternion.Slerp(player.transform.rotation, Quaternion.Euler(90, 0, 0) * rotationAtDeath, Time.deltaTime * 0.5f);
+        if (!reset)
+        {
+            //Player falls over
+            SkinnedMeshRenderer[] r = player.GetComponentsInChildren<SkinnedMeshRenderer>();
 
-        //Respawn screen shows
-        respawnScreen.SetActive(true);
+            foreach (SkinnedMeshRenderer smr in r)
+            {
+                smr.enabled = false;
+            }
+
+            floatingRankIcon.GetComponent<CanvasRenderer>().SetAlpha(0);
+
+            //Spawn in random position
+            int rand = Random.Range(0, spawnPoints.Count);
+            player.transform.position = spawnPoints[rand].transform.position;
+            playerCam.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, playerCam.transform.position.z);
+
+            //Respawn screen shows
+            respawnScreen.SetActive(true);
+            reset = true;
+
+        }
     }
-
 
     public void SetHealth(int damage)
     {
@@ -640,5 +723,30 @@ public class Client : NetworkBehaviour {
             health = 0;
         else
             health -= damage;
+    }
+
+    public void UpdateScore(int s)
+    {
+        CmdGainScore(s);
+    }
+
+    public void GainScore(int s)
+    {
+        if(isServer)
+        score += s;
+    }
+
+    [Command]
+    public void CmdGainScore(int s)
+    {
+        GainScore(s);
+        RpcGainScore(s);
+    }
+
+    [ClientRpc]
+    public void RpcGainScore(int s)
+    {
+        if(!isServer)
+        score += s;
     }
 }

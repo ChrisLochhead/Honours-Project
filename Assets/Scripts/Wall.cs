@@ -7,6 +7,7 @@ public class Wall : MonoBehaviour {
     public Vector2 pos;
     public float rot;
     public int type;
+
 	// Use this for initialization
 	void Start () {
 		

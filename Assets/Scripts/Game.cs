@@ -9,31 +9,26 @@ public class Game : MonoBehaviour {
     List<GameObject> players = new List<GameObject>();
 
     //For recording score
-    public int team1Score = 0;
-    public int team2Score = 0;
+    public int team1Score = 24;
+    public int team2Score = 132;
 
     //To be made modifiable
     public int timeLimit = 15;
     public int killLimit = 25;
 
-    private void OnPlayerConnected(NetworkPlayer player)
+    public void AddPlayer(GameObject p)
     {
-        players.Clear();
-    }
-
-    public void  addPlayer(GameObject p)
-    {
-            players.Add(p);
+       players.Add(p);
     }
 
     private void Awake()
     {
-        DontDestroyOnLoad(this);
+        DontDestroyOnLoad(this.gameObject);
     }
 
     public void OnKillRegistered(GameObject killer, GameObject killed)
     {
-        if (killer.gameObject.GetComponent<Client>().team == 0)
+        if (killer.transform.parent.GetComponent<Client>().team == 0)
         {
             team1Score++;
         }
@@ -45,11 +40,11 @@ public class Game : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-       // Debug.Log("No of players" + players.Count);
-        checkVictory();
+        Debug.Log("No of players" + players.Count);
+        CheckVictory();
 	}
 
-    private void checkVictory()
+    private void CheckVictory()
     {
     }
 }
