@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class Game : MonoBehaviour {
+public class Game : NetworkBehaviour {
 
     //Record all players in server
     List<GameObject> players = new List<GameObject>();
 
     //For recording score
-    public int team1Score = 24;
-    public int team2Score = 132;
+    public int team1Score = 0;
+    public int team2Score = 0;
 
     //To be made modifiable
     public int timeLimit = 15;
@@ -40,11 +40,35 @@ public class Game : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        Debug.Log("No of players" + players.Count);
         CheckVictory();
 	}
 
     private void CheckVictory()
     {
+        if(team1Score >= killLimit)
+        {
+            Victory(1);
+        }
+        else if( team2Score >= killLimit)
+        {
+            Victory(2);
+        }
+    }
+
+    public void Victory(int t)
+    {
+        foreach (GameObject p in players)
+        {
+            //Players of this team have won
+            if(p.GetComponent<Client>().team == t)
+            {
+
+            }
+            else
+            {
+
+            }
+
+        }
     }
 }

@@ -181,11 +181,10 @@ public class Client : NetworkBehaviour {
         team = Random.Range(0, 2);
 
         //Get spawnpoints from team
-        gameManager = GameObject.Find("MapManager");
         if (team == 1)
-            spawnPoints = gameManager.GetComponent<GameMap>().team1Spawns;
+            spawnPoints = GameObject.Find("MapManager").GetComponent<GameMap>().team1Spawns;
         else
-            spawnPoints = gameManager.GetComponent<GameMap>().team2Spawns;
+            spawnPoints = GameObject.Find("MapManager").GetComponent<GameMap>().team2Spawns;
 
         //set up spawnpoint
         Respawn();
@@ -470,7 +469,7 @@ public class Client : NetworkBehaviour {
         if (isScoreboardShowing)
         {
             team1Score.text = gameManager.GetComponent<Game>().team1Score.ToString();
-            team2Score.text = gameManager.GetComponent<Game>().team1Score.ToString();
+            team2Score.text = gameManager.GetComponent<Game>().team2Score.ToString();
         }
         //Initialisation for the camera
         if (playerCam.GetComponent<CameraMovement>().canMove == true)
