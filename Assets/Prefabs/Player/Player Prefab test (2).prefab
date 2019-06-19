@@ -5749,9 +5749,10 @@ MonoBehaviour:
   armour: 0
   damageAmounts: 0c0000000f000000080000000600000028000000
   reloadTimer: 0200000005000000040000000300000003000000
+  score: 0
   healthPercentage: 1
   healthColour: {r: 0, g: 1, b: 0, a: 1}
-  health: 150
+  health: 100
   scoreText: {fileID: 114940014275785684}
   ammoText: {fileID: 114707180593355668}
   healthText: {fileID: 114607281472923554}
@@ -5767,7 +5768,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: e1aa21d0aba7f7c4eaf646f891be27c1, type: 3}
   - {fileID: 21300000, guid: 98566832bd5bb6e40ba7902ba7aab3df, type: 3}
   - {fileID: 21300000, guid: 99e10882c49dbec41aa37b05d3d2f448, type: 3}
-  rankHealthValues: 640000006e00000078000000820000008c00000096000000a0000000af000000c8000000
+  rankHealthValues: 640000006e00000078000000820000008c0000005a000000a0000000af000000c8000000
   isReloading: 0
   initialReload: 1
   reloadStartTime: 0

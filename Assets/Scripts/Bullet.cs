@@ -45,7 +45,7 @@ public class Bullet : NetworkBehaviour {
     void CheckEnemyCollision(Collision collision)
     {
         //Apply damage
-        collision.gameObject.transform.parent.GetComponent<Client>().Hit(15);
+        collision.gameObject.transform.parent.GetComponent<Client>().Hit(damageAmount);
 
         //If this shot killed the player, register it
         if (collision.transform.parent.GetComponent<Client>().isDead)
@@ -58,7 +58,6 @@ public class Bullet : NetworkBehaviour {
         else
         {
             shooter.transform.parent.GetComponent<Client>().UpdateScore(10);
-            Debug.Log("shooter score : " + shooter.transform.parent.GetComponent<Client>().score);
         }
 
     }

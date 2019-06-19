@@ -56,8 +56,14 @@ public class Client : NetworkBehaviour {
     int[] clipSize = { 16, 10, 30, 50, 1 };
     int[] currentAmmo = { 16, 10, 30, 50, 1 };
 
-    //weapon damage
+    //weapon damage and fire rates
     public int[] damageAmounts = { 12, 15, 8, 6, 40 };
+
+    public float[] fireRates = { 0.75f, 1.8f, 0.25f, 0.35f, 2.0f};
+    public float[] currentFireRates = { 0.75f, 1.8f, 0.25f, 0.35f, 2.0f };
+
+    public int currentFired = 0;
+    public bool hasFired = false;
 
     //reload timers (in seconds)
     public int[] reloadTimer = { 2, 5, 4, 3, 3 };
@@ -125,7 +131,7 @@ public class Client : NetworkBehaviour {
 
     //For muzzle flash timing
     float muzzleFlashTimer = 0.15f;
-    bool bulletShot = false;
+    bool muzzleShot = false;
 
 
     //For gaining score
@@ -389,23 +395,40 @@ public class Client : NetworkBehaviour {
         }
 
         CmdUpdateHealth();
-
-        if (Input.GetMouseButtonDown(0) && currentAmmo[currentWeapon] > 0 && isLocalPlayer)
+        
+        if (Input.GetMouseButton(0) && currentAmmo[currentWeapon] > 0 && isLocalPlayer && fireRates[currentWeapon]  == currentFireRates[currentWeapon])
         {
             CmdSpawnBullet();
             currentAmmo[currentWeapon]--;
-            bulletShot = true;
+            currentFired = currentWeapon;
+            muzzleShot = true;
+            hasFired = true;
         }
 
-        if(bulletShot)
+        if(hasFired)
         {
+            if (currentFireRates[currentFired] > 0)
+            {
+                currentFireRates[currentFired] -= Time.deltaTime;
+            }
+            else
+            {
+                currentFireRates[currentFired] = fireRates[currentFired];
+                hasFired = false;
+            }
+
+        }
+
+        if(muzzleShot)
+        {
+
             muzzleFlashTimer -= Time.deltaTime;
 
             if(muzzleFlashTimer <= 0.0f)
             {
                 CmdRemoveFlash();
                 muzzleFlashTimer = 0.15f;
-                bulletShot = false;
+                muzzleShot = false;
             }
         }
 
@@ -732,8 +755,34 @@ public class Client : NetworkBehaviour {
 
     public void GainScore(int s)
     {
-        if(isServer)
-        score += s;
+        if (isServer)
+        {
+            score += s;
+
+            int tmpRank = rank;
+
+            if (score <= 49) rank = 0;
+            else if (score > 49 && score <= 99) rank = 1;
+            else if (score > 100 && score <= 149) rank = 2;
+            else if (score > 150 && score <= 199) rank = 3;
+            else if (score > 200 && score <= 249) rank = 4;
+            else if (score > 250 && score <= 299) rank = 5;
+            else if (score > 300 && score <= 349) rank = 6;
+            else if (score > 350 && score <= 399) rank = 7;
+            else if (score > 400 && score <= 449) rank = 8;
+            else if (score > 450 && score <= 499) rank = 9;
+
+            //Player has levelled up
+            if (tmpRank != rank)
+            {
+                health = health = rankHealthValues[rank];
+                totalHealth = rankHealthValues[rank];
+                CmdTakeDamage(0);
+            }
+                    
+
+
+        }
     }
 
     [Command]
@@ -746,7 +795,32 @@ public class Client : NetworkBehaviour {
     [ClientRpc]
     public void RpcGainScore(int s)
     {
-        if(!isServer)
-        score += s;
+        if (!isServer)
+        {
+            score += s;
+
+
+            int tmpRank = rank;
+
+            if (score <= 49) rank = 0;
+            else if (score > 49 && score <= 99) rank = 1;
+            else if (score > 100 && score <= 149) rank = 2;
+            else if (score > 150 && score <= 199) rank = 3;
+            else if (score > 200 && score <= 249) rank = 4;
+            else if (score > 250 && score <= 299) rank = 5;
+            else if (score > 300 && score <= 349) rank = 6;
+            else if (score > 350 && score <= 399) rank = 7;
+            else if (score > 400 && score <= 449) rank = 8;
+            else if (score > 450 && score <= 499) rank = 9;
+
+            //Player has levelled up, replenish back to full health
+            if (tmpRank != rank)
+            {
+                health = health = rankHealthValues[rank];
+                totalHealth = rankHealthValues[rank];
+                CmdTakeDamage(0);
+            }
+
+        }
     }
 }
