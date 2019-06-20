@@ -121,23 +121,42 @@ public class Client : NetworkBehaviour {
     public int team;
 
     //For maintaining score in the game
-    public GameObject gameManager;
+    public Game gameManager;
 
     //ScoreBoard HUD
     public bool isScoreboardShowing = false;
     public GameObject scoreBoard;
+
     public TextMeshProUGUI team1Score;
     public TextMeshProUGUI team2Score;
+
+    public TextMeshProUGUI[] team1Names;
+    public TextMeshProUGUI[] team2Names;
+
+    public TextMeshProUGUI team1PlayerTotal;
+    public TextMeshProUGUI team2PlayerTotal;
 
     //For muzzle flash timing
     float muzzleFlashTimer = 0.15f;
     bool muzzleShot = false;
 
+    //For win conditions
+    public bool hasWon = false;
 
-    //For gaining score
+    //For Initialisation
+    public GameObject nameSelector;
+    public GameObject goButton;
+    public bool nameSelected = false;
 
     // Use this for initialization
     void Start () {
+
+    }
+
+    public void InitialisePlayer()
+    {
+        //Set up name
+        this.gameObject.name = nameSelector.GetComponent<InputField>().text;
 
         sceneCam = Camera.main;
 
@@ -167,15 +186,15 @@ public class Client : NetworkBehaviour {
         }
 
         //Notify the GameManager
-        gameManager = GameObject.Find("GameManager");
-        gameManager.GetComponent<Game>().AddPlayer(this.gameObject);
+        gameManager = GameObject.Find("GameManager").GetComponent<Game>();
+        gameManager.AddPlayer(this.gameObject);
 
         //ignore collisions between players
-        Physics.IgnoreLayerCollision(9,9);
+        Physics.IgnoreLayerCollision(9, 9);
 
         //Initialise scoreboard variables
-        team1Score.text = gameManager.GetComponent<Game>().team1Score.ToString();
-        team2Score.text = gameManager.GetComponent<Game>().team1Score.ToString();
+        team1Score.text = gameManager.team1Score.ToString();
+        team2Score.text = gameManager.team1Score.ToString();
 
         //Join a random team
         team = Random.Range(0, 2);
@@ -220,7 +239,6 @@ public class Client : NetworkBehaviour {
 
         for (int i = 0; i < muzzleFlashes.Length; i++)
             muzzleFlashes[i].SetActive(false);
-    
     }
 
     [Command]
@@ -368,6 +386,17 @@ public class Client : NetworkBehaviour {
 
     public void Update()
     {
+
+        //For initialisation 
+        if (nameSelected == false)
+        {
+            if (nameSelector.GetComponent<InputField>().text == "")
+                goButton.GetComponent<Button>().enabled = false;
+            else
+                goButton.GetComponent<Button>().enabled = true;
+
+        }
+
         //Ignore collisions from players running into eachother
         Physics.IgnoreLayerCollision(9, 9);
 
@@ -468,8 +497,28 @@ public class Client : NetworkBehaviour {
         //Update scoreboard if visible
         if (isScoreboardShowing)
         {
-            team1Score.text = gameManager.GetComponent<Game>().team1Score.ToString();
-            team2Score.text = gameManager.GetComponent<Game>().team2Score.ToString();
+            //Update each teams score
+            team1Score.text = gameManager.team1Score.ToString();
+            team2Score.text = gameManager.team2Score.ToString();
+
+            //Display each teams number of players
+            team1PlayerTotal.text = gameManager.team1Players.Count.ToString();
+            team1PlayerTotal.text = gameManager.team1Players.Count.ToString();
+
+            //Activate the necessary players and add there scores to the scoreboard
+            for(int i = 0; i < gameManager.team1Players.Count; i++)
+            {
+                team1Names[i].gameObject.SetActive(true);
+                team1Names[i].text = gameManager.team1Players[i].GetComponent<Client>().name + "     " + gameManager.team1Players[i].GetComponent<Client>().kills + "     " + gameManager.team1Players[i].GetComponent<Client>().deaths;
+
+            }
+
+            for (int i = 0; i < gameManager.team2Players.Count; i++)
+            {
+                team2Names[i].gameObject.SetActive(true);
+                team2Names[i].text = gameManager.team2Players[i].GetComponent<Client>().name + "     " + gameManager.team2Players[i].GetComponent<Client>().kills + "     " + gameManager.team2Players[i].GetComponent<Client>().deaths;
+
+            }
         }
         //Initialisation for the camera
         if (playerCam.GetComponent<CameraMovement>().canMove == true)
@@ -821,5 +870,10 @@ public class Client : NetworkBehaviour {
             }
 
         }
+    }
+
+    public void SetNameSelected(bool s)
+    {
+        nameSelected = s;
     }
 }

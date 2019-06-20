@@ -6,7 +6,8 @@ using UnityEngine.Networking;
 public class Game : NetworkBehaviour {
 
     //Record all players in server
-    List<GameObject> players = new List<GameObject>();
+    public List<GameObject> team1Players = new List<GameObject>();
+    public List<GameObject> team2Players = new List<GameObject>();
 
     //For recording score
     public int team1Score = 0;
@@ -18,7 +19,10 @@ public class Game : NetworkBehaviour {
 
     public void AddPlayer(GameObject p)
     {
-       players.Add(p);
+        if (p.GetComponent<Client>().team == 0)
+            team1Players.Add(p);
+        else
+            team2Players.Add(p);
     }
 
     private void Awake()
@@ -57,18 +61,18 @@ public class Game : NetworkBehaviour {
 
     public void Victory(int t)
     {
-        foreach (GameObject p in players)
-        {
-            //Players of this team have won
-            if(p.GetComponent<Client>().team == t)
-            {
+        //foreach (GameObject p in players)
+        //{
+        //    //Players of this team have won
+        //    if(p.GetComponent<Client>().team == t)
+        //    {
 
-            }
-            else
-            {
+        //    }
+        //    else
+        //    {
 
-            }
+        //    }
 
-        }
+        //}
     }
 }
