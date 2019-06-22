@@ -8,17 +8,13 @@ public class CameraMovement : MonoBehaviour {
     private float scrollRate = 20.0f;
     public Vector2 panLimit;
 
-    public bool canMove;
+    public bool canMove = false;
 
 	// Use this for initialization
 	void Start () {
-        canMove = true;
+        canMove = false;
 	}
 	
-    public void SetMovement(bool m)
-    {
-        canMove = m;
-    }
 	// Update is called once per frame
 	void Update () {
 

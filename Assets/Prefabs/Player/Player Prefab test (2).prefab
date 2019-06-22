@@ -7919,8 +7919,6 @@ MonoBehaviour:
   deaths: 0
   isDead: 0
   team: 0
-  gameManager: {fileID: 0}
-  gamePrefab: {fileID: 1719189813770834, guid: ae03dbddf9bd41543a6e47ec6fa053f4, type: 2}
   isScoreboardShowing: 0
   scoreBoard: {fileID: 1672986317417122}
   team1Score: {fileID: 114103461166142456}
@@ -8913,7 +8911,7 @@ SkinnedMeshRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1627814130032520}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1

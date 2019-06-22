@@ -54,6 +54,7 @@ public class BuildMenu : MonoBehaviour {
     // Use this for initialization
     void Start () {
         currentState = 0;
+        Camera.main.GetComponent<CameraMovement>().canMove = true;
 	}
 	
 	// Update is called once per frame

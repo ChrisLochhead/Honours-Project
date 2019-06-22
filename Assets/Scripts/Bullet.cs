@@ -26,7 +26,7 @@ public class Bullet : NetworkBehaviour {
         }
 
         //Check if its hit a friendly, or another bullet
-        if (collision.gameObject.tag == "Bullet" || collision.gameObject.transform.parent.GetComponent<Client>().team == shooter.transform.parent.GetComponent<Client>().team)
+        if (collision.gameObject.tag == "Bullet" || collision.gameObject.transform.parent.GetComponent<Client>().GetTeam() == shooter.transform.parent.GetComponent<Client>().GetTeam())
         {
             Physics.IgnoreCollision(collision.collider, GetComponent<Collider>());
             Destroy(this.gameObject);
@@ -34,7 +34,7 @@ public class Bullet : NetworkBehaviour {
         }
 
         //Check if it has hit an enemyplayer
-        if (collision.transform.parent.GetComponent<Client>().team != shooter.transform.parent.GetComponent<Client>().team)
+        if (collision.transform.parent.GetComponent<Client>().GetTeam() != shooter.transform.parent.GetComponent<Client>().GetTeam())
         {
             CheckEnemyCollision(collision);
             Destroy(this.gameObject);

@@ -41,7 +41,7 @@ public class Client : NetworkBehaviour {
     public Rigidbody body;
 
     //Weapons
-    int currentWeapon;
+    public int currentWeapon =  0;
 
     public GameObject[] guns;
 
@@ -86,7 +86,7 @@ public class Client : NetworkBehaviour {
 
     public Sprite[] rankIcons;
     public int[] rankHealthValues;
-    int rank = 3;
+    int rank = 0;
 
     //Reloading and timer
     public bool isReloading = false;
@@ -118,7 +118,8 @@ public class Client : NetworkBehaviour {
 
 
     //Registers which team the player is in
-    public int team;
+    [SyncVar]
+    int team;
 
     //ScoreBoard HUD
     public bool isScoreboardShowing = false;
@@ -146,7 +147,8 @@ public class Client : NetworkBehaviour {
     public bool nameSelected = false;
 
     //For visible name
-    public string playerName = "";
+    [SyncVar]
+    public string playerName;
 
     //For Scoreboard
     private int team1Count = 0;
@@ -157,7 +159,8 @@ public class Client : NetworkBehaviour {
 
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
 
         sceneCam = Camera.main;
 
@@ -187,35 +190,16 @@ public class Client : NetworkBehaviour {
         }
     }
 
-    [Command]
-    public void CmdSetName(string n)
-    {
-        SetName(n);
-        RpcSetName(n);
-    }
-
-    [ClientRpc]
-    public void RpcSetName(string n)
-    {
-        if(isLocalPlayer)
-        playerName = n;
-    }
-
-    public void SetName(string n)
-    {
-        if(!isLocalPlayer)
-        playerName = n;
-    }
-
     public void InitialisePlayer()
     {
-        CmdSetName(nameSelector.GetComponent<InputField>().text);
+       //playerName = nameSelector.GetComponent<InputField>().text;
+       CmdSetName(nameSelector.GetComponent<InputField>().text);
 
         //ignore collisions between players
         Physics.IgnoreLayerCollision(9, 9);
 
         //Join a random team
-        team = Random.Range(0, 2);
+        CmdSetTeam(Random.Range(0, 2));
 
         //Get spawnpoints from team
         if (team == 1)
@@ -225,9 +209,6 @@ public class Client : NetworkBehaviour {
 
         //set up spawnpoint
         Respawn();
-
-        //Then make it's mesh visible again
-        player.GetComponentInChildren<SkinnedMeshRenderer>().enabled = true;
 
         //initialise armour rating
         armour = 0;
@@ -257,12 +238,12 @@ public class Client : NetworkBehaviour {
 
         for (int i = 0; i < muzzleFlashes.Length; i++)
             muzzleFlashes[i].SetActive(false);
+
     }
 
     [Command]
     void CmdSetWeapon(int type)
     {
-        //currently both weapons change on server, changes properly on client
         SetWeapon(type);
         RpcSetWeapon(type);
     }
@@ -442,8 +423,8 @@ public class Client : NetworkBehaviour {
         }
 
         CmdUpdateHealth();
-        
-        if (Input.GetMouseButton(0) && currentAmmo[currentWeapon] > 0 && isLocalPlayer && fireRates[currentWeapon]  == currentFireRates[currentWeapon])
+
+        if (Input.GetMouseButton(0) && currentAmmo[currentWeapon] > 0 && isLocalPlayer && fireRates[currentWeapon] == currentFireRates[currentWeapon])
         {
             CmdSpawnBullet();
             currentAmmo[currentWeapon]--;
@@ -452,7 +433,7 @@ public class Client : NetworkBehaviour {
             hasFired = true;
         }
 
-        if(hasFired)
+        if (hasFired)
         {
             if (currentFireRates[currentFired] > 0)
             {
@@ -466,22 +447,23 @@ public class Client : NetworkBehaviour {
 
         }
 
-        if(muzzleShot)
+        if (muzzleShot)
         {
 
             muzzleFlashTimer -= Time.deltaTime;
 
-            if(muzzleFlashTimer <= 0.0f)
+            if (muzzleFlashTimer <= 0.0f)
             {
                 CmdRemoveFlash();
                 muzzleFlashTimer = 0.15f;
                 muzzleShot = false;
             }
         }
-
-        //Weapon switching
-        if (Input.GetKey("1") && isLocalPlayer) CmdSetWeapon(0);
-        if (Input.GetKey("2") && isLocalPlayer && score > 100) CmdSetWeapon(1);
+        //if (Input.GetKey("1")) CmdSetName(otherName);
+        //if (Input.GetKey("2")) CmdSetName(otherName);
+        ////Weapon switching
+        if (Input.GetKey("1") && isLocalPlayer)CmdSetWeapon(0);
+        if (Input.GetKey("2") && isLocalPlayer)CmdSetWeapon(1); 
         if (Input.GetKey("3") && isLocalPlayer && score > 150) CmdSetWeapon(2);
         if (Input.GetKey("4") && isLocalPlayer && score > 200) CmdSetWeapon(3);
         if (Input.GetKey("5") && isLocalPlayer && score > 250) CmdSetWeapon(4);
@@ -501,7 +483,7 @@ public class Client : NetworkBehaviour {
         //Toggle scoreboard
         if (Input.GetKeyDown("t"))
         {
-            if (isScoreboardShowing)
+            if (isScoreboardShowing && isLocalPlayer)
             {
                 scoreBoard.SetActive(false);
                 isScoreboardShowing = false;
@@ -704,7 +686,11 @@ public class Client : NetworkBehaviour {
         if (isScoreboardShowing)
         {
             UpdateScoreBoard();
+            return;
         }
+
+        if (!nameSelected)
+            return;
 
         //Set all players to the correct z plane
         Vector3 p = player.transform.position;
@@ -882,6 +868,7 @@ public class Client : NetworkBehaviour {
     }
     public void UpdateScoreBoard()
     {
+
         GameObject[] players = GameObject.FindGameObjectsWithTag("Client");
 
         //Reset counters
@@ -894,17 +881,17 @@ public class Client : NetworkBehaviour {
 
         foreach(GameObject g in players)
         {
-            if(g.GetComponent<Client>().team == 0)
+            if(g.GetComponent<Client>().GetTeam() == 0)
             {
                 team1Names[team1Count].gameObject.SetActive(true);
-                team1Names[team1Count].text = g.GetComponent<Client>().playerName + "     " + g.GetComponent<Client>().kills + "     " + g.GetComponent<Client>().deaths;
+                team1Names[team1Count].text = g.GetComponent<Client>().GetName() + "     " + g.GetComponent<Client>().kills + "     " + g.GetComponent<Client>().deaths;
                 team1Count++;
                 team1ScoreNo += g.GetComponent<Client>().kills;
             }
             else
             {
-                team2Names[team1Count].gameObject.SetActive(true);
-                team2Names[team1Count].text = g.GetComponent<Client>().playerName + "     " + g.GetComponent<Client>().kills + "     " + g.GetComponent<Client>().deaths;
+                team2Names[team2Count].gameObject.SetActive(true);
+                team2Names[team2Count].text = g.GetComponent<Client>().GetName() + "     " + g.GetComponent<Client>().kills + "     " + g.GetComponent<Client>().deaths;
                 team2Count++;
                 team2ScoreNo += g.GetComponent<Client>().kills;
             }
@@ -916,6 +903,51 @@ public class Client : NetworkBehaviour {
         //Display each teams number of players
         team1PlayerTotal.text = team1Count + "/5";
         team2PlayerTotal.text = team2Count + "/5";
+    }
+
+    [ClientRpc]
+    public void RpcSetName(string n)
+    {
+        playerName = n;
+    }
+
+    public void SetName(string n)
+    {
+            playerName = n;
+    }
+
+    [ClientRpc]
+    public void RpcSetTeam(int t)
+    {
+        team = t;
+    }
+
+    public void SetTeam(int t)
+    {
+        team = t;
+    }
+
+    public int GetTeam()
+    {
+        return team;
+    }
+
+    public string GetName()
+    {
+        return playerName;
+    }
+    [Command]
+    public void CmdSetName(string n)
+    {
+        SetName(n);
+        RpcSetName(n);
+    }
+
+    [Command]
+    public void CmdSetTeam(int t)
+    {
+        SetTeam(t);
+        RpcSetTeam(t);
     }
 }
 
