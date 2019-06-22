@@ -120,9 +120,6 @@ public class Client : NetworkBehaviour {
     //Registers which team the player is in
     public int team;
 
-    //For maintaining score in the game
-    public Game gameManager;
-
     //ScoreBoard HUD
     public bool isScoreboardShowing = false;
     public GameObject scoreBoard;
@@ -148,15 +145,19 @@ public class Client : NetworkBehaviour {
     public GameObject goButton;
     public bool nameSelected = false;
 
+    //For visible name
+    public string playerName = "";
+
+    //For Scoreboard
+    private int team1Count = 0;
+    private int team2Count = 0;
+
+    private int team1ScoreNo = 0;
+    private int team2ScoreNo = 0;
+
+
     // Use this for initialization
     void Start () {
-
-    }
-
-    public void InitialisePlayer()
-    {
-        //Set up name
-        this.gameObject.name = nameSelector.GetComponent<InputField>().text;
 
         sceneCam = Camera.main;
 
@@ -184,17 +185,34 @@ public class Client : NetworkBehaviour {
             //floatingHealthBar.GetComponent<CanvasRenderer>().SetAlpha(0);
             //floatingRankIcon.GetComponent<CanvasRenderer>().SetAlpha(0);
         }
+    }
 
-        //Notify the GameManager
-        gameManager = GameObject.Find("GameManager").GetComponent<Game>();
-        gameManager.AddPlayer(this.gameObject);
+    [Command]
+    public void CmdSetName(string n)
+    {
+        SetName(n);
+        RpcSetName(n);
+    }
+
+    [ClientRpc]
+    public void RpcSetName(string n)
+    {
+        if(isLocalPlayer)
+        playerName = n;
+    }
+
+    public void SetName(string n)
+    {
+        if(!isLocalPlayer)
+        playerName = n;
+    }
+
+    public void InitialisePlayer()
+    {
+        CmdSetName(nameSelector.GetComponent<InputField>().text);
 
         //ignore collisions between players
         Physics.IgnoreLayerCollision(9, 9);
-
-        //Initialise scoreboard variables
-        team1Score.text = gameManager.team1Score.ToString();
-        team2Score.text = gameManager.team1Score.ToString();
 
         //Join a random team
         team = Random.Range(0, 2);
@@ -395,6 +413,7 @@ public class Client : NetworkBehaviour {
             else
                 goButton.GetComponent<Button>().enabled = true;
 
+            return;
         }
 
         //Ignore collisions from players running into eachother
@@ -494,32 +513,6 @@ public class Client : NetworkBehaviour {
             }
         }
 
-        //Update scoreboard if visible
-        if (isScoreboardShowing)
-        {
-            //Update each teams score
-            team1Score.text = gameManager.team1Score.ToString();
-            team2Score.text = gameManager.team2Score.ToString();
-
-            //Display each teams number of players
-            team1PlayerTotal.text = gameManager.team1Players.Count.ToString();
-            team1PlayerTotal.text = gameManager.team1Players.Count.ToString();
-
-            //Activate the necessary players and add there scores to the scoreboard
-            for(int i = 0; i < gameManager.team1Players.Count; i++)
-            {
-                team1Names[i].gameObject.SetActive(true);
-                team1Names[i].text = gameManager.team1Players[i].GetComponent<Client>().name + "     " + gameManager.team1Players[i].GetComponent<Client>().kills + "     " + gameManager.team1Players[i].GetComponent<Client>().deaths;
-
-            }
-
-            for (int i = 0; i < gameManager.team2Players.Count; i++)
-            {
-                team2Names[i].gameObject.SetActive(true);
-                team2Names[i].text = gameManager.team2Players[i].GetComponent<Client>().name + "     " + gameManager.team2Players[i].GetComponent<Client>().kills + "     " + gameManager.team2Players[i].GetComponent<Client>().deaths;
-
-            }
-        }
         //Initialisation for the camera
         if (playerCam.GetComponent<CameraMovement>().canMove == true)
         {
@@ -707,6 +700,12 @@ public class Client : NetworkBehaviour {
         if (isDead)
             return;
 
+        //Update scoreboard if visible
+        if (isScoreboardShowing)
+        {
+            UpdateScoreBoard();
+        }
+
         //Set all players to the correct z plane
         Vector3 p = player.transform.position;
         p.z = -10;
@@ -876,4 +875,48 @@ public class Client : NetworkBehaviour {
     {
         nameSelected = s;
     }
+
+    public int GetPlayerNo()
+    {
+        return playerNo;
+    }
+    public void UpdateScoreBoard()
+    {
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Client");
+
+        //Reset counters
+        team1Count = 0;
+        team2Count = 0;
+
+        //Reset score
+        team1ScoreNo = 0;
+        team2ScoreNo = 0;
+
+        foreach(GameObject g in players)
+        {
+            if(g.GetComponent<Client>().team == 0)
+            {
+                team1Names[team1Count].gameObject.SetActive(true);
+                team1Names[team1Count].text = g.GetComponent<Client>().playerName + "     " + g.GetComponent<Client>().kills + "     " + g.GetComponent<Client>().deaths;
+                team1Count++;
+                team1ScoreNo += g.GetComponent<Client>().kills;
+            }
+            else
+            {
+                team2Names[team1Count].gameObject.SetActive(true);
+                team2Names[team1Count].text = g.GetComponent<Client>().playerName + "     " + g.GetComponent<Client>().kills + "     " + g.GetComponent<Client>().deaths;
+                team2Count++;
+                team2ScoreNo += g.GetComponent<Client>().kills;
+            }
+        }
+        //Update each teams score
+        team1Score.text = team1ScoreNo.ToString();
+        team2Score.text = team2ScoreNo.ToString();
+
+        //Display each teams number of players
+        team1PlayerTotal.text = team1Count + "/5";
+        team2PlayerTotal.text = team2Count + "/5";
+    }
 }
+
+

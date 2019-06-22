@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 
 public class MainMenu : MonoBehaviour {
 
 
     public GameObject killLimitDropdown;
     public GameObject timeLimitDropdown;
+
+    public GameObject gameManager;
 
     private void Start()
     {
@@ -37,28 +40,30 @@ public class MainMenu : MonoBehaviour {
     public void PlayButton()
     {
         //Destroy any previously loaded games
-        if (GameObject.Find("GameManager"))
+        if (GameObject.Find("game"))
         {
-            Destroy(GameObject.Find("GameManager"));
+            Destroy(GameObject.Find("game"));
         }
 
-        //Initialise a game manager
-        GameObject g = new GameObject();
-        g.name = "GameManager";
-        g.AddComponent<Game>();
+        ////Initialise a game manager
+        //GameObject g = (GameObject)Instantiate(gameManager);
 
-        //Set up kill count for the game
-        if (killLimitDropdown.GetComponent<Dropdown>().value == 0)
-        {
-            g.GetComponent<Game>().killLimit = 5;
-        }
-        else if (killLimitDropdown.GetComponent<Dropdown>().value == 1) g.GetComponent<Game>().killLimit = 15;
-        else if (killLimitDropdown.GetComponent<Dropdown>().value == 2) g.GetComponent<Game>().killLimit = 60;
+        //g.name = "game";
 
-        //Set up time limit for the game
-        if (timeLimitDropdown.GetComponent<Dropdown>().value == 0) g.GetComponent<Game>().timeLimit = 10;
-        else if (timeLimitDropdown.GetComponent<Dropdown>().value == 1) g.GetComponent<Game>().timeLimit = 15;
-        else if (timeLimitDropdown.GetComponent<Dropdown>().value == 2) g.GetComponent<Game>().timeLimit = 30;
+        ////Set up kill count for the game
+        //if (killLimitDropdown.GetComponent<Dropdown>().value == 0)
+        //{
+        //    g.GetComponent<Game>().killLimit = 5;
+        //}
+        //else if (killLimitDropdown.GetComponent<Dropdown>().value == 1) g.GetComponent<Game>().killLimit = 15;
+        //else if (killLimitDropdown.GetComponent<Dropdown>().value == 2) g.GetComponent<Game>().killLimit = 60;
+
+        ////Set up time limit for the game
+        //if (timeLimitDropdown.GetComponent<Dropdown>().value == 0) g.GetComponent<Game>().timeLimit = 10;
+        //else if (timeLimitDropdown.GetComponent<Dropdown>().value == 1) g.GetComponent<Game>().timeLimit = 15;
+        //else if (timeLimitDropdown.GetComponent<Dropdown>().value == 2) g.GetComponent<Game>().timeLimit = 30;
+
+        //NetworkServer.Spawn(g);
 
         //Move to the next scene
         SceneManager.LoadScene(1);

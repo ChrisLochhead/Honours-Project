@@ -7920,6 +7920,7 @@ MonoBehaviour:
   isDead: 0
   team: 0
   gameManager: {fileID: 0}
+  gamePrefab: {fileID: 1719189813770834, guid: ae03dbddf9bd41543a6e47ec6fa053f4, type: 2}
   isScoreboardShowing: 0
   scoreBoard: {fileID: 1672986317417122}
   team1Score: {fileID: 114103461166142456}
@@ -7942,6 +7943,7 @@ MonoBehaviour:
   nameSelector: {fileID: 1372199867764596}
   goButton: {fileID: 1788726867798940}
   nameSelected: 0
+  playerName: 
 --- !u!114 &114656026244628660
 MonoBehaviour:
   m_ObjectHideFlags: 1

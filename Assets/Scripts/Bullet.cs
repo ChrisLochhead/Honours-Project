@@ -49,8 +49,7 @@ public class Bullet : NetworkBehaviour {
 
         //If this shot killed the player, register it
         if (collision.transform.parent.GetComponent<Client>().isDead)
-        {
-            GameObject.Find("GameManager").GetComponent<Game>().OnKillRegistered(shooter, collision.gameObject);
+        { 
             shooter.transform.parent.GetComponent<Client>().kills++;
             shooter.transform.parent.GetComponent<Client>().UpdateScore(100);
             collision.transform.parent.GetComponent<Client>().deaths++;
