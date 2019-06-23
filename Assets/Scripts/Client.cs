@@ -160,7 +160,7 @@ public class Client : NetworkBehaviour {
     private int team2ScoreNo = 0;
 
     //For recording kills and deaths over network
-    bool needsUpdate = false;
+    public bool needsUpdate = false;
 
 
     // Use this for initialization
@@ -204,7 +204,7 @@ public class Client : NetworkBehaviour {
         CmdSetName(nameSelector.GetComponent<InputField>().text);
 
         //Find team numbers
-        int temp1 = 0;
+        int temp1 = -1;
         int temp2 = 0;
 
         foreach (GameObject g in GameObject.FindGameObjectsWithTag("Client"))
@@ -374,7 +374,7 @@ public class Client : NetworkBehaviour {
         {
             if (!isDead)
             {
-                health -= damage + armour;
+                health -= damage;
                 healthPercentage = (float)health / (float)totalHealth;
 
                 if (health <= 0)
@@ -392,7 +392,7 @@ public class Client : NetworkBehaviour {
         {
             if (!isDead)
             {
-                health -= damage + armour;
+                health -= damage;
                 healthPercentage = (float)health / (float)totalHealth;
 
                 if (health <= 0)
@@ -503,15 +503,18 @@ public class Client : NetworkBehaviour {
         //Toggle scoreboard
         if (Input.GetKeyDown("t"))
         {
-            if (isScoreboardShowing && isLocalPlayer)
+            if (!isDead)
             {
-                scoreBoard.SetActive(false);
-                isScoreboardShowing = false;
-            }
-            else
-            {
-                scoreBoard.SetActive(true);
-                isScoreboardShowing = true;
+                if (isScoreboardShowing && isLocalPlayer)
+                {
+                    scoreBoard.SetActive(false);
+                    isScoreboardShowing = false;
+                }
+                else
+                {
+                    scoreBoard.SetActive(true);
+                    isScoreboardShowing = true;
+                }
             }
         }
 
@@ -571,6 +574,7 @@ public class Client : NetworkBehaviour {
 
         //add tag indicating whose bullet it is
         b.GetComponent<Bullet>().shooter = player;
+        b.GetComponent<Bullet>().isHost = isLocalPlayer;
         b.GetComponent<Bullet>().damageAmount = damageAmounts[currentWeapon];
 
         NetworkServer.Spawn(b);
@@ -701,19 +705,23 @@ public class Client : NetworkBehaviour {
     {
 
         if (isDead)
+        {
+            scoreBoard.SetActive(false);
+            isScoreboardShowing = false;
             return;
+        }
 
         //Update scoreboard if visible
         if (isScoreboardShowing)
         {
             UpdateScoreBoard();
-            return;
         }
 
         //Check if scoreboard stats need updated
-        //if(needsUpdate)
+        //if (needsUpdate && isLocalPlayer)
         //{
-        //    CmdUpdateStatistics(kills, deaths);
+        //    Debug.Log("kill assigned");
+        //    CmdUpdateKills();
         //    needsUpdate = false;
         //}
 
@@ -798,6 +806,7 @@ public class Client : NetworkBehaviour {
             respawnScreen.SetActive(true);
             if (isLocalPlayer)
                 CmdSetDeath();
+
             reset = true;
 
         }
@@ -814,6 +823,11 @@ public class Client : NetworkBehaviour {
     public void UpdateScore(int s)
     {
         CmdGainScore(s);
+    }
+
+    public void UpdateKills(int k)
+    {
+        CmdUpdateKills(k);
     }
 
     public void GainScore(int s)
@@ -853,6 +867,13 @@ public class Client : NetworkBehaviour {
     {
         GainScore(s);
         RpcGainScore(s);
+    }
+
+    [Command]
+    public void CmdUpdateKills(int k)
+    {
+        AddKills(k);
+        RpcAddKills(k);
     }
 
     [ClientRpc]
@@ -1009,6 +1030,18 @@ public class Client : NetworkBehaviour {
         deaths++;
     }
 
+    [ClientRpc]
+    public void RpcAddKills(int k)
+    {
+        //if(isLocalPlayer)
+        kills+=k;
+    }
+
+    public void AddKills(int k)
+    {
+        //if(isServer)
+        // kills+= k;
+    }
     //public void AddStatistic(bool isKill)
     //{
     //    if (isKill)
@@ -1018,6 +1051,8 @@ public class Client : NetworkBehaviour {
 
     //    needsUpdate = true;
     //}
-}
+
+    }
+
 
 

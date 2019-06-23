@@ -6,6 +6,10 @@ using UnityEngine.Networking;
 public class Bullet : NetworkBehaviour {
 
     public GameObject shooter;
+
+    [SyncVar]
+    public bool isHost;
+
     public int damageAmount;
 	// Use this for initialization
 	void Start () {
@@ -44,19 +48,38 @@ public class Bullet : NetworkBehaviour {
 
     void CheckEnemyCollision(Collision collision)
     {
-        //Apply damage
-        collision.gameObject.transform.parent.GetComponent<Client>().Hit(damageAmount);
 
         //If this shot killed the player, register it
-        if (collision.transform.parent.GetComponent<Client>().isDead)
+        if (isServer && isHost) // this works for host
         {
-            shooter.transform.parent.GetComponent<Client>().kills++;
-            shooter.transform.parent.GetComponent<Client>().UpdateScore(100);
-            //collision.transform.parent.GetComponent<Client>().AddStatistic(false);
+            //Apply damage
+            collision.gameObject.transform.parent.GetComponent<Client>().Hit(damageAmount);
+
+            Debug.Log("is server");
+            if (collision.transform.parent.GetComponent<Client>().isDead)
+            {
+                shooter.transform.parent.GetComponent<Client>().UpdateScore(100);
+                shooter.transform.parent.GetComponent<Client>().UpdateKills(1);
+            }
+            else
+            {
+                shooter.transform.parent.GetComponent<Client>().UpdateScore(10);
+            }
         }
-        else
-        {
-            shooter.transform.parent.GetComponent<Client>().UpdateScore(10);
+       else{
+
+            //Apply damage
+            collision.gameObject.transform.parent.GetComponent<Client>().Hit(damageAmount);
+
+            if (collision.transform.parent.GetComponent<Client>().health - damageAmount <= 0)
+            {
+                shooter.transform.parent.GetComponent<Client>().UpdateScore(100);
+                shooter.transform.parent.GetComponent<Client>().UpdateKills(1);
+            }
+            else
+            {
+                shooter.transform.parent.GetComponent<Client>().UpdateScore(10);
+            }
         }
 
     }
