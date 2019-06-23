@@ -108,7 +108,9 @@ public class Client : NetworkBehaviour {
     public GameObject respawnScreen;
 
     //To record kills and deaths in-game
+    [SyncVar]
     public int kills = 0;
+    [SyncVar]
     public int deaths = 0;
 
     //Recording whether character is currently alive
@@ -119,7 +121,7 @@ public class Client : NetworkBehaviour {
 
     //Registers which team the player is in
     [SyncVar]
-    int team;
+    public int team = 0;
 
     //ScoreBoard HUD
     public bool isScoreboardShowing = false;
@@ -157,6 +159,9 @@ public class Client : NetworkBehaviour {
     private int team1ScoreNo = 0;
     private int team2ScoreNo = 0;
 
+    //For recording kills and deaths over network
+    bool needsUpdate = false;
+
 
     // Use this for initialization
     void Start()
@@ -192,14 +197,30 @@ public class Client : NetworkBehaviour {
 
     public void InitialisePlayer()
     {
-       //playerName = nameSelector.GetComponent<InputField>().text;
-       CmdSetName(nameSelector.GetComponent<InputField>().text);
-
         //ignore collisions between players
         Physics.IgnoreLayerCollision(9, 9);
 
-        //Join a random team
-        CmdSetTeam(Random.Range(0, 2));
+        //playerName = nameSelector.GetComponent<InputField>().text;
+        CmdSetName(nameSelector.GetComponent<InputField>().text);
+
+        //Find team numbers
+        int temp1 = 0;
+        int temp2 = 0;
+
+        foreach (GameObject g in GameObject.FindGameObjectsWithTag("Client"))
+        {
+            if (g.GetComponent<Client>().team == 0)
+                temp1++;
+            else
+                temp2++;
+        }
+
+        if (temp1 == temp2)
+            CmdSetTeam(Random.Range(0, 2));
+        else if (temp1 > temp2)
+            CmdSetTeam(1);
+        else
+            CmdSetTeam(0);
 
         //Get spawnpoints from team
         if (team == 1)
@@ -459,11 +480,10 @@ public class Client : NetworkBehaviour {
                 muzzleShot = false;
             }
         }
-        //if (Input.GetKey("1")) CmdSetName(otherName);
-        //if (Input.GetKey("2")) CmdSetName(otherName);
+
         ////Weapon switching
         if (Input.GetKey("1") && isLocalPlayer)CmdSetWeapon(0);
-        if (Input.GetKey("2") && isLocalPlayer)CmdSetWeapon(1); 
+        if (Input.GetKey("2") && isLocalPlayer && score > 100)CmdSetWeapon(1); 
         if (Input.GetKey("3") && isLocalPlayer && score > 150) CmdSetWeapon(2);
         if (Input.GetKey("4") && isLocalPlayer && score > 200) CmdSetWeapon(3);
         if (Input.GetKey("5") && isLocalPlayer && score > 250) CmdSetWeapon(4);
@@ -592,6 +612,7 @@ public class Client : NetworkBehaviour {
     { 
         CmdRespawn();
     }
+
     [Command]
     public void CmdRespawn()
     {
@@ -689,6 +710,13 @@ public class Client : NetworkBehaviour {
             return;
         }
 
+        //Check if scoreboard stats need updated
+        //if(needsUpdate)
+        //{
+        //    CmdUpdateStatistics(kills, deaths);
+        //    needsUpdate = false;
+        //}
+
         if (!nameSelected)
             return;
 
@@ -768,6 +796,8 @@ public class Client : NetworkBehaviour {
 
             //Respawn screen shows
             respawnScreen.SetActive(true);
+            if (isLocalPlayer)
+                CmdSetDeath();
             reset = true;
 
         }
@@ -881,17 +911,17 @@ public class Client : NetworkBehaviour {
 
         foreach(GameObject g in players)
         {
-            if(g.GetComponent<Client>().GetTeam() == 0)
+            if(g.GetComponent<Client>().team == 0)
             {
                 team1Names[team1Count].gameObject.SetActive(true);
-                team1Names[team1Count].text = g.GetComponent<Client>().GetName() + "     " + g.GetComponent<Client>().kills + "     " + g.GetComponent<Client>().deaths;
+                team1Names[team1Count].text = g.GetComponent<Client>().playerName + "     " + g.GetComponent<Client>().kills + "     " + g.GetComponent<Client>().deaths;
                 team1Count++;
                 team1ScoreNo += g.GetComponent<Client>().kills;
             }
             else
             {
                 team2Names[team2Count].gameObject.SetActive(true);
-                team2Names[team2Count].text = g.GetComponent<Client>().GetName() + "     " + g.GetComponent<Client>().kills + "     " + g.GetComponent<Client>().deaths;
+                team2Names[team2Count].text = g.GetComponent<Client>().playerName + "     " + g.GetComponent<Client>().kills + "     " + g.GetComponent<Client>().deaths;
                 team2Count++;
                 team2ScoreNo += g.GetComponent<Client>().kills;
             }
@@ -927,15 +957,6 @@ public class Client : NetworkBehaviour {
         team = t;
     }
 
-    public int GetTeam()
-    {
-        return team;
-    }
-
-    public string GetName()
-    {
-        return playerName;
-    }
     [Command]
     public void CmdSetName(string n)
     {
@@ -949,6 +970,54 @@ public class Client : NetworkBehaviour {
         SetTeam(t);
         RpcSetTeam(t);
     }
+
+    //[Command]
+    //public void CmdUpdateStatistics(int k, int d)
+    //{
+    //    Debug.Log("called command");
+    //    UpdateKills(k);
+    //    RpcUpdateKills(k);
+    //    UpdateDeaths(k);
+    //    RpcUpdateDeaths(k);
+    //}
+
+    //public void UpdateKills(int k)
+    //{
+    //    kills = k;
+    //}
+
+    //[ClientRpc]
+    //public void RpcUpdateKills(int k)
+    //{
+    //    kills = k;
+    //}
+
+    [Command]
+    public void CmdSetDeath()
+    {
+        UpdateDeaths();
+        RpcUpdateDeaths();
+    }
+    public void UpdateDeaths()
+    {
+       // deaths++;
+    }
+
+    [ClientRpc]
+    public void RpcUpdateDeaths()
+    {
+        deaths++;
+    }
+
+    //public void AddStatistic(bool isKill)
+    //{
+    //    if (isKill)
+    //        kills++;
+    //    else
+    //        deaths++;
+
+    //    needsUpdate = true;
+    //}
 }
 
 
