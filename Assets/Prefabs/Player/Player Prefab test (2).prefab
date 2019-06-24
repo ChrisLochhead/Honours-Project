@@ -852,6 +852,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 224438999383230136}
+  - component: {fileID: 114150005016182340}
+  - component: {fileID: 114875748514163908}
   m_Layer: 5
   m_Name: Name Selection
   m_TagString: Untagged
@@ -1767,7 +1769,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224215913203328546}
   m_Layer: 5
-  m_Name: Team1Players (1)
+  m_Name: 'Team2Players '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1903,6 +1905,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 224451604952505068}
+  - component: {fileID: 114835969830845368}
+  - component: {fileID: 114285254050206372}
   m_Layer: 5
   m_Name: ScoreBoard
   m_TagString: Untagged
@@ -5508,11 +5512,11 @@ MonoBehaviour:
     lineCount: 1
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 0
+  m_havePropertiesChanged: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 0
+  m_isInputParsingRequired: 1
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -5683,11 +5687,11 @@ MonoBehaviour:
     lineCount: 1
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 0
+  m_havePropertiesChanged: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 0
+  m_isInputParsingRequired: 1
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -5701,6 +5705,38 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &114150005016182340
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1263437199995080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 40
+    i1: 188
+    i2: 168
+    i3: 103
+    i4: 92
+    i5: 247
+    i6: 17
+    i7: 116
+    i8: 217
+    i9: 83
+    i10: 131
+    i11: 145
+    i12: 120
+    i13: 92
+    i14: 145
+    i15: 85
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 1
 --- !u!114 &114160397302504882
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -6274,6 +6310,35 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &114285254050206372
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1672986317417122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 669ebf162dbd8024f8fddf85132c7892, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scoreBoardActive: 0
+  scoreBoard: {fileID: 1672986317417122}
+  team1Score: {fileID: 114103461166142456}
+  team2Score: {fileID: 114619826709359152}
+  team1Names:
+  - {fileID: 114868192757486496}
+  - {fileID: 114357672072403752}
+  - {fileID: 114278567927665518}
+  - {fileID: 114628365925047548}
+  - {fileID: 114160397302504882}
+  team2Names:
+  - {fileID: 114839906023895902}
+  - {fileID: 114264643366402300}
+  - {fileID: 114518157742933692}
+  - {fileID: 114536351729952556}
+  - {fileID: 114320455839735318}
+  team1PlayerTotal: {fileID: 114047275681006208}
+  team2PlayerTotal: {fileID: 114628756660182156}
 --- !u!114 &114294302517997264
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7515,11 +7580,11 @@ MonoBehaviour:
     lineCount: 1
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 0
+  m_havePropertiesChanged: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 0
+  m_isInputParsingRequired: 1
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -7741,11 +7806,11 @@ MonoBehaviour:
     lineCount: 1
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 0
+  m_havePropertiesChanged: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 0
+  m_isInputParsingRequired: 1
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -7798,16 +7863,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114648311287741478}
-        m_MethodName: SetNameSelected
-        m_Mode: 6
+      - m_Target: {fileID: 114875748514163908}
+        m_MethodName: SetPlayerName
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 1
+          m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 114648311287741478}
         m_MethodName: InitialisePlayer
@@ -7818,7 +7883,7 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 1
+          m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 1263437199995080}
         m_MethodName: SetActive
@@ -7856,6 +7921,7 @@ MonoBehaviour:
   crosshairMarker: {fileID: 1554592227955842}
   anim: {fileID: 95071292052873418}
   body: {fileID: 54328200683805082}
+  currentWeapon: 0
   guns:
   - {fileID: 1052001156774242}
   - {fileID: 1110386482247226}
@@ -7919,29 +7985,11 @@ MonoBehaviour:
   deaths: 0
   isDead: 0
   team: 0
-  isScoreboardShowing: 0
-  scoreBoard: {fileID: 1672986317417122}
-  team1Score: {fileID: 114103461166142456}
-  team2Score: {fileID: 114619826709359152}
-  team1Names:
-  - {fileID: 114868192757486496}
-  - {fileID: 114357672072403752}
-  - {fileID: 114278567927665518}
-  - {fileID: 114628365925047548}
-  - {fileID: 114160397302504882}
-  team2Names:
-  - {fileID: 114839906023895902}
-  - {fileID: 114264643366402300}
-  - {fileID: 114518157742933692}
-  - {fileID: 114536351729952556}
-  - {fileID: 114320455839735318}
-  team1PlayerTotal: {fileID: 114047275681006208}
-  team2PlayerTotal: {fileID: 114628756660182156}
   hasWon: 0
-  nameSelector: {fileID: 1372199867764596}
-  goButton: {fileID: 1788726867798940}
-  nameSelected: 0
   playerName: 
+  needsUpdate: 0
+  clientScoreBoard: {fileID: 114285254050206372}
+  clientNameMenu: {fileID: 114875748514163908}
 --- !u!114 &114656026244628660
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -8356,6 +8404,38 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &114835969830845368
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1672986317417122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 40
+    i1: 188
+    i2: 168
+    i3: 103
+    i4: 92
+    i5: 247
+    i6: 17
+    i7: 116
+    i8: 217
+    i9: 83
+    i10: 131
+    i11: 145
+    i12: 120
+    i13: 92
+    i14: 145
+    i15: 85
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 1
 --- !u!114 &114839906023895902
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -8582,6 +8662,20 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &114875748514163908
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1263437199995080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0f841aeee52a8b4b8911ea2e330b0c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nameSelector: {fileID: 1372199867764596}
+  goButton: {fileID: 1788726867798940}
+  Owner: {fileID: 114648311287741478}
 --- !u!114 &114893400425082274
 MonoBehaviour:
   m_ObjectHideFlags: 1

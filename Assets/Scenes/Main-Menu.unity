@@ -4143,8 +4143,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   killLimitDropdown: {fileID: 417266999}
   timeLimitDropdown: {fileID: 822180903}
-  gameManager: {fileID: 1719189813770834, guid: ae03dbddf9bd41543a6e47ec6fa053f4,
-    type: 2}
+  gameManager: {fileID: 0}
 --- !u!1 &740062792
 GameObject:
   m_ObjectHideFlags: 0

@@ -124,17 +124,17 @@ public class Client : NetworkBehaviour {
     public int team = 0;
 
     //ScoreBoard HUD
-    public bool isScoreboardShowing = false;
-    public GameObject scoreBoard;
+    //public bool isScoreboardShowing = false;
+    //public GameObject scoreBoard;
 
-    public TextMeshProUGUI team1Score;
-    public TextMeshProUGUI team2Score;
+    //public TextMeshProUGUI team1Score;
+    //public TextMeshProUGUI team2Score;
 
-    public TextMeshProUGUI[] team1Names;
-    public TextMeshProUGUI[] team2Names;
+    //public TextMeshProUGUI[] team1Names;
+    //public TextMeshProUGUI[] team2Names;
 
-    public TextMeshProUGUI team1PlayerTotal;
-    public TextMeshProUGUI team2PlayerTotal;
+    //public TextMeshProUGUI team1PlayerTotal;
+    //public TextMeshProUGUI team2PlayerTotal;
 
     //For muzzle flash timing
     float muzzleFlashTimer = 0.15f;
@@ -144,24 +144,29 @@ public class Client : NetworkBehaviour {
     public bool hasWon = false;
 
     //For Initialisation
-    public GameObject nameSelector;
-    public GameObject goButton;
-    public bool nameSelected = false;
+    //public GameObject nameSelector;
+    //public GameObject goButton;
+    //public bool nameSelected = false;
 
     //For visible name
     [SyncVar]
     public string playerName;
 
-    //For Scoreboard
-    private int team1Count = 0;
-    private int team2Count = 0;
+    ////For Scoreboard
+    //private int team1Count = 0;
+    //private int team2Count = 0;
 
-    private int team1ScoreNo = 0;
-    private int team2ScoreNo = 0;
+    //private int team1ScoreNo = 0;
+    //private int team2ScoreNo = 0;
 
     //For recording kills and deaths over network
     public bool needsUpdate = false;
 
+    //Scoreboard
+    public ClientScoreBoard clientScoreBoard;
+
+    //Name selector
+    public ClientNameMenu clientNameMenu;
 
     // Use this for initialization
     void Start()
@@ -195,13 +200,41 @@ public class Client : NetworkBehaviour {
         }
     }
 
+
+    #region Name Setting region
+    [ClientRpc]
+    public void RpcSetName(string n)
+    {
+        playerName = n;
+    }
+
+    public void SetName(string n)
+    {
+        playerName = n;
+    }
+
+    [Command]
+    public void CmdSetName(string n)
+    {
+        SetName(n);
+        RpcSetName(n);
+    }
+
+    // Called from the naming menu
+    public void InitialisePlayerName(string n)
+    {
+        CmdSetName(n);
+    }
+    #endregion
+
     public void InitialisePlayer()
     {
         //ignore collisions between players
         Physics.IgnoreLayerCollision(9, 9);
 
         //playerName = nameSelector.GetComponent<InputField>().text;
-        CmdSetName(nameSelector.GetComponent<InputField>().text);
+        // CmdSetName(nameSelector.GetComponent<InputField>().text);
+        //clientNameMenu.InitialisePlayerName();
 
         //Find team numbers
         int temp1 = -1;
@@ -407,16 +440,16 @@ public class Client : NetworkBehaviour {
     public void Update()
     {
 
-        //For initialisation 
-        if (nameSelected == false)
-        {
-            if (nameSelector.GetComponent<InputField>().text == "")
-                goButton.GetComponent<Button>().enabled = false;
-            else
-                goButton.GetComponent<Button>().enabled = true;
+        ////For initialisation 
+        //if (nameSelected == false)
+        //{
+        //    if (nameSelector.GetComponent<InputField>().text == "")
+        //        goButton.GetComponent<Button>().enabled = false;
+        //    else
+        //        goButton.GetComponent<Button>().enabled = true;
 
-            return;
-        }
+        //    return;
+        //}
 
         //Ignore collisions from players running into eachother
         Physics.IgnoreLayerCollision(9, 9);
@@ -503,18 +536,19 @@ public class Client : NetworkBehaviour {
         //Toggle scoreboard
         if (Input.GetKeyDown("t"))
         {
-            if (!isDead)
+            if (!isDead && isLocalPlayer)
             {
-                if (isScoreboardShowing && isLocalPlayer)
-                {
-                    scoreBoard.SetActive(false);
-                    isScoreboardShowing = false;
-                }
-                else
-                {
-                    scoreBoard.SetActive(true);
-                    isScoreboardShowing = true;
-                }
+                clientScoreBoard.ToggleScoreBoard();
+                //if (isScoreboardShowing && isLocalPlayer)
+                //{
+                 //   scoreBoard.SetActive(false);
+                //    isScoreboardShowing = false;
+                //}
+                //else
+                //{
+                //    scoreBoard.SetActive(true);
+                //    isScoreboardShowing = true;
+                //}
             }
         }
 
@@ -706,16 +740,17 @@ public class Client : NetworkBehaviour {
 
         if (isDead)
         {
-            scoreBoard.SetActive(false);
-            isScoreboardShowing = false;
+            clientScoreBoard.DeactivateScoreBoard();
+           // scoreBoard.SetActive(false);
+           // isScoreboardShowing = false;
             return;
         }
 
         //Update scoreboard if visible
-        if (isScoreboardShowing)
-        {
-            UpdateScoreBoard();
-        }
+        //if (isScoreboardShowing)
+        //{
+        //    UpdateScoreBoard();
+        //}
 
         //Check if scoreboard stats need updated
         //if (needsUpdate && isLocalPlayer)
@@ -725,8 +760,8 @@ public class Client : NetworkBehaviour {
         //    needsUpdate = false;
         //}
 
-        if (!nameSelected)
-            return;
+        //if (!nameSelected)
+        //    return;
 
         //Set all players to the correct z plane
         Vector3 p = player.transform.position;
@@ -872,7 +907,6 @@ public class Client : NetworkBehaviour {
     [Command]
     public void CmdUpdateKills(int k)
     {
-        AddKills(k);
         RpcAddKills(k);
     }
 
@@ -908,64 +942,64 @@ public class Client : NetworkBehaviour {
         }
     }
 
-    public void SetNameSelected(bool s)
-    {
-        nameSelected = s;
-    }
+    //public void SetNameSelected(bool s)
+    //{
+    //    nameSelected = s;
+    //}
 
     public int GetPlayerNo()
     {
         return playerNo;
     }
-    public void UpdateScoreBoard()
-    {
+    //public void UpdateScoreBoard()
+    //{
 
-        GameObject[] players = GameObject.FindGameObjectsWithTag("Client");
+    //    GameObject[] players = GameObject.FindGameObjectsWithTag("Client");
 
-        //Reset counters
-        team1Count = 0;
-        team2Count = 0;
+    //    //Reset counters
+    //    team1Count = 0;
+    //    team2Count = 0;
 
-        //Reset score
-        team1ScoreNo = 0;
-        team2ScoreNo = 0;
+    //    //Reset score
+    //    team1ScoreNo = 0;
+    //    team2ScoreNo = 0;
 
-        foreach(GameObject g in players)
-        {
-            if(g.GetComponent<Client>().team == 0)
-            {
-                team1Names[team1Count].gameObject.SetActive(true);
-                team1Names[team1Count].text = g.GetComponent<Client>().playerName + "     " + g.GetComponent<Client>().kills + "     " + g.GetComponent<Client>().deaths;
-                team1Count++;
-                team1ScoreNo += g.GetComponent<Client>().kills;
-            }
-            else
-            {
-                team2Names[team2Count].gameObject.SetActive(true);
-                team2Names[team2Count].text = g.GetComponent<Client>().playerName + "     " + g.GetComponent<Client>().kills + "     " + g.GetComponent<Client>().deaths;
-                team2Count++;
-                team2ScoreNo += g.GetComponent<Client>().kills;
-            }
-        }
-        //Update each teams score
-        team1Score.text = team1ScoreNo.ToString();
-        team2Score.text = team2ScoreNo.ToString();
+    //    foreach(GameObject g in players)
+    //    {
+    //        if(g.GetComponent<Client>().team == 0)
+    //        {
+    //            team1Names[team1Count].gameObject.SetActive(true);
+    //            team1Names[team1Count].text = g.GetComponent<Client>().playerName + "     " + g.GetComponent<Client>().kills + "     " + g.GetComponent<Client>().deaths;
+    //            team1Count++;
+    //            team1ScoreNo += g.GetComponent<Client>().kills;
+    //        }
+    //        else
+    //        {
+    //            team2Names[team2Count].gameObject.SetActive(true);
+    //            team2Names[team2Count].text = g.GetComponent<Client>().playerName + "     " + g.GetComponent<Client>().kills + "     " + g.GetComponent<Client>().deaths;
+    //            team2Count++;
+    //            team2ScoreNo += g.GetComponent<Client>().kills;
+    //        }
+    //    }
+    //    //Update each teams score
+    //    team1Score.text = team1ScoreNo.ToString();
+    //    team2Score.text = team2ScoreNo.ToString();
 
-        //Display each teams number of players
-        team1PlayerTotal.text = team1Count + "/5";
-        team2PlayerTotal.text = team2Count + "/5";
-    }
+    //    //Display each teams number of players
+    //    team1PlayerTotal.text = team1Count + "/5";
+    //    team2PlayerTotal.text = team2Count + "/5";
+    //}
 
-    [ClientRpc]
-    public void RpcSetName(string n)
-    {
-        playerName = n;
-    }
+    //[ClientRpc]
+    //public void RpcSetName(string n)
+    //{
+    //    playerName = n;
+    //}
 
-    public void SetName(string n)
-    {
-            playerName = n;
-    }
+    //public void SetName(string n)
+    //{
+    //        playerName = n;
+    //}
 
     [ClientRpc]
     public void RpcSetTeam(int t)
@@ -978,12 +1012,12 @@ public class Client : NetworkBehaviour {
         team = t;
     }
 
-    [Command]
-    public void CmdSetName(string n)
-    {
-        SetName(n);
-        RpcSetName(n);
-    }
+    //[Command]
+    //public void CmdSetName(string n)
+    //{
+    //    SetName(n);
+    //    RpcSetName(n);
+    //}
 
     [Command]
     public void CmdSetTeam(int t)
@@ -1033,24 +1067,8 @@ public class Client : NetworkBehaviour {
     [ClientRpc]
     public void RpcAddKills(int k)
     {
-        //if(isLocalPlayer)
         kills+=k;
     }
-
-    public void AddKills(int k)
-    {
-        //if(isServer)
-        // kills+= k;
-    }
-    //public void AddStatistic(bool isKill)
-    //{
-    //    if (isKill)
-    //        kills++;
-    //    else
-    //        deaths++;
-
-    //    needsUpdate = true;
-    //}
 
     }
 
