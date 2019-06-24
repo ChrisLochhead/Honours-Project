@@ -852,7 +852,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 224438999383230136}
-  - component: {fileID: 114150005016182340}
   - component: {fileID: 114875748514163908}
   m_Layer: 5
   m_Name: Name Selection
@@ -1186,6 +1185,7 @@ GameObject:
   - component: {fileID: 223509053943130352}
   - component: {fileID: 114269918684323038}
   - component: {fileID: 114301201902013748}
+  - component: {fileID: 114402100839107272}
   m_Layer: 5
   m_Name: HUD
   m_TagString: Untagged
@@ -2049,6 +2049,8 @@ GameObject:
   - component: {fileID: 223040910835270696}
   - component: {fileID: 114983879196186834}
   - component: {fileID: 114294302517997264}
+  - component: {fileID: 114808510606732758}
+  - component: {fileID: 114498549740925000}
   m_Layer: 0
   m_Name: HealthBarCanvas
   m_TagString: Untagged
@@ -5705,38 +5707,6 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &114150005016182340
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1263437199995080}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 40
-    i1: 188
-    i2: 168
-    i3: 103
-    i4: 92
-    i5: 247
-    i6: 17
-    i7: 116
-    i8: 217
-    i9: 83
-    i10: 131
-    i11: 145
-    i12: 120
-    i13: 92
-    i14: 145
-    i15: 85
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 1
 --- !u!114 &114160397302504882
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -6705,6 +6675,34 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Enter name...
+--- !u!114 &114402100839107272
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1382555200234950}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7fb19457894d9a4fa23e2f48978af9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scoreText: {fileID: 114940014275785684}
+  ammoText: {fileID: 114707180593355668}
+  healthText: {fileID: 114607281472923554}
+  healthBar: {fileID: 1400912380581398}
+  rankImage: {fileID: 1777225904213068}
+  rankIcons:
+  - {fileID: 21300000, guid: 4f0e075930e05bc4894727e10d62269e, type: 3}
+  - {fileID: 21300000, guid: 6a98ec2e496f3654c93ffe1738faf109, type: 3}
+  - {fileID: 21300000, guid: c65fca89d11ebbc449b6f36542e85733, type: 3}
+  - {fileID: 21300000, guid: 50842dd79603e9244897f572d4805287, type: 3}
+  - {fileID: 21300000, guid: 0e1c7f310dc00c041b3dca8164e7e552, type: 3}
+  - {fileID: 21300000, guid: f6a8fce542b84414fb21b59e7d40f532, type: 3}
+  - {fileID: 21300000, guid: e1aa21d0aba7f7c4eaf646f891be27c1, type: 3}
+  - {fileID: 21300000, guid: 98566832bd5bb6e40ba7902ba7aab3df, type: 3}
+  - {fileID: 21300000, guid: 99e10882c49dbec41aa37b05d3d2f448, type: 3}
+  rankHealthValues: 640000006e00000078000000820000008c00000096000000a0000000aa000000b4000000
+  Owner: {fileID: 114648311287741478}
 --- !u!114 &114467517667529442
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -6764,6 +6762,22 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114498549740925000
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1696924103136182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62470ea26afb8324bb261f70cb8106b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  floatingHealthBar: {fileID: 1384054250836120}
+  floatingRankIcon: {fileID: 1492719172626468}
+  healthPercentage: 1
+  healthColour: {r: 0, g: 1, b: 0, a: 1}
+  Owner: {fileID: 114648311287741478}
 --- !u!114 &114499863898377066
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7937,6 +7951,8 @@ MonoBehaviour:
   bullet: {fileID: 1437496455166464, guid: e5579f313ea97814d98a27fc045f5c15, type: 2}
   armourRatings: 000000000100000002000000030000000500000007000000080000000a0000000f000000
   armour: 0
+  clipSize: 100000000a0000001e0000003200000001000000
+  currentAmmo: 100000000a0000001e0000003200000001000000
   damageAmounts: 0c0000000f000000080000000600000028000000
   fireRates:
   - 0.75
@@ -7954,32 +7970,13 @@ MonoBehaviour:
   hasFired: 0
   reloadTimer: 0200000005000000040000000300000003000000
   score: 0
-  healthPercentage: 1
-  healthColour: {r: 0, g: 1, b: 0, a: 1}
   health: 100
-  scoreText: {fileID: 114940014275785684}
-  ammoText: {fileID: 114707180593355668}
-  healthText: {fileID: 114607281472923554}
-  healthBar: {fileID: 1400912380581398}
-  rankImage: {fileID: 1777225904213068}
-  rankIcons:
-  - {fileID: 21300000, guid: 4f0e075930e05bc4894727e10d62269e, type: 3}
-  - {fileID: 21300000, guid: 6a98ec2e496f3654c93ffe1738faf109, type: 3}
-  - {fileID: 21300000, guid: c65fca89d11ebbc449b6f36542e85733, type: 3}
-  - {fileID: 21300000, guid: 50842dd79603e9244897f572d4805287, type: 3}
-  - {fileID: 21300000, guid: 0e1c7f310dc00c041b3dca8164e7e552, type: 3}
-  - {fileID: 21300000, guid: f6a8fce542b84414fb21b59e7d40f532, type: 3}
-  - {fileID: 21300000, guid: e1aa21d0aba7f7c4eaf646f891be27c1, type: 3}
-  - {fileID: 21300000, guid: 98566832bd5bb6e40ba7902ba7aab3df, type: 3}
-  - {fileID: 21300000, guid: 99e10882c49dbec41aa37b05d3d2f448, type: 3}
-  rankHealthValues: 640000006e00000078000000820000008c0000005a000000a0000000af000000c8000000
+  rank: 0
   isReloading: 0
   initialReload: 1
   reloadStartTime: 0
   reloadTargetTime: 0
   currentMPos: {x: 0, y: 0, z: 0}
-  floatingHealthBar: {fileID: 1384054250836120}
-  floatingRankIcon: {fileID: 1492719172626468}
   respawnScreen: {fileID: 1978756503730130}
   kills: 0
   deaths: 0
@@ -7990,6 +7987,8 @@ MonoBehaviour:
   needsUpdate: 0
   clientScoreBoard: {fileID: 114285254050206372}
   clientNameMenu: {fileID: 114875748514163908}
+  clientHUD: {fileID: 114402100839107272}
+  clientHealthBar: {fileID: 114498549740925000}
 --- !u!114 &114656026244628660
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -8289,6 +8288,38 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &114808510606732758
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1696924103136182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 40
+    i1: 188
+    i2: 168
+    i3: 103
+    i4: 92
+    i5: 247
+    i6: 17
+    i7: 116
+    i8: 217
+    i9: 83
+    i10: 131
+    i11: 145
+    i12: 120
+    i13: 92
+    i14: 145
+    i15: 85
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!114 &114835813308152688
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -10244,7 +10275,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 224660995204916464}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -10392,8 +10423,8 @@ RectTransform:
   - {fileID: 224654098412350726}
   - {fileID: 224855920031419014}
   - {fileID: 224153841089599494}
-  - {fileID: 224966406149446432}
   - {fileID: 224516157412493676}
+  - {fileID: 224966406149446432}
   - {fileID: 224322495632268954}
   - {fileID: 224451604952505068}
   - {fileID: 224438999383230136}
@@ -10737,7 +10768,7 @@ RectTransform:
   - {fileID: 224159447010074552}
   - {fileID: 224499181864264240}
   m_Father: {fileID: 224660995204916464}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
