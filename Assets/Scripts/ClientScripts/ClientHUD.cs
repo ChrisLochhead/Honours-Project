@@ -30,7 +30,7 @@ public class ClientHUD : MonoBehaviour {
         scoreText.text = Owner.score.ToString();
 
         //Ammo
-        ammoText.text = Owner.currentAmmo[Owner.currentWeapon].ToString() + "/" + Owner.clipSize[Owner.currentWeapon];
+        ammoText.text = Owner.clientWeaponManager.currentAmmo[Owner.clientWeaponManager.currentWeapon].ToString() + "/" + Owner.clientWeaponManager.clipSize[Owner.clientWeaponManager.currentWeapon];
 
         //Rank
         rankImage.GetComponent<Image>().sprite = rankIcons[Owner.rank];

@@ -1,10 +1,6 @@
-﻿using System.Collections;
-using System.IO;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
-using UnityEngine.UI;
-using TMPro;
 
 public class Client : NetworkBehaviour
 {
@@ -35,37 +31,12 @@ public class Client : NetworkBehaviour
     public GameObject crosshairMarker;
 
     //Animations
-    Animator weaponAnim;
     public Animator anim;
     public Rigidbody body;
-
-    //Weapons
-    public int currentWeapon = 0;
-
-    public GameObject[] guns;
-
-    public GameObject[] muzzleFlashes;
-    public GameObject bullet;
 
     //Armour
     public int[] armourRatings = { 0, 1, 2, 3, 5, 7, 8, 10, 15 };
     public int armour;
-
-    //weapon clips
-    public int[] clipSize = { 16, 10, 30, 50, 1 };
-    public int[] currentAmmo = { 16, 10, 30, 50, 1 };
-
-    //weapon damage and fire rates
-    public int[] damageAmounts = { 12, 15, 8, 6, 40 };
-
-    public float[] fireRates = { 0.75f, 1.8f, 0.25f, 0.35f, 2.0f };
-    public float[] currentFireRates = { 0.75f, 1.8f, 0.25f, 0.35f, 2.0f };
-
-    public int currentFired = 0;
-    public bool hasFired = false;
-
-    //reload timers (in seconds)
-    public int[] reloadTimer = { 2, 5, 4, 3, 3 };
 
     //HUD stuff
     public int score = 0;
@@ -73,12 +44,6 @@ public class Client : NetworkBehaviour
     int totalHealth = 100;
 
     public int rank = 0;
-
-    //Reloading and timer
-    public bool isReloading = false;
-    public bool initialReload = true;
-    public float reloadStartTime = 0.0f;
-    public float reloadTargetTime = 0.0f;
 
     //For multiplayer
     int playerNo;
@@ -105,10 +70,6 @@ public class Client : NetworkBehaviour
     [SyncVar]
     public int team = 0;
 
-    //For muzzle flash timing
-    float muzzleFlashTimer = 0.15f;
-    bool muzzleShot = false;
-
     //For win conditions
     public bool hasWon = false;
 
@@ -130,6 +91,9 @@ public class Client : NetworkBehaviour
 
     //Floating healthbar 
     public ClientHealthBar clientHealthBar;
+
+    //Weapon controller
+    public ClientWeaponManager clientWeaponManager;
 
     // Use this for initialization
     void Start()
@@ -162,33 +126,6 @@ public class Client : NetworkBehaviour
             //floatingRankIcon.GetComponent<CanvasRenderer>().SetAlpha(0);
         }
     }
-
-
-    #region Name Setting region
-    [ClientRpc]
-    public void RpcSetName(string n)
-    {
-        playerName = n;
-    }
-
-    public void SetName(string n)
-    {
-        playerName = n;
-    }
-
-    [Command]
-    public void CmdSetName(string n)
-    {
-        SetName(n);
-        RpcSetName(n);
-    }
-
-    // Called from the naming menu
-    public void InitialisePlayerName(string n)
-    {
-        CmdSetName(n);
-    }
-    #endregion
 
     public void InitialisePlayer()
     {
@@ -236,55 +173,14 @@ public class Client : NetworkBehaviour
             playerNo++;
         }
 
-        currentWeapon = 0;
+        clientWeaponManager.InitialiseWeapons();
+        //currentWeapon = 0;
         velocity = 0.3f;
         movementSpeed = 0.3f;
 
         player.transform.position = new Vector3(playerCam.transform.position.x, playerCam.transform.position.y, -10);
         anim.enabled = false;
-        guns[currentWeapon].transform.position = player.transform.position;
-        guns[currentWeapon].transform.rotation = player.transform.rotation;
 
-        weaponAnim = guns[currentWeapon].GetComponent<Animator>();
-        weaponAnim.enabled = false;
-
-        for (int i = 0; i < muzzleFlashes.Length; i++)
-            muzzleFlashes[i].SetActive(false);
-
-    }
-
-    [Command]
-    void CmdSetWeapon(int type)
-    {
-        SetWeapon(type);
-        RpcSetWeapon(type);
-    }
-
-    [ClientRpc]
-    public void RpcSetWeapon(int type)
-    {
-        currentWeapon = type;
-
-        for (int i = 0; i < guns.Length; i++)
-        {
-            if (i == type)
-                guns[i].SetActive(true);
-            else
-                guns[i].SetActive(false);
-        }
-    }
-
-    public void SetWeapon(int type)
-    {
-        currentWeapon = type;
-
-        for (int i = 0; i < guns.Length; i++)
-        {
-            if (i == type)
-                guns[i].SetActive(true);
-            else
-                guns[i].SetActive(false);
-        }
     }
 
     public void Hit(int damage)
@@ -348,51 +244,6 @@ public class Client : NetworkBehaviour
             return;
         }
 
-        //CmdUpdateHealth();
-
-        if (Input.GetMouseButton(0) && currentAmmo[currentWeapon] > 0 && isLocalPlayer && fireRates[currentWeapon] == currentFireRates[currentWeapon])
-        {
-            CmdSpawnBullet();
-            currentAmmo[currentWeapon]--;
-            currentFired = currentWeapon;
-            muzzleShot = true;
-            hasFired = true;
-        }
-
-        if (hasFired)
-        {
-            if (currentFireRates[currentFired] > 0)
-            {
-                currentFireRates[currentFired] -= Time.deltaTime;
-            }
-            else
-            {
-                currentFireRates[currentFired] = fireRates[currentFired];
-                hasFired = false;
-            }
-
-        }
-
-        if (muzzleShot)
-        {
-
-            muzzleFlashTimer -= Time.deltaTime;
-
-            if (muzzleFlashTimer <= 0.0f)
-            {
-                CmdRemoveFlash();
-                muzzleFlashTimer = 0.15f;
-                muzzleShot = false;
-            }
-        }
-
-        ////Weapon switching
-        if (Input.GetKey("1") && isLocalPlayer) CmdSetWeapon(0);
-        if (Input.GetKey("2") && isLocalPlayer && score > 100) CmdSetWeapon(1);
-        if (Input.GetKey("3") && isLocalPlayer && score > 150) CmdSetWeapon(2);
-        if (Input.GetKey("4") && isLocalPlayer && score > 200) CmdSetWeapon(3);
-        if (Input.GetKey("5") && isLocalPlayer && score > 250) CmdSetWeapon(4);
-
         //Update rank
         if (score <= 49) rank = 0;
         else if (score > 49 && score <= 99) rank = 1;
@@ -408,8 +259,10 @@ public class Client : NetworkBehaviour
         //Toggle scoreboard
         if (Input.GetKeyDown("t") && playerName != "")
         {
+            Debug.Log("step1");
             if (!isDead && isLocalPlayer)
             {
+                Debug.Log("step2");
                 clientScoreBoard.ToggleScoreBoard();
             }
         }
@@ -420,81 +273,6 @@ public class Client : NetworkBehaviour
             playerCam.GetComponent<CameraMovement>().canMove = false;
         }
 
-        //Reload sequence
-        if (isReloading)
-        {
-            if (reloadStartTime >= reloadTargetTime)
-            {
-                currentAmmo[currentWeapon] = clipSize[currentWeapon];
-                reloadStartTime = 0.0f;
-                isReloading = false;
-                initialReload = true;
-            }
-            else
-            {
-                reloadStartTime = Time.time;
-            }
-        }
-
-        //Cancel reload if reloading mid-weapon switch
-        if (Input.GetKey("1") || Input.GetKey("2") || Input.GetKey("3") || Input.GetKey("4") || Input.GetKey("5"))
-        {
-            isReloading = false;
-            initialReload = true;
-        }
-
-        //Reloading
-        if (Input.GetKey("r") && initialReload == true || currentAmmo[currentWeapon] == 0 && initialReload == true || Input.GetKey("r") && isReloading == false)
-        {
-            reloadStartTime = Time.time;
-            reloadTargetTime = reloadStartTime + reloadTimer[currentWeapon];
-            isReloading = true;
-            initialReload = false;
-        }
-
-    }
-
-    [Command]
-    public void CmdSpawnBullet()
-    {
-        GameObject b = (GameObject)Instantiate(bullet, new Vector3(crosshairMarker.transform.position.x, crosshairMarker.transform.position.y, -4.5f), Quaternion.identity);
-
-        //calculate rotation
-        Quaternion rot = b.transform.rotation;
-        rot = player.transform.rotation;
-        rot *= Quaternion.Euler(-90, 0, 0);
-        b.transform.rotation = rot;
-
-        //calculate trajectory
-        b.GetComponent<Rigidbody>().velocity = b.transform.forward * 6.0f;
-
-        //add tag indicating whose bullet it is
-        b.GetComponent<Bullet>().shooter = player;
-        b.GetComponent<Bullet>().isHost = isLocalPlayer;
-        b.GetComponent<Bullet>().damageAmount = damageAmounts[currentWeapon];
-
-        NetworkServer.Spawn(b);
-
-        MuzzleFlash(true);
-        RpcMuzzleFlash(true);
-    }
-
-    [Command]
-    public void CmdRemoveFlash()
-    {
-        MuzzleFlash(false);
-        RpcMuzzleFlash(false);
-    }
-
-    public void MuzzleFlash(bool istrue)
-    {
-        muzzleFlashes[currentWeapon].SetActive(istrue);
-    }
-
-    [ClientRpc]
-    public void RpcMuzzleFlash(bool istrue)
-    {
-        muzzleFlashes[currentWeapon].SetActive(istrue);
     }
 
     private void OnDisable()

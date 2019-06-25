@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 
-public class ClientNameMenu : MonoBehaviour {
+public class ClientNameMenu : NetworkBehaviour {
 
     //HUD objects
     //Input field in name selection menu
@@ -15,7 +16,32 @@ public class ClientNameMenu : MonoBehaviour {
 
     // Use this for initialization
     public void SetPlayerName () {
-        Owner.InitialisePlayerName(nameSelector.GetComponent<InputField>().text);
+        // Owner.InitialisePlayerName(nameSelector.GetComponent<InputField>().text);
+        CmdSetName(nameSelector.GetComponent<InputField>().text);
+    }
+
+    [ClientRpc]
+    public void RpcSetName(string n)
+    {
+        Owner.playerName = n;
+    }
+
+    public void SetName(string n)
+    {
+        Owner.playerName = n;
+    }
+
+    [Command]
+    public void CmdSetName(string n)
+    {
+        SetName(n);
+        RpcSetName(n);
+    }
+
+    // Called from the naming menu
+    public void InitialisePlayerName(string n)
+    {
+        CmdSetName(n);
     }
 
     // Update is called once per frame

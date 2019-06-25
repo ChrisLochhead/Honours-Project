@@ -333,6 +333,8 @@ GameObject:
   - component: {fileID: 114683141585487362}
   - component: {fileID: 114575720045080634}
   - component: {fileID: 114789625227702804}
+  - component: {fileID: 114213096663396228}
+  - component: {fileID: 114020351946336372}
   m_Layer: 0
   m_Name: Player Prefab test (2)
   m_TagString: Client
@@ -853,7 +855,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 224438999383230136}
-  - component: {fileID: 114875748514163908}
   m_Layer: 5
   m_Name: Name Selection
   m_TagString: Untagged
@@ -5391,6 +5392,20 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &114020351946336372
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1108341617336374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0f841aeee52a8b4b8911ea2e330b0c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nameSelector: {fileID: 1372199867764596}
+  goButton: {fileID: 1788726867798940}
+  Owner: {fileID: 114648311287741478}
 --- !u!114 &114034376682388256
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5846,6 +5861,54 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114213096663396228
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1108341617336374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2226de4d79ef4f84892525eccb12abd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentWeapon: 0
+  guns:
+  - {fileID: 1052001156774242}
+  - {fileID: 1110386482247226}
+  - {fileID: 1690581661529682}
+  - {fileID: 1758058091268932}
+  - {fileID: 1193851704441686}
+  muzzleFlashes:
+  - {fileID: 1148884142658146}
+  - {fileID: 1873893700723816}
+  - {fileID: 1980240169360764}
+  - {fileID: 1188676875090132}
+  - {fileID: 1206345521048384}
+  bullet: {fileID: 1437496455166464, guid: e5579f313ea97814d98a27fc045f5c15, type: 2}
+  clipSize: 100000000a0000001e0000003200000001000000
+  currentAmmo: 100000000a0000001e0000003200000001000000
+  damageAmounts: 0c0000000f000000080000000600000028000000
+  fireRates:
+  - 0.75
+  - 1.8
+  - 0.25
+  - 0.35
+  - 2
+  currentFireRates:
+  - 0.75
+  - 1.8
+  - 0.25
+  - 0.35
+  - 2
+  currentFired: 0
+  hasFired: 0
+  reloadTimer: 0200000005000000040000000300000003000000
+  isReloading: 0
+  initialReload: 1
+  reloadStartTime: 0
+  reloadTargetTime: 0
+  Owner: {fileID: 114648311287741478}
 --- !u!114 &114218839899229240
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7860,7 +7923,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114875748514163908}
+      - m_Target: {fileID: 114020351946336372}
         m_MethodName: SetPlayerName
         m_Mode: 1
         m_Arguments:
@@ -7918,49 +7981,12 @@ MonoBehaviour:
   crosshairMarker: {fileID: 1554592227955842}
   anim: {fileID: 95071292052873418}
   body: {fileID: 54328200683805082}
-  currentWeapon: 0
-  guns:
-  - {fileID: 1052001156774242}
-  - {fileID: 1110386482247226}
-  - {fileID: 1690581661529682}
-  - {fileID: 1758058091268932}
-  - {fileID: 1193851704441686}
-  muzzleFlashes:
-  - {fileID: 1148884142658146}
-  - {fileID: 1873893700723816}
-  - {fileID: 1980240169360764}
-  - {fileID: 1188676875090132}
-  - {fileID: 1206345521048384}
-  bullet: {fileID: 1437496455166464, guid: e5579f313ea97814d98a27fc045f5c15, type: 2}
   armourRatings: 000000000100000002000000030000000500000007000000080000000a0000000f000000
   armour: 0
-  clipSize: 100000000a0000001e0000003200000001000000
-  currentAmmo: 100000000a0000001e0000003200000001000000
-  damageAmounts: 0c0000000f000000080000000600000028000000
-  fireRates:
-  - 0.75
-  - 1.8
-  - 0.25
-  - 0.35
-  - 2
-  currentFireRates:
-  - 0.75
-  - 1.8
-  - 0.25
-  - 0.35
-  - 2
-  currentFired: 0
-  hasFired: 0
-  reloadTimer: 0200000005000000040000000300000003000000
   score: 0
   health: 100
   rank: 0
-  isReloading: 0
-  initialReload: 1
-  reloadStartTime: 0
-  reloadTargetTime: 0
   currentMPos: {x: 0, y: 0, z: 0}
-  floatingHealthBar: {fileID: 1384054250836120}
   respawnScreen: {fileID: 1978756503730130}
   kills: 0
   deaths: 0
@@ -7970,9 +7996,10 @@ MonoBehaviour:
   playerName: 
   needsUpdate: 0
   clientScoreBoard: {fileID: 114285254050206372}
-  clientNameMenu: {fileID: 114875748514163908}
+  clientNameMenu: {fileID: 114020351946336372}
   clientHUD: {fileID: 114402100839107272}
   clientHealthBar: {fileID: 114789625227702804}
+  clientWeaponManager: {fileID: 114213096663396228}
 --- !u!114 &114656026244628660
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -8287,6 +8314,7 @@ MonoBehaviour:
   floatingRankIcon: {fileID: 1492719172626468}
   healthPercentage: 1
   healthColour: {r: 0, g: 1, b: 0, a: 1}
+  deathSet: 0
   Owner: {fileID: 114648311287741478}
 --- !u!114 &114835813308152688
 MonoBehaviour:
@@ -8661,20 +8689,6 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &114875748514163908
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1263437199995080}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e0f841aeee52a8b4b8911ea2e330b0c3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nameSelector: {fileID: 1372199867764596}
-  goButton: {fileID: 1788726867798940}
-  Owner: {fileID: 114648311287741478}
 --- !u!114 &114893400425082274
 MonoBehaviour:
   m_ObjectHideFlags: 1
