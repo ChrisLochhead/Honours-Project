@@ -69,22 +69,9 @@ public class Client : NetworkBehaviour
 
     //HUD stuff
     public int score = 0;
-    //[SyncVar(hook = "ChangeHealth")] public float healthPercentage = 1;
-    //[SyncVar(hook = "ChangeHealthColour")] public Color healthColour = Color.green;
     public int health = 100;
     int totalHealth = 100;
 
-
-    //HUD objects
-    //public TextMeshProUGUI scoreText;
-    //public TextMeshProUGUI ammoText;
-    //public TextMeshProUGUI healthText;
-
-    //public GameObject healthBar;
-    //public GameObject rankImage;
-
-    //public Sprite[] rankIcons;
-    //public int[] rankHealthValues;
     public int rank = 0;
 
     //Reloading and timer
@@ -98,10 +85,6 @@ public class Client : NetworkBehaviour
 
     //For interaction with the controller script
     public Vector3 currentMPos;
-
-    ////For manipulating the health bar
-    //public GameObject floatingHealthBar;
-    //public GameObject floatingRankIcon;
 
     //Respawn screen
     public GameObject respawnScreen;
@@ -245,8 +228,6 @@ public class Client : NetworkBehaviour
 
         ////Set up health and rank position so it doesnt jump on first movement
         clientHealthBar.InitialiseHealthbar();
-        //floatingHealthBar.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 7.5f, player.transform.position.z);
-        //floatingRankIcon.transform.position = new Vector3(player.transform.position.x - 5.8f, player.transform.position.y + 7.75f, player.transform.position.z);
 
         //get the number of players currently in game
         foreach (GameObject g in GameObject.FindGameObjectsWithTag("Player"))
@@ -306,65 +287,6 @@ public class Client : NetworkBehaviour
         }
     }
 
-    //[Command]
-    //public void CmdUpdateHealth()
-    //{
-    //    UpdateHealth();
-    //    RpcUpdateHealth();
-    //}
-
-    //public void UpdateHealth()
-    //{
-    //    //Set colour
-    //    if (healthPercentage > 0.7f)
-    //        floatingHealthBar.GetComponent<Image>().color = Color.green;
-    //    else
-    //    if (healthPercentage <= 0.7f && healthPercentage > 0.25f)
-    //        floatingHealthBar.GetComponent<Image>().color = Color.yellow;
-    //    else
-    //        floatingHealthBar.GetComponent<Image>().color = Color.red;
-
-    //    //update rank image also
-    //    floatingRankIcon.GetComponent<Image>().sprite = clientHUD.rankIcons[rank];
-
-    //    //And finally set it's position
-    //    floatingHealthBar.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 7.5f, player.transform.position.z);
-    //    floatingRankIcon.transform.position = new Vector3(player.transform.position.x - 5.8f, player.transform.position.y + 7.75f, player.transform.position.z);
-    //}
-
-    //[ClientRpc]
-    //public void RpcUpdateHealth()
-    //{
-    //    //update rank image
-    //    floatingRankIcon.GetComponent<Image>().sprite = clientHUD.rankIcons[rank];
-
-    //    //Set it's position
-    //    floatingHealthBar.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 7.5f, player.transform.position.z);
-    //    floatingRankIcon.transform.position = new Vector3(player.transform.position.x - 5.8f, player.transform.position.y + 7.75f, player.transform.position.z);
-    //}
-
-
-    //void ChangeHealth(float h)
-    //{
-    //    //Set the Fill Amount
-    //    floatingHealthBar.GetComponent<Image>().fillAmount = h;
-
-    //    //Set colour
-    //    if (h > 0.7f)
-    //        healthColour = Color.green;
-    //    else
-    //    if (h <= 0.7f && h > 0.25f)
-    //        healthColour = Color.yellow;
-    //    else
-    //        healthColour = Color.red;
-
-    //}
-
-    //void ChangeHealthColour(Color c)
-    //{
-    //    floatingHealthBar.GetComponent<Image>().color = c;
-    //}
-
     public void Hit(int damage)
     {
         CmdTakeDamage(damage);
@@ -418,21 +340,6 @@ public class Client : NetworkBehaviour
     {
         //Ignore collisions from players running into eachother
         Physics.IgnoreLayerCollision(9, 9);
-
-        ////Update the HUD
-        ////Health
-        //healthBar.GetComponent<Slider>().maxValue = rankHealthValues[rank];
-        //healthBar.GetComponent<Slider>().value = health;
-        //healthText.text = health.ToString() + "/" + rankHealthValues[rank];
-
-        ////Score
-        //scoreText.text = score.ToString();
-
-        ////Ammo
-        //ammoText.text = currentAmmo[currentWeapon].ToString() + "/" + clipSize[currentWeapon];
-
-        ////Rank
-        //rankImage.GetComponent<Image>().sprite = rankIcons[rank];
 
         //Check for life
         if (isDead)
@@ -604,6 +511,7 @@ public class Client : NetworkBehaviour
     public void OnRespawnClicked()
     {
         CmdRespawn();
+        clientHealthBar.CmdRespawn();
     }
 
     [Command]
@@ -624,9 +532,6 @@ public class Client : NetworkBehaviour
             rank = 0;
             score = 0;
 
-            //floatingHealthBar.GetComponent<Image>().fillAmount = 1;
-            //healthColour = Color.green;
-
             //Make visible after in position 
             SkinnedMeshRenderer[] r = player.GetComponentsInChildren<SkinnedMeshRenderer>();
 
@@ -634,8 +539,6 @@ public class Client : NetworkBehaviour
             {
                 smr.enabled = true;
             }
-
-            //floatingRankIcon.GetComponent<CanvasRenderer>().SetAlpha(255);
 
             //Let the game loop re-commence
             isDead = false;
@@ -659,9 +562,6 @@ public class Client : NetworkBehaviour
             rank = 0;
             score = 0;
 
-          //  floatingHealthBar.GetComponent<Image>().fillAmount = 1;
-           // healthColour = Color.green;
-
             //Make visible after in position 
             SkinnedMeshRenderer[] r = player.GetComponentsInChildren<SkinnedMeshRenderer>();
 
@@ -669,8 +569,6 @@ public class Client : NetworkBehaviour
             {
                 smr.enabled = true;
             }
-
-            //floatingRankIcon.GetComponent<CanvasRenderer>().SetAlpha(255);
 
             //Let the game loop re-commence
             isDead = false;
@@ -738,8 +636,6 @@ public class Client : NetworkBehaviour
                 //apply the move toward function using this position
                 player.transform.position = Vector3.MoveTowards(player.transform.position, new Vector3(currentMPos.x, currentMPos.y, -10), velocity);
                 clientHealthBar.UpdatePosition();
-               // floatingHealthBar.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 7.5f, player.transform.position.z);
-               // floatingRankIcon.transform.position = new Vector3(player.transform.position.x - 5.8f, player.transform.position.y + 7.75f, player.transform.position.z);
                 playerCam.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, playerCam.transform.position.z);
                 anim.enabled = true;
             }
@@ -766,8 +662,6 @@ public class Client : NetworkBehaviour
             {
                 smr.enabled = false;
             }
-
-            clientHealthBar.floatingRankIcon.GetComponent<CanvasRenderer>().SetAlpha(0);
 
             //Spawn in random position
             int rand = Random.Range(0, spawnPoints.Count);

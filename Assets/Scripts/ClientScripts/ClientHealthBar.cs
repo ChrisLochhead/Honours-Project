@@ -12,17 +12,16 @@ public class ClientHealthBar : NetworkBehaviour {
     [SyncVar(hook = "ChangeHealth")] public float healthPercentage = 1;
     [SyncVar(hook = "ChangeHealthColour")] public Color healthColour = Color.green;
 
+    //For handling death and respawning
+    public bool deathSet = false;
+
+
     public Client Owner;
 
     public void InitialiseHealthbar()
     {
         floatingHealthBar.transform.position = new Vector3(Owner.player.transform.position.x, Owner.player.transform.position.y + 7.5f, Owner.player.transform.position.z);
         floatingRankIcon.transform.position = new Vector3(Owner.player.transform.position.x - 5.8f, Owner.player.transform.position.y + 7.75f, Owner.player.transform.position.z);
-    }
-
-    public void CallRespawn()
-    {
-        CmdRespawn();
     }
 
     [Command]
@@ -39,7 +38,10 @@ public class ClientHealthBar : NetworkBehaviour {
             floatingHealthBar.GetComponent<Image>().fillAmount = 1;
             healthColour = Color.green;
 
-            floatingRankIcon.GetComponent<CanvasRenderer>().SetAlpha(255);
+            Color tmp = floatingRankIcon.GetComponent<Image>().color;
+            tmp.a = 1.0f;
+            floatingRankIcon.GetComponent<Image>().color = tmp;
+            deathSet = false;
         }
     }
 
@@ -51,9 +53,13 @@ public class ClientHealthBar : NetworkBehaviour {
             floatingHealthBar.GetComponent<Image>().fillAmount = 1;
             healthColour = Color.green;
 
-            floatingRankIcon.GetComponent<CanvasRenderer>().SetAlpha(255);
+            Color tmp = floatingRankIcon.GetComponent<Image>().color;
+            tmp.a = 1.0f;
+            floatingRankIcon.GetComponent<Image>().color = tmp;
+            deathSet = false;
         }
     }
+
     public void UpdateHealth()
     {
         //Set colour
@@ -107,6 +113,27 @@ public class ClientHealthBar : NetworkBehaviour {
     }
 
     [Command]
+    public void CmdDeath()
+    {
+        Death();
+        RpcDeath();
+    }
+
+    public void Death()
+    {
+        Color tmp = floatingRankIcon.GetComponent<Image>().color;
+        tmp.a = 0.0f;
+        floatingRankIcon.GetComponent<Image>().color = tmp;
+    }
+
+    [ClientRpc]
+    public void RpcDeath()
+    {
+        Color tmp = floatingRankIcon.GetComponent<Image>().color;
+        tmp.a = 0.0f;
+        floatingRankIcon.GetComponent<Image>().color = tmp;
+    }
+    [Command]
     public void CmdUpdateHealth()
     {
         UpdateHealth();
@@ -117,11 +144,23 @@ public class ClientHealthBar : NetworkBehaviour {
     {
         floatingHealthBar.transform.position = new Vector3(Owner.player.transform.position.x, Owner.player.transform.position.y + 7.5f, Owner.player.transform.position.z);
         floatingRankIcon.transform.position = new Vector3(Owner.player.transform.position.x - 5.8f, Owner.player.transform.position.y + 7.75f, Owner.player.transform.position.z);
+
     }
+
+
+
+
+
     // Update is called once per frame
     void Update () {
 
         CmdUpdateHealth();
+
+        if (Owner.isDead && !deathSet)
+        {
+            CmdDeath();
+            deathSet = true;
+        }
 
     }
 }

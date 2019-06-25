@@ -331,7 +331,8 @@ GameObject:
   - component: {fileID: 114648311287741478}
   - component: {fileID: 114537825186406234}
   - component: {fileID: 114683141585487362}
-  - component: {fileID: 114266898456904092}
+  - component: {fileID: 114575720045080634}
+  - component: {fileID: 114789625227702804}
   m_Layer: 0
   m_Name: Player Prefab test (2)
   m_TagString: Client
@@ -2049,8 +2050,6 @@ GameObject:
   - component: {fileID: 223040910835270696}
   - component: {fileID: 114983879196186834}
   - component: {fileID: 114294302517997264}
-  - component: {fileID: 114808510606732758}
-  - component: {fileID: 114498549740925000}
   m_Layer: 0
   m_Name: HealthBarCanvas
   m_TagString: Untagged
@@ -6014,25 +6013,6 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &114266898456904092
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1108341617336374}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1267208747, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Target: {fileID: 224929911313268028}
-  m_ChildIndex: 1
-  m_SendInterval: 0.1
-  m_SyncRotationAxis: 7
-  m_RotationSyncCompression: 0
-  m_MovementThreshold: 0.001
-  m_InterpolateRotation: 0.5
-  m_InterpolateMovement: 0.5
 --- !u!114 &114268166521980434
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -6762,22 +6742,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114498549740925000
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1696924103136182}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62470ea26afb8324bb261f70cb8106b6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  floatingHealthBar: {fileID: 1384054250836120}
-  floatingRankIcon: {fileID: 1492719172626468}
-  healthPercentage: 1
-  healthColour: {r: 0, g: 1, b: 0, a: 1}
-  Owner: {fileID: 114648311287741478}
 --- !u!114 &114499863898377066
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7334,6 +7298,25 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114575720045080634
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1108341617336374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1267208747, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Target: {fileID: 224929911313268028}
+  m_ChildIndex: 1
+  m_SendInterval: 0.1
+  m_SyncRotationAxis: 7
+  m_RotationSyncCompression: 0
+  m_MovementThreshold: 0.001
+  m_InterpolateRotation: 0.5
+  m_InterpolateMovement: 0.5
 --- !u!114 &114607281472923554
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7977,6 +7960,7 @@ MonoBehaviour:
   reloadStartTime: 0
   reloadTargetTime: 0
   currentMPos: {x: 0, y: 0, z: 0}
+  floatingHealthBar: {fileID: 1384054250836120}
   respawnScreen: {fileID: 1978756503730130}
   kills: 0
   deaths: 0
@@ -7988,7 +7972,7 @@ MonoBehaviour:
   clientScoreBoard: {fileID: 114285254050206372}
   clientNameMenu: {fileID: 114875748514163908}
   clientHUD: {fileID: 114402100839107272}
-  clientHealthBar: {fileID: 114498549740925000}
+  clientHealthBar: {fileID: 114789625227702804}
 --- !u!114 &114656026244628660
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -8288,38 +8272,22 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &114808510606732758
+--- !u!114 &114789625227702804
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1696924103136182}
+  m_GameObject: {fileID: 1108341617336374}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Script: {fileID: 11500000, guid: 62470ea26afb8324bb261f70cb8106b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 40
-    i1: 188
-    i2: 168
-    i3: 103
-    i4: 92
-    i5: 247
-    i6: 17
-    i7: 116
-    i8: 217
-    i9: 83
-    i10: 131
-    i11: 145
-    i12: 120
-    i13: 92
-    i14: 145
-    i15: 85
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 0
+  floatingHealthBar: {fileID: 1384054250836120}
+  floatingRankIcon: {fileID: 1492719172626468}
+  healthPercentage: 1
+  healthColour: {r: 0, g: 1, b: 0, a: 1}
+  Owner: {fileID: 114648311287741478}
 --- !u!114 &114835813308152688
 MonoBehaviour:
   m_ObjectHideFlags: 1
