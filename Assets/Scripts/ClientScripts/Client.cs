@@ -72,6 +72,7 @@ public class Client : NetworkBehaviour
 
     //For win conditions
     public bool hasWon = false;
+    public bool hasLost = false;
 
     //For visible name
     [SyncVar]

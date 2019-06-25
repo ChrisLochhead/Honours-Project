@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Networking;
@@ -34,11 +32,66 @@ public class ClientScoreBoard : NetworkBehaviour {
     public TextMeshProUGUI team1PlayerTotal;
     public TextMeshProUGUI team2PlayerTotal;
 
-	
+    //for win condition
+    public TextMeshProUGUI winCondition;
+
+    public Client Owner;
+
+    //For the end of the game
+    public bool ConditionSet = false;
+    public GameObject ContinueButton;
+
 	// Update is called once per frame
 	void Update () {
         if (scoreBoardActive)
             UpdateScoreBoard();
+        //Check player hasn't already won or lost
+        if (Owner.hasWon == false && Owner.hasLost == false)
+        {
+            CheckVictory();
+        }
+
+        if (Owner.hasWon == true) ClientWon();
+        if (Owner.hasLost == true) ClientLost();
+    }
+
+    public void ClientWon()
+    {
+        winCondition.text = "You Wins";
+        ContinueButton.SetActive(true);
+    }
+
+    public void ClientLost()
+    {
+        winCondition.text = "You Lose";
+        ContinueButton.SetActive(true);
+    }
+
+    public void CheckVictory()
+    {
+        //Check if player has won or lost
+        if (Owner.team == 0)
+        {
+            if (team1ScoreNo >= 25)
+            {
+                Owner.hasWon = true;            
+            }
+            if (team2ScoreNo >= 25)
+            {
+                Owner.hasLost = true;
+            }
+        }
+        else
+        {
+            if (team1ScoreNo >= 25)
+            {
+                Owner.hasLost = true;
+            }
+            if (team2ScoreNo >= 25)
+            {
+                Owner.hasWon = true;
+            }
+        }
     }
 
     void UpdateScoreBoard()
