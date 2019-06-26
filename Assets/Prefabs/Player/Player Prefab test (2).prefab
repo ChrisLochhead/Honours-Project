@@ -5379,8 +5379,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114648311287741478}
-        m_MethodName: OnRespawnClicked
+      - m_Target: {fileID: 114285254050206372}
+        m_MethodName: OnContinueClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6352,6 +6352,10 @@ MonoBehaviour:
   - {fileID: 114320455839735318}
   team1PlayerTotal: {fileID: 114047275681006208}
   team2PlayerTotal: {fileID: 114628756660182156}
+  winCondition: {fileID: 114671929018290244}
+  Owner: {fileID: 114648311287741478}
+  ConditionSet: 0
+  ContinueButton: {fileID: 1254658518055574}
 --- !u!114 &114294302517997264
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7993,6 +7997,7 @@ MonoBehaviour:
   isDead: 0
   team: 0
   hasWon: 0
+  hasLost: 0
   playerName: 
   needsUpdate: 0
   clientScoreBoard: {fileID: 114285254050206372}

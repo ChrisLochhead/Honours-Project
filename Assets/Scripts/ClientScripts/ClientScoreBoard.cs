@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using TMPro;
 using UnityEngine.Networking;
 
@@ -45,6 +45,7 @@ public class ClientScoreBoard : NetworkBehaviour {
 	void Update () {
         if (scoreBoardActive)
             UpdateScoreBoard();
+
         //Check player hasn't already won or lost
         if (Owner.hasWon == false && Owner.hasLost == false)
         {
@@ -57,13 +58,19 @@ public class ClientScoreBoard : NetworkBehaviour {
 
     public void ClientWon()
     {
-        winCondition.text = "You Wins";
+        scoreBoard.SetActive(true);
+        scoreBoardActive = true;
+        winCondition.gameObject.SetActive(true);
+        winCondition.text = "You Win!";
         ContinueButton.SetActive(true);
     }
 
     public void ClientLost()
     {
-        winCondition.text = "You Lose";
+        scoreBoard.SetActive(true);
+        scoreBoardActive = true;
+        winCondition.gameObject.SetActive(true);
+        winCondition.text = "You Lose!";
         ContinueButton.SetActive(true);
     }
 
@@ -72,22 +79,22 @@ public class ClientScoreBoard : NetworkBehaviour {
         //Check if player has won or lost
         if (Owner.team == 0)
         {
-            if (team1ScoreNo >= 25)
+            if (team1ScoreNo >= 1)
             {
                 Owner.hasWon = true;            
             }
-            if (team2ScoreNo >= 25)
+            if (team2ScoreNo >= 1)
             {
                 Owner.hasLost = true;
             }
         }
         else
         {
-            if (team1ScoreNo >= 25)
+            if (team1ScoreNo >= 1)
             {
                 Owner.hasLost = true;
             }
-            if (team2ScoreNo >= 25)
+            if (team2ScoreNo >= 1)
             {
                 Owner.hasWon = true;
             }
@@ -96,10 +103,31 @@ public class ClientScoreBoard : NetworkBehaviour {
 
     void UpdateScoreBoard()
     {
+        //Update each teams score
+        team1Score.text = team1ScoreNo.ToString();
+        team2Score.text = team2ScoreNo.ToString();
 
+        //Display each teams number of players
+        team1PlayerTotal.text = team1Count + "/5";
+        team2PlayerTotal.text = team2Count + "/5";
 
+        //Clear players no longer in game
+        for (int i = 0; i < team1Names.Length; i++)
+        {
+            if (i >= team1Count)
+                team1Names[i].gameObject.SetActive(false);
+        }
+        //Clear players no longer in game
+        for (int i = 0; i < team1Names.Length; i++)
+        {
+            if (i >= team2Count)
+                team2Names[i].gameObject.SetActive(false);
+        }
+    }
+
+    public void UpdateScores()
+    {
         GameObject[] players = GameObject.FindGameObjectsWithTag("Client");
-
         //Reset counters
         team1Count = 0;
         team2Count = 0;
@@ -125,13 +153,6 @@ public class ClientScoreBoard : NetworkBehaviour {
                 team2ScoreNo += g.GetComponent<Client>().kills;
             }
         }
-        //Update each teams score
-        team1Score.text = team1ScoreNo.ToString();
-        team2Score.text = team2ScoreNo.ToString();
-
-        //Display each teams number of players
-        team1PlayerTotal.text = team1Count + "/5";
-        team2PlayerTotal.text = team2Count + "/5";
     }
 
     public void ToggleScoreBoard()
@@ -156,5 +177,10 @@ public class ClientScoreBoard : NetworkBehaviour {
             scoreBoard.SetActive(false);
             scoreBoardActive = false;
         }
+    }
+
+    public void OnContinueClicked()
+    {
+        SceneManager.LoadScene(0);
     }
 }

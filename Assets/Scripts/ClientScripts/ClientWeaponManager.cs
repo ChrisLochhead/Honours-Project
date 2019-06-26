@@ -99,79 +99,84 @@ public class ClientWeaponManager : NetworkBehaviour {
 
     // Update is called once per frame
     void Update () {
-        if (Input.GetMouseButton(0) && currentAmmo[currentWeapon] > 0 && Owner.isLocal && fireRates[currentWeapon] == currentFireRates[currentWeapon])
-        {
-            CmdSpawnBullet();
-            currentAmmo[currentWeapon]--;
-            currentFired = currentWeapon;
-            muzzleShot = true;
-            hasFired = true;
-        }
 
-        if (hasFired)
+        //Game is not over, and player has set his name (and therefore has joined the game)
+        if (!Owner.hasWon && !Owner.hasLost && Owner.playerName != "")
         {
-            if (currentFireRates[currentFired] > 0)
+            if (Input.GetMouseButton(0) && currentAmmo[currentWeapon] > 0 && Owner.isLocal && fireRates[currentWeapon] == currentFireRates[currentWeapon])
             {
-                currentFireRates[currentFired] -= Time.deltaTime;
-            }
-            else
-            {
-                currentFireRates[currentFired] = fireRates[currentFired];
-                hasFired = false;
+                CmdSpawnBullet();
+                currentAmmo[currentWeapon]--;
+                currentFired = currentWeapon;
+                muzzleShot = true;
+                hasFired = true;
             }
 
-        }
-
-        if (muzzleShot)
-        {
-
-            muzzleFlashTimer -= Time.deltaTime;
-
-            if (muzzleFlashTimer <= 0.0f)
+            if (hasFired)
             {
-                CmdRemoveFlash();
-                muzzleFlashTimer = 0.15f;
-                muzzleShot = false;
+                if (currentFireRates[currentFired] > 0)
+                {
+                    currentFireRates[currentFired] -= Time.deltaTime;
+                }
+                else
+                {
+                    currentFireRates[currentFired] = fireRates[currentFired];
+                    hasFired = false;
+                }
+
             }
-        }
 
-        ////Weapon switching
-        if (Input.GetKey("1") && Owner.isLocal) CmdSetWeapon(0);
-        if (Input.GetKey("2") && Owner.isLocal && Owner.score > -1) CmdSetWeapon(1);
-        if (Input.GetKey("3") && Owner.isLocal && Owner.score > -1) CmdSetWeapon(2);
-        if (Input.GetKey("4") && Owner.isLocal && Owner.score > -1) CmdSetWeapon(3);
-        if (Input.GetKey("5") && Owner.isLocal && Owner.score > -1) CmdSetWeapon(4);
-
-        //Reload sequence
-        if (isReloading)
-        {
-            if (reloadStartTime >= reloadTargetTime)
+            if (muzzleShot)
             {
-                currentAmmo[currentWeapon] = clipSize[currentWeapon];
-                reloadStartTime = 0.0f;
+
+                muzzleFlashTimer -= Time.deltaTime;
+
+                if (muzzleFlashTimer <= 0.0f)
+                {
+                    CmdRemoveFlash();
+                    muzzleFlashTimer = 0.15f;
+                    muzzleShot = false;
+                }
+            }
+
+            ////Weapon switching
+            if (Input.GetKey("1") && Owner.isLocal) CmdSetWeapon(0);
+            if (Input.GetKey("2") && Owner.isLocal && Owner.score > -1) CmdSetWeapon(1);
+            if (Input.GetKey("3") && Owner.isLocal && Owner.score > -1) CmdSetWeapon(2);
+            if (Input.GetKey("4") && Owner.isLocal && Owner.score > -1) CmdSetWeapon(3);
+            if (Input.GetKey("5") && Owner.isLocal && Owner.score > -1) CmdSetWeapon(4);
+
+            //Reload sequence
+            if (isReloading)
+            {
+                if (reloadStartTime >= reloadTargetTime)
+                {
+                    currentAmmo[currentWeapon] = clipSize[currentWeapon];
+                    reloadStartTime = 0.0f;
+                    isReloading = false;
+                    initialReload = true;
+                }
+                else
+                {
+                    reloadStartTime = Time.time;
+                }
+            }
+
+            //Cancel reload if reloading mid-weapon switch
+            if (Input.GetKey("1") || Input.GetKey("2") || Input.GetKey("3") || Input.GetKey("4") || Input.GetKey("5"))
+            {
                 isReloading = false;
                 initialReload = true;
             }
-            else
+
+            //Reloading
+            if (Input.GetKey("r") && initialReload == true || currentAmmo[currentWeapon] == 0 && initialReload == true || Input.GetKey("r") && isReloading == false)
             {
                 reloadStartTime = Time.time;
+                reloadTargetTime = reloadStartTime + reloadTimer[currentWeapon];
+                isReloading = true;
+                initialReload = false;
             }
-        }
-
-        //Cancel reload if reloading mid-weapon switch
-        if (Input.GetKey("1") || Input.GetKey("2") || Input.GetKey("3") || Input.GetKey("4") || Input.GetKey("5"))
-        {
-            isReloading = false;
-            initialReload = true;
-        }
-
-        //Reloading
-        if (Input.GetKey("r") && initialReload == true || currentAmmo[currentWeapon] == 0 && initialReload == true || Input.GetKey("r") && isReloading == false)
-        {
-            reloadStartTime = Time.time;
-            reloadTargetTime = reloadStartTime + reloadTimer[currentWeapon];
-            isReloading = true;
-            initialReload = false;
         }
     }
     [Command]

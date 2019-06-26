@@ -192,7 +192,6 @@ public class EnemyAI : MonoBehaviour {
             //apply the move toward function using this position             //was mpos
             transform.position = Vector3.MoveTowards(transform.position, new Vector3(mPos.x, mPos.y, -10), velocity);
             playerCam.transform.position = new Vector3(transform.position.x, transform.position.y, playerCam.transform.position.z);
-            Debug.Log(transform.position);
             anim.enabled = true;
         }
         else

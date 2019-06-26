@@ -235,6 +235,14 @@ public class Client : NetworkBehaviour
 
     public void Update()
     {
+
+        //Check for victory by updating the scoreboard
+        clientScoreBoard.UpdateScores();
+        clientScoreBoard.CheckVictory();
+
+        if (hasWon == true || hasLost == true)
+            clientScoreBoard.scoreBoardActive = true;
+
         //Ignore collisions from players running into eachother
         Physics.IgnoreLayerCollision(9, 9);
 
@@ -242,8 +250,27 @@ public class Client : NetworkBehaviour
         if (isDead)
         {
             Death();
+        }
+
+        if (hasLost == true || hasWon == true)
+        {
+            //Make sure respawn screen is deactivated
+            respawnScreen.SetActive(false);
+
+            //HealthHUD
+            clientHUD.healthBar.SetActive(false);
+            clientHUD.healthText.enabled = false;
+
+            //ammo score and rank icon
+            clientHUD.ammoText.enabled = false;
+            clientHUD.scoreText.enabled = false;
+            clientHUD.rankImage.SetActive(false);
+
+            clientScoreBoard.gameObject.SetActive(true);
             return;
         }
+
+        if (isDead) return;
 
         //Update rank
         if (score <= 49) rank = 0;
@@ -260,10 +287,8 @@ public class Client : NetworkBehaviour
         //Toggle scoreboard
         if (Input.GetKeyDown("t") && playerName != "")
         {
-            Debug.Log("step1");
             if (!isDead && isLocalPlayer)
             {
-                Debug.Log("step2");
                 clientScoreBoard.ToggleScoreBoard();
             }
         }
@@ -355,6 +380,10 @@ public class Client : NetworkBehaviour
             //Stand the player back up
             player.transform.rotation *= Quaternion.Euler(-90, 0, 0);
 
+            //disable colliders
+            player.GetComponent<Rigidbody>().detectCollisions = true;
+            player.GetComponent<BoxCollider>().enabled = true;
+
             //Hide respawn button
             respawnScreen.SetActive(false);
             reset = false;
@@ -369,6 +398,8 @@ public class Client : NetworkBehaviour
 
     private void FixedUpdate()
     {
+        if (hasLost || hasWon)
+            return;
 
         if (isDead)
         {
@@ -446,6 +477,10 @@ public class Client : NetworkBehaviour
             int rand = Random.Range(0, spawnPoints.Count);
             player.transform.position = spawnPoints[rand].transform.position;
             playerCam.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, playerCam.transform.position.z);
+
+            //disable colliders
+            player.GetComponent<Rigidbody>().detectCollisions = false;
+            player.GetComponent<BoxCollider>().enabled = false;
 
             //Respawn screen shows
             respawnScreen.SetActive(true);

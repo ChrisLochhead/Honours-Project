@@ -45,26 +45,6 @@ public class MainMenu : MonoBehaviour {
             Destroy(GameObject.Find("game"));
         }
 
-        ////Initialise a game manager
-        //GameObject g = (GameObject)Instantiate(gameManager);
-
-        //g.name = "game";
-
-        ////Set up kill count for the game
-        //if (killLimitDropdown.GetComponent<Dropdown>().value == 0)
-        //{
-        //    g.GetComponent<Game>().killLimit = 5;
-        //}
-        //else if (killLimitDropdown.GetComponent<Dropdown>().value == 1) g.GetComponent<Game>().killLimit = 15;
-        //else if (killLimitDropdown.GetComponent<Dropdown>().value == 2) g.GetComponent<Game>().killLimit = 60;
-
-        ////Set up time limit for the game
-        //if (timeLimitDropdown.GetComponent<Dropdown>().value == 0) g.GetComponent<Game>().timeLimit = 10;
-        //else if (timeLimitDropdown.GetComponent<Dropdown>().value == 1) g.GetComponent<Game>().timeLimit = 15;
-        //else if (timeLimitDropdown.GetComponent<Dropdown>().value == 2) g.GetComponent<Game>().timeLimit = 30;
-
-        //NetworkServer.Spawn(g);
-
         //Move to the next scene
         SceneManager.LoadScene(1);
     }

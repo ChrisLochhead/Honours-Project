@@ -60,7 +60,6 @@ public class BuildMenu : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        Debug.Log(mapItems.Count);
 
         if(Input.GetMouseButtonDown(0))
         {
@@ -101,9 +100,7 @@ public class BuildMenu : MonoBehaviour {
             }
             if (Input.GetKeyDown("t"))
             {
-                Debug.Log(mapItems.Count);
                 mapItems.RemoveAt(dragObjectModel.GetComponent<mapItem>().listPlace);
-                Debug.Log(mapItems.Count);
                 Destroy(dragObjectModel);
                 dragObjectModel = null;
                 objectToDrag = null;

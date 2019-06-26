@@ -55,7 +55,6 @@ public class Bullet : NetworkBehaviour {
             //Apply damage
             collision.gameObject.transform.parent.GetComponent<Client>().Hit(damageAmount);
 
-            Debug.Log("is server");
             if (collision.transform.parent.GetComponent<Client>().isDead)
             {
                 shooter.transform.parent.GetComponent<Client>().UpdateScore(100);

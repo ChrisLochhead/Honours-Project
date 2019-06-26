@@ -47,7 +47,6 @@ public class MapFinder : MonoBehaviour {
                         else if (lineIterator == 1)
                         {
                             map.GetComponent<Map>().setMapSize(new Vector2(int.Parse(lines[0]), int.Parse(lines[1])));
-                            // Debug.Log(map.GetComponent<Map>().getMapSize().x.ToString() + " , " + map.GetComponent<Map>().getMapSize().y.ToString());
                         }
                         else
                         {
@@ -57,7 +56,6 @@ public class MapFinder : MonoBehaviour {
                             else
                                 map.GetComponent<Map>().addCoinItem(int.Parse(lines[0]), float.Parse(lines[1]), float.Parse(lines[2]));
                         }
-                        Debug.Log(text);
                         lineIterator++;
                     }
                 }
