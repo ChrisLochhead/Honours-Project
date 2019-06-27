@@ -96,6 +96,13 @@ public class Client : NetworkBehaviour
     //Weapon controller
     public ClientWeaponManager clientWeaponManager;
 
+    //Model
+    public GameObject characterModel;
+
+    //Accompanying textures
+    public Material BlueTeamMaterial;
+    public Material RedTeamMaterial;
+
     // Use this for initialization
     void Start()
     {
@@ -152,8 +159,9 @@ public class Client : NetworkBehaviour
         else
             CmdSetTeam(0);
 
+
         //Get spawnpoints from team
-        if (team == 1)
+        if (team == 0)
             spawnPoints = GameObject.Find("MapManager").GetComponent<GameMap>().team1Spawns;
         else
             spawnPoints = GameObject.Find("MapManager").GetComponent<GameMap>().team2Spawns;
@@ -596,11 +604,23 @@ public class Client : NetworkBehaviour
     public void RpcSetTeam(int t)
     {
         team = t;
+
+        //Set the texture of the player
+        if (team == 0)
+            characterModel.GetComponent<SkinnedMeshRenderer>().material = RedTeamMaterial;
+        else
+            characterModel.GetComponent<SkinnedMeshRenderer>().material = BlueTeamMaterial;
     }
 
     public void SetTeam(int t)
     {
         team = t;
+
+        //Set the texture of the player
+        if (team == 0)
+            characterModel.GetComponent<SkinnedMeshRenderer>().material = RedTeamMaterial;
+        else
+            characterModel.GetComponent<SkinnedMeshRenderer>().material = BlueTeamMaterial;
     }
 
     [Command]

@@ -32,7 +32,12 @@ ModelImporter:
     7400012: Armature|ArmatureAction
     9500000: //RootNode
     13700000: CharacterModel
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.002
+    second: {fileID: 2100000, guid: ad32b8c797f6bcb4b9d64c2d16565237, type: 2}
   materials:
     importMaterials: 1
     materialName: 0

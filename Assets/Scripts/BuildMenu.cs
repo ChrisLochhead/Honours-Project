@@ -289,7 +289,7 @@ public class BuildMenu : MonoBehaviour {
             {
                 if (mapInfo[i].GetComponent<Wall>().type == 0)
                 {
-                    tmp = Instantiate(redWall, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, -5), Quaternion.identity * Quaternion.Euler(0, 0, mapInfo[i].GetComponent<Wall>().rot));
+                    tmp = Instantiate(redWall, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, -5), Quaternion.identity * Quaternion.Euler(0, 0, mapInfo[i].GetComponent<Wall>().rot));     
                 }
                 else
                 if (mapInfo[i].GetComponent<Wall>().type == 1)

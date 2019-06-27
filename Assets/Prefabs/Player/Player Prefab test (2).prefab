@@ -8005,6 +8005,9 @@ MonoBehaviour:
   clientHUD: {fileID: 114402100839107272}
   clientHealthBar: {fileID: 114789625227702804}
   clientWeaponManager: {fileID: 114213096663396228}
+  characterModel: {fileID: 1627814130032520}
+  BlueTeamMaterial: {fileID: 2100000, guid: c3067a8fe3d78cb43a98fa75e599d702, type: 2}
+  RedTeamMaterial: {fileID: 2100000, guid: 663fab50bf0e215469884163d915f084, type: 2}
 --- !u!114 &114656026244628660
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -9032,7 +9035,7 @@ SkinnedMeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: b514f5e4c1c49d94c9ccb6f9b32bd1fc, type: 3}
+  - {fileID: 2100000, guid: 663fab50bf0e215469884163d915f084, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
