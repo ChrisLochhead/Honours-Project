@@ -133,12 +133,6 @@ public class Client : NetworkBehaviour
             //floatingHealthBar.GetComponent<CanvasRenderer>().SetAlpha(0);
             //floatingRankIcon.GetComponent<CanvasRenderer>().SetAlpha(0);
         }
-    }
-
-    public void InitialisePlayer()
-    {
-        //ignore collisions between players
-        Physics.IgnoreLayerCollision(9, 9);
 
         //Find team numbers
         int temp1 = -1;
@@ -168,6 +162,14 @@ public class Client : NetworkBehaviour
 
         //set up spawnpoint
         Respawn();
+    }
+
+    public void InitialisePlayer()
+    {
+        //ignore collisions between players
+        Physics.IgnoreLayerCollision(9, 9);
+
+       
 
         //initialise armour rating
         armour = 0;
@@ -338,6 +340,12 @@ public class Client : NetworkBehaviour
     {
         if (!isServer)
         {
+
+            //Spawn in random position
+            int rand = Random.Range(0, spawnPoints.Count);
+            player.transform.position = spawnPoints[rand].transform.position;
+            playerCam.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, playerCam.transform.position.z);
+
             //Reset health and ranks
             health = 100;
             clientHealthBar.healthPercentage = 1;
@@ -368,6 +376,12 @@ public class Client : NetworkBehaviour
     {
         if (isServer)
         {
+
+            //Spawn in random position
+            int rand = Random.Range(0, spawnPoints.Count);
+            player.transform.position = spawnPoints[rand].transform.position;
+            playerCam.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, playerCam.transform.position.z);
+
             //Reset health and ranks
             health = 100;
             clientHealthBar.healthPercentage = 1;
