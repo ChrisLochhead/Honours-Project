@@ -71,13 +71,6 @@ public class Wall : MonoBehaviour {
         if (GetComponent<MeshRenderer>() && wallMaterial == null)
             wallMaterial = GetComponent<MeshRenderer>().material;
 
-        if (Input.GetKey("p"))
-        {
-            Color tmp = wallMaterial.color;
-            tmp.a = 0.0f;
-            wallMaterial.color = tmp;
-        }
-
         if(wallMaterial)
         {
             Color tmp = wallMaterial.color;

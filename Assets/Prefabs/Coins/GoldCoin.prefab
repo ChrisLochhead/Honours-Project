@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 33890234640718276}
   - component: {fileID: 23440127007440056}
   - component: {fileID: 135486010070576518}
+  - component: {fileID: 114989499460662974}
   m_Layer: 0
   m_Name: GoldCoin
   m_TagString: Untagged
@@ -84,6 +85,19 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1049524726679572}
   m_Mesh: {fileID: 4300002, guid: 1740bf4e70ba19649a01354b7ce57c7b, type: 3}
+--- !u!114 &114989499460662974
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1049524726679572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fa954f28239eb74f8705b289ed3e764, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  listPlace: 0
+  type: 
 --- !u!135 &135486010070576518
 SphereCollider:
   m_ObjectHideFlags: 1

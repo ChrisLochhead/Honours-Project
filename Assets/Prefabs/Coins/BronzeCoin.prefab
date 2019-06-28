@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 33342209814187768}
   - component: {fileID: 23370620922989892}
   - component: {fileID: 135109598879019202}
+  - component: {fileID: 114740052045436702}
   m_Layer: 0
   m_Name: BronzeCoin
   m_TagString: Untagged
@@ -84,6 +85,19 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1684810227353058}
   m_Mesh: {fileID: 4300000, guid: 59f46b70dc189aa42a3c4ec0a60be67b, type: 3}
+--- !u!114 &114740052045436702
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1684810227353058}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fa954f28239eb74f8705b289ed3e764, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  listPlace: 0
+  type: 
 --- !u!135 &135109598879019202
 SphereCollider:
   m_ObjectHideFlags: 1

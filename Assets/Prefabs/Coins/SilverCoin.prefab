@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 33064085222669044}
   - component: {fileID: 23978019351544622}
   - component: {fileID: 135140406460074172}
+  - component: {fileID: 114136919602721256}
   m_Layer: 0
   m_Name: SilverCoin
   m_TagString: Untagged
@@ -84,6 +85,19 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1480739355948570}
   m_Mesh: {fileID: 4300000, guid: d09300b9f8552c74ea9627591e006009, type: 3}
+--- !u!114 &114136919602721256
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1480739355948570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fa954f28239eb74f8705b289ed3e764, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  listPlace: 0
+  type: 
 --- !u!135 &135140406460074172
 SphereCollider:
   m_ObjectHideFlags: 1

@@ -60,8 +60,11 @@ public class BuildMenu : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+        //Make sure camera can move at all times
+        if (Camera.main.GetComponent<CameraMovement>().canMove == false)
+            Camera.main.GetComponent<CameraMovement>().canMove = true;
 
-        if(Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
             objectToDrag = getTransformFromMouse();
 

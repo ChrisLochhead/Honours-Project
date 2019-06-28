@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 23316734858888098}
   - component: {fileID: 114890260426362124}
   - component: {fileID: 65386564433943358}
+  - component: {fileID: 114974483035569850}
   m_Layer: 0
   m_Name: NewRedWall
   m_TagString: draggable
@@ -113,3 +114,16 @@ MonoBehaviour:
   type: 0
   Health: 0
   totalHealth: 0
+--- !u!114 &114974483035569850
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1744126536531200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fa954f28239eb74f8705b289ed3e764, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  listPlace: 0
+  type: 
