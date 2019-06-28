@@ -1,15 +1,15 @@
-## Honours Project
+# Honours Project
 
 Game is currently in an intermediate stage, being developed in Unity using C#. 
 
 My Honours project will be carried out on this game of my design: WarZone.
 
-# WarZone
+## WarZone
 
 WarZone is a top down box-head style shooter in which two large teams of players fight in many different game modes, with a focus on the games fundamental gameplay mechanics. 
 The game is designed for team games with an emphasis on strategy and teamwork. 
 
-- Game Mechanics
+### Game Mechanics
 
 The gameplay in this project is fairly unique that gives a new feel to shooters and multiplayer games in general. The primary aspect of this unique experience is the health system.
 Players can only gain health by ranking up, and they can only rank up by killing players, or collecting tokens scattered about the map. As a player ranks up, there health is not only restored,
@@ -26,11 +26,11 @@ The multiplayer capabilities of this game are currently entirely LAN based. In t
 to allow anyone to play this game anywhere. Depending on time restraints, I may also publish this game on a free hosting site to try and drum up some attention to attract play testers.
 
 
--Build
+- Build
 
 WarZone comes complete with a dedicated build system, which not only has the benefit of letting players build there own unique maps, but also will allow me to create multiple maps when
 implementing my learning AI into the game for training. The build system is a drag and drop system that saves map information to text files for later reading.
 
--AI
+- AI
 
 The AI has not yet been implemented thus far, as the game still contains some bugs and necessary features yet to be implemented, such as setting up tensorflow for unity.
