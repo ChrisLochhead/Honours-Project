@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
+using TMPro;
 
 public class ClientNameMenu : NetworkBehaviour {
 
@@ -16,7 +17,6 @@ public class ClientNameMenu : NetworkBehaviour {
 
     // Use this for initialization
     public void SetPlayerName () {
-        // Owner.InitialisePlayerName(nameSelector.GetComponent<InputField>().text);
         CmdSetName(nameSelector.GetComponent<InputField>().text);
     }
 
@@ -24,11 +24,13 @@ public class ClientNameMenu : NetworkBehaviour {
     public void RpcSetName(string n)
     {
         Owner.playerName = n;
+        Owner.clientHealthBar.floatingName.GetComponent<TextMeshPro>().text = n;
     }
 
     public void SetName(string n)
     {
         Owner.playerName = n;
+        Owner.clientHealthBar.floatingName.GetComponent<TextMeshPro>().text = n;
     }
 
     [Command]
