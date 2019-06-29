@@ -251,9 +251,9 @@ MonoBehaviour:
   orangeWall: {fileID: 1593998960162694, guid: cd9c856e2c92ace4da2e63976947fa6b, type: 2}
   greenWall: {fileID: 1481424459068890, guid: 7f383559bb1acf944afa66173f4418d5, type: 2}
   greyWall: {fileID: 1928308074973962, guid: 77aea299c6dd341408a57516ef24593a, type: 2}
-  goldCoin: {fileID: 1049524726679572, guid: e7a694650ee63464b8f81d973e4b7d04, type: 2}
-  silverCoin: {fileID: 1480739355948570, guid: 3c99109154774bc408fb4bab4fb4cf06, type: 2}
-  bronzeCoin: {fileID: 1684810227353058, guid: b018276685be4284aa010219e245fd24, type: 2}
+  goldCoin: {fileID: 1788021123348940, guid: 4e9192b64188b7645be2e075cd5d0163, type: 2}
+  silverCoin: {fileID: 1586400724043756, guid: 6b15133c9510b1c4b8a7666c9c989101, type: 2}
+  bronzeCoin: {fileID: 1193338027445560, guid: 810dde9e6a2a1c04b8f291eda3ead9d7, type: 2}
   teamFlag1: {fileID: 1059214415926398, guid: 18f9d6679c495334d80b22f48ac6e005, type: 2}
   teamFlag2: {fileID: 1118116294114014, guid: 780e0415441fbdd43aca455e2350c2af, type: 2}
   team1Spawns: []

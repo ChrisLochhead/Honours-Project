@@ -72,19 +72,22 @@ public class GameMap : NetworkBehaviour {
                 }
             }
             else
-                if (mapInfo[i].GetComponent<Coin>().type == 4)
+                if (mapInfo[i].GetComponent<Coin>().type == 4 && isServer)
             {
-                Instantiate(goldCoin, new Vector3(mapInfo[i].GetComponent<Coin>().pos.x, mapInfo[i].GetComponent<Coin>().pos.y, -5), Quaternion.identity);
+                GameObject spawnObj = (GameObject)Instantiate(goldCoin, new Vector3(mapInfo[i].GetComponent<Coin>().pos.x, mapInfo[i].GetComponent<Coin>().pos.y, -5), Quaternion.identity);
+                NetworkServer.Spawn(spawnObj);
             }
             else
-                if (mapInfo[i].GetComponent<Coin>().type == 5)
+                if (mapInfo[i].GetComponent<Coin>().type == 5 && isServer)
             {
-                Instantiate(silverCoin, new Vector3(mapInfo[i].GetComponent<Coin>().pos.x, mapInfo[i].GetComponent<Coin>().pos.y, -5), Quaternion.identity);
+                GameObject spawnObj = (GameObject)Instantiate(silverCoin, new Vector3(mapInfo[i].GetComponent<Coin>().pos.x, mapInfo[i].GetComponent<Coin>().pos.y, -5), Quaternion.identity);
+                NetworkServer.Spawn(spawnObj);
             }
             else
-                if (mapInfo[i].GetComponent<Coin>().type == 6)
+                if (mapInfo[i].GetComponent<Coin>().type == 6 && isServer)
             {
-                Instantiate(bronzeCoin, new Vector3(mapInfo[i].GetComponent<Coin>().pos.x, mapInfo[i].GetComponent<Coin>().pos.y, -5), Quaternion.identity);
+                GameObject spawnObj = (GameObject)Instantiate(bronzeCoin, new Vector3(mapInfo[i].GetComponent<Coin>().pos.x, mapInfo[i].GetComponent<Coin>().pos.y, -5), Quaternion.identity);
+                NetworkServer.Spawn(spawnObj);
             }
             else
                 if (mapInfo[i].GetComponent<Coin>().type == 7)
