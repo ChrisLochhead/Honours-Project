@@ -1,8 +1,8 @@
-﻿using System.Collections;
+﻿using UnityEngine.Networking;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameMap : MonoBehaviour {
+public class GameMap : NetworkBehaviour {
 
     private List<GameObject> mapInfo;
     Vector2 mapSize;
@@ -48,23 +48,27 @@ public class GameMap : MonoBehaviour {
         for (int i = 0; i < mapInfo.Count; i++) {
             if (mapInfo[i].GetComponent<Wall>())
             {
-                if (mapInfo[i].GetComponent<Wall>().type == 0)
+                if (mapInfo[i].GetComponent<Wall>().type == 0 && isServer)
                 {
-                    Instantiate(redWall, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, -5), Quaternion.identity * Quaternion.Euler(0,0, mapInfo[i].GetComponent<Wall>().rot));
+                    GameObject spawnObj = (GameObject)Instantiate(redWall, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, -5), Quaternion.identity * Quaternion.Euler(0,0, mapInfo[i].GetComponent<Wall>().rot));
+                    NetworkServer.Spawn(spawnObj);
                 }
                 else
-                if (mapInfo[i].GetComponent<Wall>().type == 1)
+                if (mapInfo[i].GetComponent<Wall>().type == 1 && isServer)
                 {
-                    Instantiate(orangeWall, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, -5), Quaternion.identity * Quaternion.Euler(0, 0, mapInfo[i].GetComponent<Wall>().rot));
+                    GameObject spawnObj = (GameObject)Instantiate(orangeWall, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, -5), Quaternion.identity * Quaternion.Euler(0, 0, mapInfo[i].GetComponent<Wall>().rot));
+                    NetworkServer.Spawn(spawnObj);
                 }
                 else
-                if (mapInfo[i].GetComponent<Wall>().type == 2)
+                if (mapInfo[i].GetComponent<Wall>().type == 2 && isServer)
                 {
-                    Instantiate(greenWall, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, -5), Quaternion.identity * Quaternion.Euler(0, 0, mapInfo[i].GetComponent<Wall>().rot));
+                    GameObject spawnObj = (GameObject)Instantiate(greenWall, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, -5), Quaternion.identity * Quaternion.Euler(0, 0, mapInfo[i].GetComponent<Wall>().rot));
+                    NetworkServer.Spawn(spawnObj);
                 }
-                if (mapInfo[i].GetComponent<Wall>().type == 3)
+                if (mapInfo[i].GetComponent<Wall>().type == 3 && isServer)
                 {
-                    Instantiate(greyWall, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, -5), Quaternion.identity * Quaternion.Euler(0, 0, mapInfo[i].GetComponent<Wall>().rot));
+                    GameObject spawnObj = (GameObject)Instantiate(greyWall, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, -5), Quaternion.identity * Quaternion.Euler(0, 0, mapInfo[i].GetComponent<Wall>().rot));
+                    NetworkServer.Spawn(spawnObj);
                 }
             }
             else

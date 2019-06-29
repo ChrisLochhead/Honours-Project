@@ -227,6 +227,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1040102045}
   - component: {fileID: 1040102044}
+  - component: {fileID: 1040102046}
   m_Layer: 0
   m_Name: MapManager
   m_TagString: Untagged
@@ -247,9 +248,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ground: {fileID: 1199434456073256, guid: 7ae6c8b685404374290ff4100f217bea, type: 2}
   redWall: {fileID: 1561674524923140, guid: db23f0c00f9d0494584a23bed5c6137b, type: 2}
-  orangeWall: {fileID: 1257864531734054, guid: 5485a1bbed1e9cb44bbb1dd8f3204f71, type: 2}
-  greenWall: {fileID: 1585524941553692, guid: 18030ac132cae554d9e730ed71e27c59, type: 2}
-  greyWall: {fileID: 1660004336968288, guid: a3768f49f25aa004484682c9299784e6, type: 2}
+  orangeWall: {fileID: 1593998960162694, guid: cd9c856e2c92ace4da2e63976947fa6b, type: 2}
+  greenWall: {fileID: 1481424459068890, guid: 7f383559bb1acf944afa66173f4418d5, type: 2}
+  greyWall: {fileID: 1928308074973962, guid: 77aea299c6dd341408a57516ef24593a, type: 2}
   goldCoin: {fileID: 1049524726679572, guid: e7a694650ee63464b8f81d973e4b7d04, type: 2}
   silverCoin: {fileID: 1480739355948570, guid: 3c99109154774bc408fb4bab4fb4cf06, type: 2}
   bronzeCoin: {fileID: 1684810227353058, guid: b018276685be4284aa010219e245fd24, type: 2}
@@ -270,6 +271,38 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1040102046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1040102043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 0
+    i1: 0
+    i2: 0
+    i3: 0
+    i4: 0
+    i5: 0
+    i6: 0
+    i7: 0
+    i8: 0
+    i9: 0
+    i10: 0
+    i11: 0
+    i12: 0
+    i13: 0
+    i14: 0
+    i15: 0
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!1 &1109827861
 GameObject:
   m_ObjectHideFlags: 0
@@ -473,6 +506,10 @@ MonoBehaviour:
   m_OnlineScene: 
   m_SpawnPrefabs:
   - {fileID: 1437496455166464, guid: e5579f313ea97814d98a27fc045f5c15, type: 2}
+  - {fileID: 1481424459068890, guid: 7f383559bb1acf944afa66173f4418d5, type: 2}
+  - {fileID: 1928308074973962, guid: 77aea299c6dd341408a57516ef24593a, type: 2}
+  - {fileID: 1561674524923140, guid: db23f0c00f9d0494584a23bed5c6137b, type: 2}
+  - {fileID: 1593998960162694, guid: cd9c856e2c92ace4da2e63976947fa6b, type: 2}
   m_CustomConfig: 0
   m_MaxConnections: 4
   m_ConnectionConfig:

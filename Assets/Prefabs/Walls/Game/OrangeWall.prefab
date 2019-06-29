@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 23269286016498580}
   - component: {fileID: 65537505731888910}
   - component: {fileID: 114498614831751924}
+  - component: {fileID: 114423544928577430}
   m_Layer: 0
   m_Name: OrangeWall
   m_TagString: Obstacle
@@ -97,6 +98,38 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.020000005, y: 0.020000005, z: 0.02}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &114423544928577430
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1593998960162694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 205
+    i1: 156
+    i2: 133
+    i3: 110
+    i4: 44
+    i5: 146
+    i6: 172
+    i7: 228
+    i8: 218
+    i9: 46
+    i10: 99
+    i11: 151
+    i12: 105
+    i13: 71
+    i14: 250
+    i15: 107
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!114 &114498614831751924
 MonoBehaviour:
   m_ObjectHideFlags: 1

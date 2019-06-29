@@ -1,8 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using UnityEngine.Networking;
 using UnityEngine;
 
-public class Wall : MonoBehaviour {
+public class Wall : NetworkBehaviour {
 
     public Vector2 pos;
     public float rot;
@@ -10,12 +9,14 @@ public class Wall : MonoBehaviour {
 
     Material wallMaterial;
 
+    [SyncVar]
     public float Health;
+    [SyncVar]
     public float totalHealth;
 
     private void Start()
     {
-        SetHealth();    
+        SetHealth();
     }
 
     public void SetType(int t)
@@ -26,15 +27,15 @@ public class Wall : MonoBehaviour {
 
     public void SetHealth()
     {
-        if(type == 0)
+        if (type == 0)
         {
             totalHealth = 80;
         }
-        else if(type == 1)
+        else if (type == 1)
         {
             totalHealth = 125;
         }
-        else if(type == 2)
+        else if (type == 2)
         {
             totalHealth = 175;
         }
@@ -53,17 +54,60 @@ public class Wall : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(type == 3)
+        if (type == 3)
         {
             return;
         }
         else
         {
-            if(collision.gameObject.GetComponent<Bullet>())
+            if (collision.gameObject.GetComponent<Bullet>())
             {
                 Health -= collision.gameObject.GetComponent<Bullet>().damageAmount / 2;
             }
         }
+    }
+
+    [Command]
+    public void CmdUpdateAlpha()
+    {
+        UpdateAlpha();
+        RpcUpdateAlpha();
+    }
+
+    public void UpdateAlpha()
+    {
+
+        if (wallMaterial)
+        {
+            Color tmp = wallMaterial.color;
+            tmp.a = ((Health / 100) * 75) / totalHealth;
+            wallMaterial.color = tmp;
+        }
+
+        if (Health <= 0)
+        {
+            GetComponent<BoxCollider>().enabled = false;
+        }
+
+    }
+
+    [ClientRpc]
+    public void RpcUpdateAlpha()
+    {
+
+        if (wallMaterial)
+        {
+            Color tmp = wallMaterial.color;
+            tmp.a = ((Health / 100) * 75) / totalHealth;
+            wallMaterial.color = tmp;
+        }
+
+        if (Health <= 0)
+        {
+            GetComponent<BoxCollider>().enabled = false;
+        }
+
+
     }
     // Update is called once per frame
     void Update () {
@@ -71,17 +115,14 @@ public class Wall : MonoBehaviour {
         if (GetComponent<MeshRenderer>() && wallMaterial == null)
             wallMaterial = GetComponent<MeshRenderer>().material;
 
-        if(wallMaterial)
+        if (wallMaterial)
         {
-            Color tmp = wallMaterial.color;
-            tmp.a = ((Health/100)*75)/totalHealth;
-            wallMaterial.color = tmp;
+            CmdUpdateAlpha();
+            //UpdateAlpha();
+            //if(isServer)
+            //RpcUpdateAlpha();
+
         }
 
-        if(Health <= 0)
-        {
-            GetComponent<BoxCollider>().enabled = false;
-        }
-		
 	}
 }

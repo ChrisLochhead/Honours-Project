@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 23233519011258592}
   - component: {fileID: 65182090001982112}
   - component: {fileID: 114932782921176534}
+  - component: {fileID: 114882473376108380}
   m_Layer: 0
   m_Name: GreyWall
   m_TagString: Obstacle
@@ -97,6 +98,38 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.02, y: 0.019999996, z: 0.019999996}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &114882473376108380
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1928308074973962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 119
+    i1: 174
+    i2: 162
+    i3: 153
+    i4: 198
+    i5: 221
+    i6: 52
+    i7: 20
+    i8: 8
+    i9: 165
+    i10: 117
+    i11: 22
+    i12: 239
+    i13: 36
+    i14: 89
+    i15: 58
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 1
 --- !u!114 &114932782921176534
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 33875928745842400}
   - component: {fileID: 23958897449158514}
   - component: {fileID: 65918413214660192}
+  - component: {fileID: 114513143765125520}
   - component: {fileID: 114890835148637896}
   m_Layer: 0
   m_Name: GreenWall
@@ -97,6 +98,38 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.020000005, y: 0.020000005, z: 0.02}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &114513143765125520
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1481424459068890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 127
+    i1: 56
+    i2: 53
+    i3: 89
+    i4: 187
+    i5: 26
+    i6: 207
+    i7: 148
+    i8: 74
+    i9: 250
+    i10: 102
+    i11: 23
+    i12: 63
+    i13: 68
+    i14: 24
+    i15: 213
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 1
 --- !u!114 &114890835148637896
 MonoBehaviour:
   m_ObjectHideFlags: 1
