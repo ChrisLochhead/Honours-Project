@@ -1,13 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using UnityEngine.Networking;
 using UnityEngine;
 
-public class Coin : MonoBehaviour {
+public class Coin : NetworkBehaviour {
 
     public Vector2 pos;
     public int type;
 
     public int Points;
+
+    [SyncVar]
     public bool isActive = true;
 
     public float reactivationTime = 45.0f;
@@ -43,14 +44,21 @@ public class Coin : MonoBehaviour {
         }
     }
 
-    // Update is called once per frame
-    void Update () {
+    [Command]
+    public void CmdUpdateActivity()
+    {
+        UpdateActivity();
+        RpcUpdateActivity();
+    }
+
+    public void UpdateActivity()
+    {
         if (isActive == false)
         {
             GetComponent<MeshRenderer>().enabled = false;
             reactivationTime -= Time.deltaTime;
 
-            if(reactivationTime <= 0)
+            if (reactivationTime <= 0)
             {
                 reactivationTime = 45.0f;
                 isActive = true;
@@ -59,5 +67,31 @@ public class Coin : MonoBehaviour {
         }
         else
             GetComponent<MeshRenderer>().enabled = true;
+    }
+
+    [ClientRpc]
+    public void RpcUpdateActivity()
+    {
+        if (isActive == false)
+        {
+            GetComponent<MeshRenderer>().enabled = false;
+            reactivationTime -= Time.deltaTime;
+
+            if (reactivationTime <= 0)
+            {
+                reactivationTime = 45.0f;
+                isActive = true;
+                GetComponent<SphereCollider>().enabled = true;
+            }
+        }
+        else
+            GetComponent<MeshRenderer>().enabled = true;
+    }
+    // Update is called once per frame
+    void Update () {
+
+        if(GetComponent<MeshRenderer>())
+        CmdUpdateActivity();
+
     }
 }

@@ -118,10 +118,6 @@ public class Wall : NetworkBehaviour {
         if (wallMaterial)
         {
             CmdUpdateAlpha();
-            //UpdateAlpha();
-            //if(isServer)
-            //RpcUpdateAlpha();
-
         }
 
 	}

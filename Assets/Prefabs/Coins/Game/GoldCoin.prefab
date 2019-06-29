@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 23152218311082798}
   - component: {fileID: 135081395402400764}
   - component: {fileID: 114207593235790774}
+  - component: {fileID: 114786904409579588}
   m_Layer: 0
   m_Name: GoldCoin
   m_TagString: Untagged
@@ -101,6 +102,38 @@ MonoBehaviour:
   Points: 0
   isActive: 1
   reactivationTime: 45
+--- !u!114 &114786904409579588
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1788021123348940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 78
+    i1: 145
+    i2: 146
+    i3: 182
+    i4: 65
+    i5: 136
+    i6: 183
+    i7: 100
+    i8: 91
+    i9: 226
+    i10: 224
+    i11: 117
+    i12: 205
+    i13: 93
+    i14: 1
+    i15: 99
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 1
 --- !u!135 &135081395402400764
 SphereCollider:
   m_ObjectHideFlags: 1
