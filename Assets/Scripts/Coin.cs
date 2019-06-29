@@ -11,6 +11,7 @@ public class Coin : NetworkBehaviour {
     [SyncVar]
     public bool isActive = true;
 
+    [SyncVar]
     public float reactivationTime = 45.0f;
 
 	// Use this for initialization
