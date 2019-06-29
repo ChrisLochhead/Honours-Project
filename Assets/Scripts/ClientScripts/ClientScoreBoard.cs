@@ -141,14 +141,24 @@ public class ClientScoreBoard : NetworkBehaviour {
             if (g.GetComponent<Client>().team == 0)
             {
                 team1Names[team1Count].gameObject.SetActive(true);
-                team1Names[team1Count].text = g.GetComponent<Client>().playerName + "     " + g.GetComponent<Client>().kills + "     " + g.GetComponent<Client>().deaths;
+                team1Names[team1Count].text = g.GetComponent<Client>().playerName;
+
+                TextMeshProUGUI[] childText = team1Names[team1Count].GetComponentsInChildren<TextMeshProUGUI>();
+                childText[0].text = g.GetComponent<Client>().kills.ToString();
+                childText[1].text = g.GetComponent<Client>().kills.ToString();
+
                 team1Count++;
                 team1ScoreNo += g.GetComponent<Client>().kills;
             }
             else
             {
                 team2Names[team2Count].gameObject.SetActive(true);
-                team2Names[team2Count].text = g.GetComponent<Client>().playerName + "     " + g.GetComponent<Client>().kills + "     " + g.GetComponent<Client>().deaths;
+                team2Names[team2Count].text = g.GetComponent<Client>().playerName;
+
+                TextMeshProUGUI[] childText = team2Names[team2Count].GetComponentsInChildren<TextMeshProUGUI>();
+                childText[0].text = g.GetComponent<Client>().kills.ToString();
+                childText[1].text = g.GetComponent<Client>().kills.ToString();
+
                 team2Count++;
                 team2ScoreNo += g.GetComponent<Client>().kills;
             }

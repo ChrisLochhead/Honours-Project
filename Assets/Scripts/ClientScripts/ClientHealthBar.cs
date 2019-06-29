@@ -7,6 +7,7 @@ public class ClientHealthBar : NetworkBehaviour {
     //For manipulating the health bar
     public GameObject floatingHealthBar;
     public GameObject floatingRankIcon;
+    public GameObject floatingName;
 
     //Colour of the healthbar
     [SyncVar(hook = "ChangeHealth")] public float healthPercentage = 1;
@@ -22,6 +23,7 @@ public class ClientHealthBar : NetworkBehaviour {
     {
         floatingHealthBar.transform.position = new Vector3(Owner.player.transform.position.x, Owner.player.transform.position.y + 7.5f, Owner.player.transform.position.z);
         floatingRankIcon.transform.position = new Vector3(Owner.player.transform.position.x - 5.8f, Owner.player.transform.position.y + 7.75f, Owner.player.transform.position.z);
+        floatingName.transform.position = new Vector3(Owner.player.transform.position.x, Owner.player.transform.position.y + 7.0f, Owner.player.transform.position.z);
     }
 
     [Command]
@@ -75,6 +77,7 @@ public class ClientHealthBar : NetworkBehaviour {
         floatingRankIcon.GetComponent<Image>().sprite = Owner.clientHUD.rankIcons[Owner.rank];
 
         //And finally set it's position
+        floatingName.transform.position = new Vector3(Owner.player.transform.position.x, Owner.player.transform.position.y + 7.0f, Owner.player.transform.position.z);
         floatingHealthBar.transform.position = new Vector3(Owner.player.transform.position.x, Owner.player.transform.position.y + 7.5f, Owner.player.transform.position.z);
         floatingRankIcon.transform.position = new Vector3(Owner.player.transform.position.x - 5.8f, Owner.player.transform.position.y + 7.75f, Owner.player.transform.position.z);
     }
@@ -86,6 +89,7 @@ public class ClientHealthBar : NetworkBehaviour {
         floatingRankIcon.GetComponent<Image>().sprite = Owner.clientHUD.rankIcons[Owner.rank];
 
         //Set it's position
+        floatingName.transform.position = new Vector3(Owner.player.transform.position.x, Owner.player.transform.position.y + 7.0f, Owner.player.transform.position.z);
         floatingHealthBar.transform.position = new Vector3(Owner.player.transform.position.x, Owner.player.transform.position.y + 7.5f, Owner.player.transform.position.z);
         floatingRankIcon.transform.position = new Vector3(Owner.player.transform.position.x - 5.8f, Owner.player.transform.position.y + 7.75f, Owner.player.transform.position.z);
     }
@@ -142,6 +146,7 @@ public class ClientHealthBar : NetworkBehaviour {
 
     public void UpdatePosition()
     {
+        floatingName.transform.position = new Vector3(Owner.player.transform.position.x, Owner.player.transform.position.y + 7.0f, Owner.player.transform.position.z);
         floatingHealthBar.transform.position = new Vector3(Owner.player.transform.position.x, Owner.player.transform.position.y + 7.5f, Owner.player.transform.position.z);
         floatingRankIcon.transform.position = new Vector3(Owner.player.transform.position.x - 5.8f, Owner.player.transform.position.y + 7.75f, Owner.player.transform.position.z);
 
