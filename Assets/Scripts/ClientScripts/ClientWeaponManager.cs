@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
+using System.Collections.Generic;
 public class ClientWeaponManager : NetworkBehaviour {
 
 
@@ -40,12 +41,9 @@ public class ClientWeaponManager : NetworkBehaviour {
 
     Animator weaponAnim;
 
+    public AudioClip[] gunSounds;
     public Client Owner;
 
-    // Use this for initialization
-    void Start () {
-		
-	}
 	
     public void InitialiseWeapons()
     { 
@@ -214,11 +212,21 @@ public class ClientWeaponManager : NetworkBehaviour {
     public void MuzzleFlash(bool istrue)
     {
         muzzleFlashes[currentWeapon].SetActive(istrue);
+        if (isLocalPlayer && istrue == true)
+        {
+            Owner.gameObject.GetComponent<AudioSource>().clip = gunSounds[currentWeapon];
+            Owner.gameObject.GetComponent<AudioSource>().Play();
+        }
     }
 
     [ClientRpc]
     public void RpcMuzzleFlash(bool istrue)
     {
         muzzleFlashes[currentWeapon].SetActive(istrue);
+        if (isLocalPlayer && istrue == true)
+        {
+            Owner.gameObject.GetComponent<AudioSource>().clip = gunSounds[currentWeapon];
+            Owner.gameObject.GetComponent<AudioSource>().Play();
+        }
     }
 }
