@@ -2227,6 +2227,8 @@ GameObject:
   - component: {fileID: 1109827864}
   - component: {fileID: 1109827863}
   - component: {fileID: 1109827862}
+  - component: {fileID: 1109827867}
+  - component: {fileID: 1109827866}
   m_Layer: 0
   m_Name: SceneCam
   m_TagString: MainCamera
@@ -2298,6 +2300,66 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: -49.915, y: 0, z: 0}
+--- !u!114 &1109827866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1109827861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 0
+    i1: 0
+    i2: 0
+    i3: 0
+    i4: 0
+    i5: 0
+    i6: 0
+    i7: 0
+    i8: 0
+    i9: 0
+    i10: 0
+    i11: 0
+    i12: 0
+    i13: 0
+    i14: 0
+    i15: 0
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
+--- !u!114 &1109827867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1109827861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ddade7ae9a567c499588239716d3fd6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hasGameStarted: 0
+  NumberOfPlayers: 0
+  playerTags:
+  - {fileID: 807195342}
+  - {fileID: 1350413400}
+  - {fileID: 2087850032}
+  - {fileID: 2117251999}
+  - {fileID: 962192300}
+  - {fileID: 139408559}
+  - {fileID: 638324316}
+  - {fileID: 1460589171}
+  - {fileID: 1470098567}
+  - {fileID: 1228366811}
+  - {fileID: 1494431928}
+  - {fileID: 1619119711}
+  timeTillGameStart: 30
+  status: {fileID: 1955129267}
 --- !u!1 &1186405915
 GameObject:
   m_ObjectHideFlags: 0
