@@ -127,7 +127,7 @@ public class Client : NetworkBehaviour
         else
         {
             isLocal = true;
-            sceneCam.gameObject.SetActive(false);
+            //sceneCam.gameObject.SetActive(false);
 
             //Hide UI elements that player shouldn't see
             //floatingHealthBar.GetComponent<CanvasRenderer>().SetAlpha(0);
@@ -166,6 +166,9 @@ public class Client : NetworkBehaviour
 
     public void InitialisePlayer()
     {
+        //Disable the lobby now that the game has begun
+        sceneCam.gameObject.SetActive(false);
+
         //ignore collisions between players
         Physics.IgnoreLayerCollision(9, 9);
 
