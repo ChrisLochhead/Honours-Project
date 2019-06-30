@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Networking;
+using UnityEngine.Networking.Match;
 
 public class MainMenu : MonoBehaviour {
 
@@ -12,6 +13,8 @@ public class MainMenu : MonoBehaviour {
     public GameObject timeLimitDropdown;
 
     public GameObject gameManager;
+
+    private NetworkManager networkManager;
 
     private void Start()
     {
@@ -36,6 +39,14 @@ public class MainMenu : MonoBehaviour {
             PersistentObject.GetComponent<MapFinder>().selectedMap = selectedMap;
             PersistentObject.GetComponent<MapFinder>().map = Map;
 
+        //Set up networking
+        networkManager = NetworkManager.singleton;
+
+        if(networkManager.matchMaker == null)
+        {
+            networkManager.StartMatchMaker();
+        }
+
     }
     public void PlayButton()
     {
@@ -46,7 +57,8 @@ public class MainMenu : MonoBehaviour {
         }
 
         //Move to the next scene
-        SceneManager.LoadScene(1);
+        //SceneManager.LoadScene(1);
+        networkManager.matchMaker.CreateMatch("roomName", 4, true, "", "", "", 0, 0, networkManager.OnMatchCreate);
     }
 
     public void BuildButton()
