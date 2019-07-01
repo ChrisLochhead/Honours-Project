@@ -13,6 +13,7 @@ public class MainMenu : MonoBehaviour {
     public GameObject timeLimitDropdown;
 
     public GameObject gameManager;
+    public InputField nameInput;
 
     private NetworkManager networkManager;
 
@@ -48,7 +49,7 @@ public class MainMenu : MonoBehaviour {
         }
 
     }
-    public void PlayButton()
+    public void HostButton()
     {
         //Destroy any previously loaded games
         if (GameObject.Find("game"))
@@ -56,8 +57,15 @@ public class MainMenu : MonoBehaviour {
             Destroy(GameObject.Find("game"));
         }
 
-        //Move to the next scene
-        //SceneManager.LoadScene(1);
+        //Store info for the next scene
+        GameObject gameInfo = new GameObject();
+        gameInfo.AddComponent<GameInfo>();
+        gameInfo.name = "gameInfo";
+        gameInfo.GetComponent<GameInfo>().name = nameInput.text;
+        gameInfo.GetComponent<GameInfo>().killLimit = killLimitDropdown.GetComponent<Dropdown>().value;
+        gameInfo.GetComponent<GameInfo>().timeLimit = timeLimitDropdown.GetComponent<Dropdown>().value;
+
+        //Create a match
         networkManager.matchMaker.CreateMatch("roomName", 4, true, "", "", "", 0, 0, networkManager.OnMatchCreate);
     }
 

@@ -169,15 +169,15 @@ public class Client : NetworkBehaviour
         //Disable the lobby now that the game has begun
         sceneCam.gameObject.SetActive(false);
 
+        clientHUD.gameObject.SetActive(true);
+
         //ignore collisions between players
         Physics.IgnoreLayerCollision(9, 9);
-
-       
 
         //initialise armour rating
         armour = 0;
 
-        ////Set up health and rank position so it doesnt jump on first movement
+        //Set up health and rank position so it doesnt jump on first movement
         clientHealthBar.InitialiseHealthbar();
 
         //get the number of players currently in game

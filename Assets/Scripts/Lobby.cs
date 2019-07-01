@@ -20,6 +20,21 @@ public class Lobby : NetworkBehaviour {
 
     public TextMeshProUGUI status;
 
+    public Client Owner;
+
+    public GameManager gameManager;
+
+    private void Start()
+    {
+        GameObject gameInfo = GameObject.Find("GameInfo");
+        Owner.playerName = gameInfo.GetComponent<GameInfo>().name;
+        if(gameInfo.GetComponent<GameInfo>().killLimit != 0 && gameInfo.GetComponent<GameInfo>().timeLimit != 0)
+        {
+            gameManager.killLimit = gameInfo.GetComponent<GameInfo>().killLimit;
+            gameManager.timeLimit = gameInfo.GetComponent<GameInfo>().timeLimit;
+        }
+    }
+
     public void startGame()
     {
         hasGameStarted = true;
