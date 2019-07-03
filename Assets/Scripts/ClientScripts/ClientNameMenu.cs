@@ -17,19 +17,17 @@ public class ClientNameMenu : NetworkBehaviour {
 
     // Use this for initialization
     public void SetPlayerName () {
-        CmdSetName(nameSelector.GetComponent<InputField>().text);
+        CmdSetName(Owner.playerName);
     }
 
     [ClientRpc]
     public void RpcSetName(string n)
     {
-        Owner.playerName = n;
         Owner.clientHealthBar.floatingName.GetComponent<TextMeshPro>().text = n;
     }
 
     public void SetName(string n)
     {
-        Owner.playerName = n;
         Owner.clientHealthBar.floatingName.GetComponent<TextMeshPro>().text = n;
     }
 

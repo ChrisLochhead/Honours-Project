@@ -28,7 +28,8 @@ public class Lobby : NetworkBehaviour
     private void Start()
     {
         GameObject gameInfo = GameObject.Find("gameInfo");
-        Owner.playerName = gameInfo.GetComponent<GameInfo>().name;
+        Owner.CmdSetName(gameInfo.GetComponent<GameInfo>().name);
+        //Owner.playerName = gameInfo.GetComponent<GameInfo>().name;
         if (gameInfo.GetComponent<GameInfo>().killLimit != 0 && gameInfo.GetComponent<GameInfo>().timeLimit != 0)
         {
             gameManager.killLimit = gameInfo.GetComponent<GameInfo>().killLimit;
@@ -69,11 +70,8 @@ public class Lobby : NetworkBehaviour
             NumberOfPlayers = 0;
 
             GameObject[] clients = GameObject.FindGameObjectsWithTag("Client");
+            RefreshLobby();
 
-            if (clients.Length > currentNumberOfPlayers)
-            {
-                RefreshLobby();
-            }
 
             if (currentNumberOfPlayers >= MinNumOfPlayers)
             {

@@ -165,6 +165,23 @@ public class Client : NetworkBehaviour
         Respawn();
     }
 
+    [Command]
+    public void CmdSetName(string name)
+    {
+        SetName(name);
+        RpcSetName(name);
+    }
+
+    public void SetName(string name)
+    {
+        playerName = name;
+    }
+
+    [ClientRpc]
+    public void RpcSetName(string name)
+    {
+        playerName = name;
+    }
     public void InitialisePlayer()
     {
         //Disable the lobby now that the game has begun
@@ -172,6 +189,8 @@ public class Client : NetworkBehaviour
         isPaused = false;
 
         clientHUD.gameObject.SetActive(true);
+
+        clientNameMenu.InitialisePlayerName(playerName);
 
         //ignore collisions between players
         Physics.IgnoreLayerCollision(9, 9);
