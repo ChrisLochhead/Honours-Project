@@ -68,7 +68,28 @@ public class MainMenu : MonoBehaviour {
         gameInfo.GetComponent<GameInfo>().timeLimit = timeLimitDropdown.GetComponent<Dropdown>().value;
 
         //Create a match
-        networkManager.matchMaker.CreateMatch("roomName", 4, true, "", "", "", 0, 0, networkManager.OnMatchCreate);
+        networkManager.matchMaker.CreateMatch( nameInput.text + "'s room", 4, true, "", "", "", 0, 0, networkManager.OnMatchCreate);
+    }
+
+    public void JoinButton()
+    {
+        networkManager.matchMaker.ListMatches(0, 20, "", false, 0, 0, OnMatchList);
+    }
+
+    public void OnMatchList(bool success, string extendedInfo, List<MatchInfoSnapshot> matches)
+    {
+        MatchInfoSnapshot priorityMatch = new MatchInfoSnapshot();
+
+        //Find match closest to being full
+        foreach (MatchInfoSnapshot match in matches)
+        {
+            if(match.currentSize < match.maxSize && priorityMatch.currentSize < match.currentSize)
+            {
+                priorityMatch = match;
+            }
+        }
+
+        networkManager.matchMaker.JoinMatch(priorityMatch.networkId, "", "", "", 0, 0, networkManager.OnMatchJoined);
     }
 
     public void BuildButton()
