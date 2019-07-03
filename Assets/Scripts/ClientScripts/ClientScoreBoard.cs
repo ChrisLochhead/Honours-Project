@@ -142,10 +142,9 @@ public class ClientScoreBoard : NetworkBehaviour {
             {
                 team1Names[team1Count].gameObject.SetActive(true);
                 team1Names[team1Count].text = g.GetComponent<Client>().playerName;
-
                 TextMeshProUGUI[] childText = team1Names[team1Count].GetComponentsInChildren<TextMeshProUGUI>();
-                childText[0].text = g.GetComponent<Client>().kills.ToString();
                 childText[1].text = g.GetComponent<Client>().kills.ToString();
+                childText[2].text = g.GetComponent<Client>().deaths.ToString();
 
                 team1Count++;
                 team1ScoreNo += g.GetComponent<Client>().kills;
@@ -154,10 +153,9 @@ public class ClientScoreBoard : NetworkBehaviour {
             {
                 team2Names[team2Count].gameObject.SetActive(true);
                 team2Names[team2Count].text = g.GetComponent<Client>().playerName;
-
                 TextMeshProUGUI[] childText = team2Names[team2Count].GetComponentsInChildren<TextMeshProUGUI>();
-                childText[0].text = g.GetComponent<Client>().kills.ToString();
                 childText[1].text = g.GetComponent<Client>().kills.ToString();
+                childText[2].text = g.GetComponent<Client>().deaths.ToString();
 
                 team2Count++;
                 team2ScoreNo += g.GetComponent<Client>().kills;

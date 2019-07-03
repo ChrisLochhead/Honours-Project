@@ -4,9 +4,8 @@ using UnityEngine;
 using UnityEngine.Networking;
 using TMPro;
 
-public class Lobby : NetworkBehaviour {
-
-    [SyncVar] public bool hasGameStarted = false;
+public class Lobby : NetworkBehaviour
+{
 
     [SyncVar] public int NumberOfPlayers = 0;
 
@@ -14,9 +13,9 @@ public class Lobby : NetworkBehaviour {
 
     public GameObject[] playerTags;
 
-    private int MinNumOfPlayers = 2;
+    private int MinNumOfPlayers = 1;
 
-    public float timeTillGameStart = 30.0f;
+    public float timeTillGameStart = 10.0f;
 
     public TextMeshProUGUI status;
 
@@ -24,58 +23,27 @@ public class Lobby : NetworkBehaviour {
 
     public GameManager gameManager;
 
+    public bool lobbyFinished = false;
+
     private void Start()
     {
-        GameObject gameInfo = GameObject.Find("GameInfo");
+        GameObject gameInfo = GameObject.Find("gameInfo");
         Owner.playerName = gameInfo.GetComponent<GameInfo>().name;
-        if(gameInfo.GetComponent<GameInfo>().killLimit != 0 && gameInfo.GetComponent<GameInfo>().timeLimit != 0)
+        if (gameInfo.GetComponent<GameInfo>().killLimit != 0 && gameInfo.GetComponent<GameInfo>().timeLimit != 0)
         {
             gameManager.killLimit = gameInfo.GetComponent<GameInfo>().killLimit;
             gameManager.timeLimit = gameInfo.GetComponent<GameInfo>().timeLimit;
         }
     }
 
-    public void startGame()
-    {
-        hasGameStarted = true;
-    }
-
-    [Command]
-    public void CmdCountDown()
-    {
-        CountDown();
-        RpcCountDown();
-    }
-
-    [ClientRpc]
-    public void RpcCountDown()
-    {
-        timeTillGameStart -= Time.deltaTime;
-    }
-
-    public void CountDown()
-    {
-        timeTillGameStart -= Time.deltaTime;
-    }
-
-    [Command]
-    public void CmdRefreshLobby()
-    {
-        RefreshLobby();
-        RpcRefreshLobby();
-    }
-
-    [ClientRpc]
-    public void RpcRefreshLobby()
-    {
-        currentNumberOfPlayers = 0;
-        foreach (GameObject g in GameObject.FindGameObjectsWithTag("Client"))
-        {
-            playerTags[NumberOfPlayers].GetComponentInChildren<TextMeshProUGUI>().text = g.GetComponent<Client>().playerName;
-            NumberOfPlayers++;
-            currentNumberOfPlayers++;
-        }
-    }
+    //public void StartGame()
+    //{
+    //    //Start the game by removing the lobby
+    //    foreach (GameObject g in GameObject.FindGameObjectsWithTag("Client"))
+    //    {
+    //        g.GetComponent<Client>().InitialisePlayer();
+    //    }
+    //}
 
     public void RefreshLobby()
     {
@@ -86,37 +54,47 @@ public class Lobby : NetworkBehaviour {
             NumberOfPlayers++;
             currentNumberOfPlayers++;
         }
+
+        for (int i = NumberOfPlayers; i < playerTags.Length; i++)
+        {
+            playerTags[i].GetComponentInChildren<TextMeshProUGUI>().text = "";
+        }
     }
 
     private void Update()
     {
-        NumberOfPlayers = 0;
+        if (lobbyFinished == false)
+        {
+            NumberOfPlayers = 0;
 
-        GameObject[] clients = GameObject.FindGameObjectsWithTag("Client");
+            GameObject[] clients = GameObject.FindGameObjectsWithTag("Client");
 
-        if(clients.Length > currentNumberOfPlayers)
-        {
-            CmdRefreshLobby();
-        }
-        
-        if(NumberOfPlayers >= MinNumOfPlayers)
-        {
-            CmdCountDown();
-        }
-        else
-        {
-            timeTillGameStart = 30.0f;
-        }
-
-        if(timeTillGameStart <= 0)
-        {
-            //Start the game by removing the lobby
-            foreach(GameObject g in clients)
+            if (clients.Length > currentNumberOfPlayers)
             {
-                g.GetComponent<Client>().InitialisePlayer();
+                RefreshLobby();
             }
-        }
 
-        status.text = "Game will begin in" + ((int)timeTillGameStart).ToString() + "seconds";
+            if (currentNumberOfPlayers >= MinNumOfPlayers)
+            {
+                timeTillGameStart -= Time.deltaTime;
+            }
+            else
+            {
+                timeTillGameStart = 10.0f;
+            }
+
+            if (timeTillGameStart <= 0)
+            {
+                //Start the game by removing the lobby
+                foreach (GameObject g in clients)
+                {
+                    g.GetComponent<Client>().InitialisePlayer();
+                }
+
+                lobbyFinished = true;
+            }
+
+            status.text = "Game will begin in " + ((int)timeTillGameStart).ToString() + " seconds";
+        }
     }
 }

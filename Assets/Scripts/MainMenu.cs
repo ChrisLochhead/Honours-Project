@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 using UnityEngine.Networking.Match;
+using TMPro;
 
 public class MainMenu : MonoBehaviour {
 
@@ -13,7 +14,8 @@ public class MainMenu : MonoBehaviour {
     public GameObject timeLimitDropdown;
 
     public GameObject gameManager;
-    public InputField nameInput;
+
+    public TMP_InputField nameInput;
 
     private NetworkManager networkManager;
 

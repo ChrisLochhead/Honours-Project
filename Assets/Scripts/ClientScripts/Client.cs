@@ -8,7 +8,7 @@ public class Client : NetworkBehaviour
     [SerializeField]
     Behaviour[] clientComponents;
 
-    Camera sceneCam;
+    public Camera lobbyCam;
 
     public GameObject player;
 
@@ -103,11 +103,12 @@ public class Client : NetworkBehaviour
     public Material BlueTeamMaterial;
     public Material RedTeamMaterial;
 
+    //For pausing at the start of games
+    public bool isPaused = true;
+
     // Use this for initialization
     void Start()
     {
-
-        sceneCam = Camera.main;
 
         if (!isLocalPlayer)
         {
@@ -167,7 +168,8 @@ public class Client : NetworkBehaviour
     public void InitialisePlayer()
     {
         //Disable the lobby now that the game has begun
-        sceneCam.gameObject.SetActive(false);
+        lobbyCam.gameObject.SetActive(false);
+        isPaused = false;
 
         clientHUD.gameObject.SetActive(true);
 
@@ -316,8 +318,8 @@ public class Client : NetworkBehaviour
 
     private void OnDisable()
     {
-        if (sceneCam)
-            sceneCam.gameObject.SetActive(true);
+        if (lobbyCam)
+            lobbyCam.gameObject.SetActive(true);
     }
 
     void SetLiving(bool b)
@@ -423,7 +425,7 @@ public class Client : NetworkBehaviour
 
     private void FixedUpdate()
     {
-        if (hasLost || hasWon)
+        if (hasLost || hasWon || isPaused)
             return;
 
         if (isDead)

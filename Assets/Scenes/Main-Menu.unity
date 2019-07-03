@@ -2403,7 +2403,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 738656959}
-        m_MethodName: PlayButton
+        m_MethodName: HostButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5478,6 +5478,7 @@ MonoBehaviour:
   killLimitDropdown: {fileID: 417266999}
   timeLimitDropdown: {fileID: 822180903}
   gameManager: {fileID: 0}
+  nameInput: {fileID: 1141672841}
 --- !u!1 &739976696
 GameObject:
   m_ObjectHideFlags: 0
@@ -13631,7 +13632,7 @@ MonoBehaviour:
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
-  m_ignoreRectMaskCulling: 0
+  m_ignoreRectMaskCulling: 1
   m_ignoreCulling: 1
   m_horizontalMapping: 0
   m_verticalMapping: 0
