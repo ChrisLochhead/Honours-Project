@@ -15,7 +15,8 @@ public class MainMenu : MonoBehaviour {
 
     public GameObject gameManager;
 
-    public TMP_InputField nameInput;
+    public TMP_InputField nameInputHost;
+    public TMP_InputField nameInputJoin;
 
     private NetworkManager networkManager;
 
@@ -63,16 +64,22 @@ public class MainMenu : MonoBehaviour {
         GameObject gameInfo = new GameObject();
         gameInfo.AddComponent<GameInfo>();
         gameInfo.name = "gameInfo";
-        gameInfo.GetComponent<GameInfo>().name = nameInput.text;
+        gameInfo.GetComponent<GameInfo>().name = nameInputHost.text;
         gameInfo.GetComponent<GameInfo>().killLimit = killLimitDropdown.GetComponent<Dropdown>().value;
         gameInfo.GetComponent<GameInfo>().timeLimit = timeLimitDropdown.GetComponent<Dropdown>().value;
 
         //Create a match
-        networkManager.matchMaker.CreateMatch( nameInput.text + "'s room", 4, true, "", "", "", 0, 0, networkManager.OnMatchCreate);
+        networkManager.matchMaker.CreateMatch( nameInputHost.text + "'s room", 4, true, "", "", "", 0, 0, networkManager.OnMatchCreate);
     }
 
     public void JoinButton()
     {
+        //Store info for the next scene
+        GameObject gameInfo = new GameObject();
+        gameInfo.AddComponent<GameInfo>();
+        gameInfo.name = "gameInfo";
+        gameInfo.GetComponent<GameInfo>().name = nameInputJoin.text;
+
         networkManager.matchMaker.ListMatches(0, 20, "", false, 0, 0, OnMatchList);
     }
 
