@@ -86,6 +86,16 @@ public class MainMenu : MonoBehaviour {
         networkManager.matchMaker.ListMatches(0, 20, "", false, 0, 0, OnMatchList);
     }
 
+    public void HostButtonLAN()
+    {
+        networkManager.StartHost();
+    }
+
+    public void JoinButtonLAN()
+    {
+        networkManager.StartClient();
+    }
+
     public void SelectLAN()
     {
         if (networkManager.matchMaker != null)
