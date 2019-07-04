@@ -111,6 +111,9 @@ public class Client : NetworkBehaviour
     //For connectivity stuff
     NetworkManager networkManager;
 
+    [SyncVar]
+    public bool GameStarted = false;
+
     //Pause Menu
     public GameObject clientPauseMenu;
 
@@ -215,6 +218,8 @@ public class Client : NetworkBehaviour
 
         player.transform.position = new Vector3(playerCam.transform.position.x, playerCam.transform.position.y, -10);
         anim.enabled = false;
+
+        GameStarted = true;
 
     }
 

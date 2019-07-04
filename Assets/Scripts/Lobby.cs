@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using TMPro;
+using UnityEngine.UI;
 
 public class Lobby : NetworkBehaviour
 {
@@ -25,6 +26,8 @@ public class Lobby : NetworkBehaviour
 
     public bool lobbyFinished = false;
 
+    public Button StartButton;
+
     private void Start()
     {
         GameObject gameInfo = GameObject.Find("gameInfo");
@@ -36,6 +39,13 @@ public class Lobby : NetworkBehaviour
             gameManager.timeLimit = gameInfo.GetComponent<GameInfo>().timeLimit;
         }
         Destroy(gameInfo);
+
+        //Check if game already begun on host
+        if (GameObject.FindGameObjectsWithTag("Client")[0].GetComponent<Client>().GameStarted == true)
+        {
+            timeTillGameStart = 0.0f;
+            status.text = "Press start to join the game";
+        }
     }
 
     //public void StartGame()
@@ -65,6 +75,18 @@ public class Lobby : NetworkBehaviour
 
     private void Update()
     {
+
+        status.text = "Game will begin in " + ((int)timeTillGameStart).ToString() + " seconds";
+
+
+        //Check if game already begun on host
+        if (GameObject.FindGameObjectsWithTag("Client")[0].GetComponent<Client>().GameStarted == true)
+        {
+            timeTillGameStart = 0.0f;
+            StartButton.enabled = true;
+            status.text = "Press start to join the game";
+        }
+
         if (lobbyFinished == false)
         {
             NumberOfPlayers = 0;
@@ -82,18 +104,34 @@ public class Lobby : NetworkBehaviour
                 timeTillGameStart = 10.0f;
             }
 
-            if (timeTillGameStart <= 0)
+            if (timeTillGameStart <= 0 && StartButton.enabled == false)
             {
+                status.text = "Press start to join the game";
+
                 //Start the game by removing the lobby
                 foreach (GameObject g in clients)
                 {
                     g.GetComponent<Client>().InitialisePlayer();
                 }
+                
 
                 lobbyFinished = true;
             }
 
-            status.text = "Game will begin in " + ((int)timeTillGameStart).ToString() + " seconds";
+
         }
+    }
+
+    public void OnStartButtonClicked()
+    {
+
+        //GameObject[] clients = GameObject.FindGameObjectsWithTag("Client");
+
+        ////Start the game by removing the lobby
+        //foreach (GameObject g in clients)
+        //{
+        //    g.GetComponent<Client>().InitialisePlayer();
+        //}
+        //StartButton.enabled = true;
     }
 }
