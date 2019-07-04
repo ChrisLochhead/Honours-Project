@@ -13,7 +13,7 @@ public class Lobby : NetworkBehaviour
 
     public GameObject[] playerTags;
 
-    private int MinNumOfPlayers = 2;
+    private int MinNumOfPlayers = 1;
 
     public float timeTillGameStart = 10.0f;
 

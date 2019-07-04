@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.Networking.Match;
 
 public class Client : NetworkBehaviour
 {
@@ -104,11 +105,20 @@ public class Client : NetworkBehaviour
     public Material RedTeamMaterial;
 
     //For pausing at the start of games
-    public bool isPaused = true;
+    public bool Paused = true;
+
+
+    //For connectivity stuff
+    NetworkManager networkManager;
+
+    //Pause Menu
+    public GameObject clientPauseMenu;
 
     // Use this for initialization
     void Start()
     {
+       
+        networkManager = NetworkManager.singleton;
 
         if (!isLocalPlayer)
         {
@@ -153,15 +163,6 @@ public class Client : NetworkBehaviour
             CmdSetTeam(1);
         else
             CmdSetTeam(0);
-
-        //Get spawnpoints from team
-        //if (team == 0)
-        //    spawnPoints = team1Spawns;
-        //else
-        //    spawnPoints = team2Spawns;
-
-        //set up spawnpoint
-        //Respawn();
     }
 
     [Command]
@@ -185,11 +186,11 @@ public class Client : NetworkBehaviour
     {
         //Disable the lobby now that the game has begun
         lobbyCam.gameObject.SetActive(false);
-        isPaused = false;
+        Paused = false;
 
         clientHUD.gameObject.SetActive(true);
 
-        clientNameMenu.InitialisePlayerName(playerName);
+        clientNameMenu.SetPlayerName();
 
         //ignore collisions between players
         Physics.IgnoreLayerCollision(9, 9);
@@ -268,6 +269,18 @@ public class Client : NetworkBehaviour
 
     public void Update()
     {
+
+        //Toggle pause menu
+        if (Input.GetKeyDown("p") && Paused == false)
+        {
+            clientPauseMenu.SetActive(true);
+            Paused = true;
+        }
+
+        if(Paused == false)
+        {
+            clientPauseMenu.SetActive(false);
+        }
 
         if (spawnPoints.Length == 0)
         {
@@ -413,6 +426,13 @@ public class Client : NetworkBehaviour
         }
     }
 
+    public void LeaveGame()
+    {
+        MatchInfo matchInfo = networkManager.matchInfo;
+        networkManager.matchMaker.DropConnection(matchInfo.networkId, matchInfo.nodeId, 0, networkManager.OnDropConnection);
+        networkManager.StopHost();
+    }
+
     public void Respawn()
     {
         if (isServer)
@@ -462,7 +482,7 @@ public class Client : NetworkBehaviour
 
     private void FixedUpdate()
     {
-        if (hasLost || hasWon || isPaused)
+        if (hasLost || hasWon || Paused)
             return;
 
         if (isDead)
@@ -704,6 +724,11 @@ public class Client : NetworkBehaviour
         kills += k;
     }
 
+    //For button control
+    public void SetPaused(bool p)
+    {
+        Paused = p;
+    }
 }
 
 

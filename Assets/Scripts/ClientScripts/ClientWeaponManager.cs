@@ -99,7 +99,7 @@ public class ClientWeaponManager : NetworkBehaviour {
     void Update () {
 
         //Game is not over, and player has set his name (and therefore has joined the game)
-        if (!Owner.hasWon && !Owner.hasLost && !Owner.isPaused)
+        if (!Owner.hasWon && !Owner.hasLost && !Owner.Paused)
         {
             if (Input.GetMouseButton(0) && currentAmmo[currentWeapon] > 0 && Owner.isLocal && fireRates[currentWeapon] == currentFireRates[currentWeapon])
             {

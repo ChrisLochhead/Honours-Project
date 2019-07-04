@@ -186,9 +186,4 @@ public class ClientScoreBoard : NetworkBehaviour {
             scoreBoardActive = false;
         }
     }
-
-    public void OnContinueClicked()
-    {
-        SceneManager.LoadScene(0);
-    }
 }

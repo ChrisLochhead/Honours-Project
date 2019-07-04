@@ -38,21 +38,4 @@ public class ClientNameMenu : NetworkBehaviour {
         RpcSetName(n);
     }
 
-    // Called from the naming menu
-    public void InitialisePlayerName(string n)
-    {
-        CmdSetName(n);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-        if (nameSelector.GetComponent<InputField>().text == "")
-            goButton.GetComponent<Button>().enabled = false;
-        else
-            goButton.GetComponent<Button>().enabled = true;
-
-        return;
-    }
 }
