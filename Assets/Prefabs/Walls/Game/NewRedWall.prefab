@@ -114,6 +114,7 @@ MonoBehaviour:
   type: 0
   Health: 0
   totalHealth: 0
+  isNetworked: 1
 --- !u!114 &114622883213335748
 MonoBehaviour:
   m_ObjectHideFlags: 1

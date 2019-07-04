@@ -188,7 +188,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 743672334}
+      - m_Target: {fileID: 0}
         m_MethodName: CloseClicked
         m_Mode: 1
         m_Arguments:
@@ -721,7 +721,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -97, y: -0.26}
+  m_AnchoredPosition: {x: -97, y: -0.25999832}
   m_SizeDelta: {x: 480.5, y: 358.11}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &358885150
@@ -1369,7 +1369,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 743672334}
+      - m_Target: {fileID: 1209184295}
         m_MethodName: CancelSave
         m_Mode: 1
         m_Arguments:
@@ -1491,7 +1491,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 743672334}
+      - m_Target: {fileID: 1209184295}
         m_MethodName: SaveButton
         m_Mode: 1
         m_Arguments:
@@ -1752,7 +1752,6 @@ GameObject:
   - component: {fileID: 743672331}
   - component: {fileID: 743672330}
   - component: {fileID: 743672329}
-  - component: {fileID: 743672334}
   m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
@@ -1848,34 +1847,6 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!114 &743672334
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 743672327}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 066ea7e33dfbb20469d39cdab2bc003b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mapItems: []
-  openState: {fileID: 906186114}
-  closedState: {fileID: 1537343319}
-  selectedObject: {fileID: 0}
-  buttons: []
-  saveField: {fileID: 1242408570}
-  isSaving: 0
-  redWall: {fileID: 1744126536531200, guid: 15d211e83c32c014e8d83eba18b8fa20, type: 2}
-  orangeWall: {fileID: 1257864531734054, guid: 5485a1bbed1e9cb44bbb1dd8f3204f71, type: 2}
-  greenWall: {fileID: 1585524941553692, guid: 18030ac132cae554d9e730ed71e27c59, type: 2}
-  greyWall: {fileID: 1660004336968288, guid: a3768f49f25aa004484682c9299784e6, type: 2}
-  goldCoin: {fileID: 1049524726679572, guid: e7a694650ee63464b8f81d973e4b7d04, type: 2}
-  silverCoin: {fileID: 1480739355948570, guid: 3c99109154774bc408fb4bab4fb4cf06, type: 2}
-  bronzeCoin: {fileID: 1684810227353058, guid: b018276685be4284aa010219e245fd24, type: 2}
-  teamFlag1: {fileID: 1059214415926398, guid: 18f9d6679c495334d80b22f48ac6e005, type: 2}
-  teamFlag2: {fileID: 1118116294114014, guid: 780e0415441fbdd43aca455e2350c2af, type: 2}
-  errorMessage: {fileID: 1369353777}
 --- !u!1 &764516012
 GameObject:
   m_ObjectHideFlags: 0
@@ -3107,6 +3078,7 @@ GameObject:
   - component: {fileID: 1209184289}
   - component: {fileID: 1209184293}
   - component: {fileID: 1209184294}
+  - component: {fileID: 1209184295}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -3286,6 +3258,35 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1209184295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1209184288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 066ea7e33dfbb20469d39cdab2bc003b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mapItems: []
+  openState: {fileID: 906186114}
+  closedState: {fileID: 1537343319}
+  selectedObject: {fileID: 0}
+  buttons: []
+  saveField: {fileID: 1242408570}
+  isSaving: 0
+  redWall: {fileID: 1744126536531200, guid: 15d211e83c32c014e8d83eba18b8fa20, type: 2}
+  orangeWall: {fileID: 1257864531734054, guid: 5485a1bbed1e9cb44bbb1dd8f3204f71, type: 2}
+  greenWall: {fileID: 1585524941553692, guid: 18030ac132cae554d9e730ed71e27c59, type: 2}
+  greyWall: {fileID: 1660004336968288, guid: a3768f49f25aa004484682c9299784e6, type: 2}
+  goldCoin: {fileID: 1049524726679572, guid: e7a694650ee63464b8f81d973e4b7d04, type: 2}
+  silverCoin: {fileID: 1480739355948570, guid: 3c99109154774bc408fb4bab4fb4cf06, type: 2}
+  bronzeCoin: {fileID: 1684810227353058, guid: b018276685be4284aa010219e245fd24, type: 2}
+  teamFlag1: {fileID: 1059214415926398, guid: 18f9d6679c495334d80b22f48ac6e005, type: 2}
+  teamFlag2: {fileID: 1118116294114014, guid: 780e0415441fbdd43aca455e2350c2af, type: 2}
+  errorMessage: {fileID: 1369353777}
+  takingImage: 0
 --- !u!1 &1242408568
 GameObject:
   m_ObjectHideFlags: 0
@@ -4644,7 +4645,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 743672334}
+      - m_Target: {fileID: 1209184295}
         m_MethodName: ExitButtonPressed
         m_Mode: 1
         m_Arguments:
@@ -5155,7 +5156,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 743672334}
+      - m_Target: {fileID: 0}
         m_MethodName: CloseClicked
         m_Mode: 1
         m_Arguments:
@@ -5834,7 +5835,7 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
@@ -5958,7 +5959,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 743672334}
+      - m_Target: {fileID: 1209184295}
         m_MethodName: LoadMap
         m_Mode: 1
         m_Arguments:

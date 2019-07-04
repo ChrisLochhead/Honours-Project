@@ -14,6 +14,8 @@ public class Wall : NetworkBehaviour {
     [SyncVar]
     public float totalHealth;
 
+    public bool isNetworked;
+
     private void Start()
     {
         SetHealth();
@@ -115,7 +117,7 @@ public class Wall : NetworkBehaviour {
         if (GetComponent<MeshRenderer>() && wallMaterial == null)
             wallMaterial = GetComponent<MeshRenderer>().material;
 
-        if (wallMaterial)
+        if (wallMaterial && isNetworked)
         {
             CmdUpdateAlpha();
         }

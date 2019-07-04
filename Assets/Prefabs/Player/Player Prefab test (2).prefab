@@ -11070,6 +11070,7 @@ MonoBehaviour:
   gameManager: {fileID: 0}
   lobbyFinished: 0
   StartButton: {fileID: 114475219767255114}
+  gamePreview: {fileID: 114842351246970440}
 --- !u!114 &114450070810720110
 MonoBehaviour:
   m_ObjectHideFlags: 1

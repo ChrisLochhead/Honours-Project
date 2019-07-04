@@ -146,3 +146,4 @@ MonoBehaviour:
   type: 0
   Health: 0
   totalHealth: 0
+  isNetworked: 1

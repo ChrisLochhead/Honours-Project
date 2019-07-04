@@ -22,6 +22,7 @@ public class MainMenu : MonoBehaviour {
 
     private void Start()
     {
+
         if (GameObject.Find("PersistentObject"))
         {
             Destroy(GameObject.Find("PersistentObject"));

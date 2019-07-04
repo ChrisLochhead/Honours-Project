@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using TMPro;
 using UnityEngine.UI;
+using System.IO;
 
 public class Lobby : NetworkBehaviour
 {
@@ -14,7 +15,7 @@ public class Lobby : NetworkBehaviour
 
     public GameObject[] playerTags;
 
-    private int MinNumOfPlayers = 1;
+    private int MinNumOfPlayers = 10;
 
     public float timeTillGameStart = 10.0f;
 
@@ -28,8 +29,26 @@ public class Lobby : NetworkBehaviour
 
     public Button StartButton;
 
+    public RawImage gamePreview;
+
     private void Start()
     {
+
+        //Test
+        //DirectoryInfo info = new DirectoryInfo(Application.dataPath + "/mapImages/");
+        //FileInfo[] fileInfo = info.GetFiles();
+        //foreach (FileInfo f in fileInfo)
+        //{
+            byte[] fileData = File.ReadAllBytes(Application.dataPath + "/MapImages/saved.png");
+            Texture2D testTex = new Texture2D(2, 2);
+            testTex.LoadImage(fileData);
+            gamePreview.texture = testTex;
+
+       // }
+
+     
+
+
         GameObject gameInfo = GameObject.Find("gameInfo");
         Owner.CmdSetName(gameInfo.GetComponent<GameInfo>().name);
         //Owner.playerName = gameInfo.GetComponent<GameInfo>().name;
@@ -101,6 +120,7 @@ public class Lobby : NetworkBehaviour
             }
             else
             {
+                status.text = "Looking for " + (MinNumOfPlayers - currentNumberOfPlayers) + " more players";
                 timeTillGameStart = 10.0f;
             }
 

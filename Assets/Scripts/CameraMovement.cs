@@ -15,6 +15,11 @@ public class CameraMovement : MonoBehaviour {
         canMove = false;
 	}
 	
+    public void SetMovement(bool m)
+    {
+        canMove = m;
+    }
+
 	// Update is called once per frame
 	void Update () {
 

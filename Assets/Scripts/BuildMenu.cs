@@ -51,14 +51,26 @@ public class BuildMenu : MonoBehaviour {
     public GameObject teamFlag2;
 
     public GameObject errorMessage;
+
+    //For taking screenshots
+    Texture2D currentImage;
+    public bool takingImage = false;
+
     // Use this for initialization
     void Start () {
         currentState = 0;
         Camera.main.GetComponent<CameraMovement>().canMove = true;
-	}
+    }
 	
 	// Update is called once per frame
 	void Update () {
+
+
+        //Check if taking a screenshot
+        if(Input.GetKeyDown("c"))
+        {
+            TakeScreenShot();
+        }
 
         //Make sure camera can move at all times
         if (Camera.main.GetComponent<CameraMovement>().canMove == false)
@@ -231,9 +243,11 @@ public class BuildMenu : MonoBehaviour {
         string filename = saveField.text;
         StreamWriter sr = File.CreateText(Application.dataPath + "/Maps/" + filename + ".txt");
         sr.WriteLine(filename);
-        sr.WriteLine("1,1");
-        
-        for(int i = 0; i < mapItems.Count; i++)
+        byte[] byteArray = currentImage.EncodeToPNG();
+        System.IO.File.WriteAllBytes(Application.dataPath + "/MapImages/" + filename + ".png", byteArray);
+        sr.WriteLine(Application.dataPath + "/MapImages/" + filename + ".png");
+
+        for (int i = 0; i < mapItems.Count; i++)
         {
             if (mapItems[i])
             {
@@ -251,11 +265,35 @@ public class BuildMenu : MonoBehaviour {
                 }
             }
         }
+       
         sr.Close();
         CancelSave();
 
         GameObject.Find("PersistentObject").GetComponent<MapFinder>().FindFiles();
         errorMessage.SetActive(false);
+    }
+
+    public void TakeScreenShot()
+    {
+        Camera.main.targetTexture = RenderTexture.GetTemporary(Screen.width, Screen.height, 16);
+        takingImage = true;
+    }
+
+    private void OnPostRender()
+    {
+
+        if (takingImage)
+        {
+            RenderTexture renderTex = Camera.main.targetTexture;
+
+            currentImage = new Texture2D(renderTex.width, renderTex.height, TextureFormat.ARGB32, false);
+            Rect tmpRect = new Rect(0, 0, renderTex.width, renderTex.height);
+            currentImage.ReadPixels(tmpRect, 0, 0);
+            Debug.Log("here");
+            Camera.main.targetTexture = null;
+            Debug.Log("and here");
+            takingImage = false;
+        }
     }
 
     public void CancelSave()
