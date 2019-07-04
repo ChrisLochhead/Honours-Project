@@ -1,6 +1,7 @@
 ﻿using UnityEngine.Networking;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class GameMap : NetworkBehaviour {
 
@@ -20,9 +21,6 @@ public class GameMap : NetworkBehaviour {
 
     public GameObject teamFlag1;
     public GameObject teamFlag2;
-
-    public List<GameObject> team1Spawns = new List<GameObject>();
-    public List<GameObject> team2Spawns = new List<GameObject>();
 
     // Use this for initialization
     void Start () {
@@ -93,21 +91,15 @@ public class GameMap : NetworkBehaviour {
                 if (mapInfo[i].GetComponent<Coin>().type == 7)
             {
                 GameObject tmp = Instantiate(teamFlag1, new Vector3(mapInfo[i].GetComponent<Coin>().pos.x, mapInfo[i].GetComponent<Coin>().pos.y, -5), Quaternion.identity);
-                tmp.GetComponent<MeshRenderer>().enabled = false;
-                team1Spawns.Add(tmp);
+                NetworkServer.Spawn(tmp);
             }
             else
                 if (mapInfo[i].GetComponent<Coin>().type == 8)
             {
                 GameObject tmp = Instantiate(teamFlag2, new Vector3(mapInfo[i].GetComponent<Coin>().pos.x, mapInfo[i].GetComponent<Coin>().pos.y, -5), Quaternion.identity);
-                tmp.GetComponent<MeshRenderer>().enabled = false;
-                team2Spawns.Add(tmp);
+                NetworkServer.Spawn(tmp);
             }
         }
     }
 
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }

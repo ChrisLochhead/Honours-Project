@@ -21,10 +21,10 @@ GameObject:
   - component: {fileID: 4237745438045282}
   - component: {fileID: 33424566607439852}
   - component: {fileID: 23750261524505116}
-  - component: {fileID: 114291166383268654}
+  - component: {fileID: 114005937777082218}
   m_Layer: 0
   m_Name: SpawnPoint
-  m_TagString: Untagged
+  m_TagString: SpawnPoint1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -84,7 +84,7 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1059214415926398}
   m_Mesh: {fileID: 4300000, guid: 0b2d63d7bddd42e478d37c2ad22bb9ee, type: 3}
---- !u!114 &114291166383268654
+--- !u!114 &114005937777082218
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -92,6 +92,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 1059214415926398}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1050975500, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 24
+    i1: 249
+    i2: 214
+    i3: 103
+    i4: 156
+    i5: 73
+    i6: 83
+    i7: 52
+    i8: 216
+    i9: 11
+    i10: 34
+    i11: 244
+    i12: 138
+    i13: 198
+    i14: 224
+    i15: 5
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0

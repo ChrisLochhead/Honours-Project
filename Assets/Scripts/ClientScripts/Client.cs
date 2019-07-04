@@ -14,7 +14,7 @@ public class Client : NetworkBehaviour
 
     public bool isLocal;
 
-    public List<GameObject> spawnPoints;
+    public GameObject[] spawnPoints;
 
     //Camera
     public Camera playerCam;
@@ -154,15 +154,14 @@ public class Client : NetworkBehaviour
         else
             CmdSetTeam(0);
 
-
         //Get spawnpoints from team
-        if (team == 0)
-            spawnPoints = GameObject.Find("MapManager").GetComponent<GameMap>().team1Spawns;
-        else
-            spawnPoints = GameObject.Find("MapManager").GetComponent<GameMap>().team2Spawns;
+        //if (team == 0)
+        //    spawnPoints = team1Spawns;
+        //else
+        //    spawnPoints = team2Spawns;
 
         //set up spawnpoint
-        Respawn();
+        //Respawn();
     }
 
     [Command]
@@ -270,6 +269,23 @@ public class Client : NetworkBehaviour
     public void Update()
     {
 
+        if (spawnPoints.Length == 0)
+        {
+            if(GameObject.FindGameObjectsWithTag("SpawnPoint1").Length > 0 && team == 0)
+            {
+                spawnPoints = GameObject.FindGameObjectsWithTag("SpawnPoint1");
+                Respawn();
+                return;
+            }
+
+            if (GameObject.FindGameObjectsWithTag("SpawnPoint2").Length > 0 && team == 1)
+            {
+                spawnPoints = GameObject.FindGameObjectsWithTag("SpawnPoint2");
+                Respawn();
+                return;
+            }
+        }
+
         //Check for victory by updating the scoreboard
         clientScoreBoard.UpdateScores();
         clientScoreBoard.CheckVictory();
@@ -366,7 +382,8 @@ public class Client : NetworkBehaviour
         {
 
             //Spawn in random position
-            int rand = Random.Range(0, spawnPoints.Count);
+            int rand = Random.Range(0, spawnPoints.Length);
+            Debug.Log(rand);
             player.transform.position = spawnPoints[rand].transform.position;
             playerCam.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, playerCam.transform.position.z);
 
@@ -402,7 +419,8 @@ public class Client : NetworkBehaviour
         {
 
             //Spawn in random position
-            int rand = Random.Range(0, spawnPoints.Count);
+            int rand = Random.Range(0, spawnPoints.Length);
+            Debug.Log(rand);
             player.transform.position = spawnPoints[rand].transform.position;
             playerCam.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, playerCam.transform.position.z);
 
@@ -520,7 +538,7 @@ public class Client : NetworkBehaviour
             }
 
             //Spawn in random position
-            int rand = Random.Range(0, spawnPoints.Count);
+            int rand = Random.Range(0, spawnPoints.Length);
             player.transform.position = spawnPoints[rand].transform.position;
             playerCam.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, playerCam.transform.position.z);
 

@@ -69,7 +69,9 @@ public class MainMenu : MonoBehaviour {
         gameInfo.GetComponent<GameInfo>().timeLimit = timeLimitDropdown.GetComponent<Dropdown>().value;
 
         //Create a match
+        Debug.Log("called network new");
         networkManager.matchMaker.CreateMatch( nameInputHost.text + "'s room", 4, true, "", "", "", 0, 0, networkManager.OnMatchCreate);
+        
     }
 
     public void JoinButton()
