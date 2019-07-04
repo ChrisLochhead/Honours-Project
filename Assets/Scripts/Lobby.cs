@@ -20,6 +20,7 @@ public class Lobby : NetworkBehaviour
     public float timeTillGameStart = 10.0f;
 
     public TextMeshProUGUI status;
+    public TextMeshProUGUI mapName;
 
     public Client Owner;
 
@@ -33,21 +34,18 @@ public class Lobby : NetworkBehaviour
 
     private void Start()
     {
+        //Get the preview image path
+        Map m = GameObject.Find("PersistentObject").GetComponent<MapFinder>().selectedMap.GetComponent<Map>();
+        string mPath = m.imageTexturePath;
 
-        //Test
-        //DirectoryInfo info = new DirectoryInfo(Application.dataPath + "/mapImages/");
-        //FileInfo[] fileInfo = info.GetFiles();
-        //foreach (FileInfo f in fileInfo)
-        //{
-            byte[] fileData = File.ReadAllBytes(Application.dataPath + "/MapImages/saved.png");
-            Texture2D testTex = new Texture2D(2, 2);
-            testTex.LoadImage(fileData);
-            gamePreview.texture = testTex;
+        //Set name
+        mapName.text = m.gameObject.name;
 
-       // }
-
-     
-
+        //Assign the preview image path to the lobby
+        byte[] fileData = File.ReadAllBytes(mPath);
+        Texture2D testTex = new Texture2D(2, 2);
+        testTex.LoadImage(fileData);
+        gamePreview.texture = testTex;
 
         GameObject gameInfo = GameObject.Find("gameInfo");
         Owner.CmdSetName(gameInfo.GetComponent<GameInfo>().name);

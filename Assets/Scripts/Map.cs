@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Map : MonoBehaviour {
 
+    public string imageTexturePath;
     //// Use this for initialization
     void Start()
     {

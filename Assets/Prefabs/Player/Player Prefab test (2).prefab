@@ -11066,6 +11066,7 @@ MonoBehaviour:
   - {fileID: 1882108536862380}
   timeTillGameStart: 10
   status: {fileID: 114967373996627502}
+  mapName: {fileID: 114329681082677666}
   Owner: {fileID: 114648311287741478}
   gameManager: {fileID: 0}
   lobbyFinished: 0

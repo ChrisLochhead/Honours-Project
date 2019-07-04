@@ -46,7 +46,8 @@ public class MapFinder : MonoBehaviour {
                         }
                         else if (lineIterator == 1)
                         {
-                            map.GetComponent<Map>().setMapSize(new Vector2(int.Parse(lines[0]), int.Parse(lines[1])));
+                            //map.GetComponent<Map>().setMapSize(new Vector2(int.Parse(lines[0]), int.Parse(lines[1])));
+                            map.GetComponent<Map>().imageTexturePath = lines[0];
                         }
                         else
                         {

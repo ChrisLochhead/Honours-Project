@@ -1,0 +1,5 @@
+Imagetest
+D:/repos/Honours Project/Code/Honours-Project/Assets/MapImages/Imagetest.png
+0,4.089755,13.95969,0
+1,-8.452154,-6.107365,90
+1,14.99576,-0.3271801,90
