@@ -86,6 +86,23 @@ public class MainMenu : MonoBehaviour {
         networkManager.matchMaker.ListMatches(0, 20, "", false, 0, 0, OnMatchList);
     }
 
+    public void SelectLAN()
+    {
+        if (networkManager.matchMaker != null)
+        {
+            networkManager.matchMaker = null;
+        }
+    }
+
+    public void SelectMultiPlayer()
+    {
+        if (networkManager.matchMaker == null)
+        {
+            networkManager.StartMatchMaker();
+        }
+    }
+
+
     public void OnMatchList(bool success, string extendedInfo, List<MatchInfoSnapshot> matches)
     {
         MatchInfoSnapshot priorityMatch = new MatchInfoSnapshot();
