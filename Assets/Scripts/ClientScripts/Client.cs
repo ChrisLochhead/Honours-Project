@@ -123,6 +123,12 @@ public class Client : NetworkBehaviour
        
         networkManager = NetworkManager.singleton;
 
+        //For host to spawn the map for everyone else
+        if(GameObject.FindGameObjectsWithTag("Client").Length == 1)
+        {
+            NetworkServer.Spawn(GameObject.Find("PersistentObject"));
+        }
+
         if (!isLocalPlayer)
         {
             isLocal = false;

@@ -7,18 +7,23 @@ using UnityEngine.Networking;
 using UnityEngine.Networking.Match;
 using TMPro;
 
-public class MainMenu : MonoBehaviour {
-
-
-    public GameObject killLimitDropdown;
-    public GameObject timeLimitDropdown;
+public class MainMenu : NetworkBehaviour {
 
     public GameObject gameManager;
 
-    public TMP_InputField nameInputHost;
-    public TMP_InputField nameInputJoin;
+    public TMP_InputField nameInputHostMultiplayer;
+    public TMP_InputField nameInputJoinMultiplayer;
+    public GameObject killLimitDropdownMultiplayer;
+    public GameObject timeLimitDropdownMultiplayer;
+
+    public TMP_InputField nameInputHostLAN;
+    public TMP_InputField nameInputJoinLAN;
+    public GameObject killLimitDropdownLAN;
+    public GameObject timeLimitDropdownLAN;
 
     private NetworkManager networkManager;
+
+    public GameObject mapFinderPrefab;
 
     private void Start()
     {
@@ -28,21 +33,23 @@ public class MainMenu : MonoBehaviour {
             Destroy(GameObject.Find("PersistentObject"));
         }
 
-            GameObject PersistentObject = new GameObject();
-            PersistentObject.AddComponent<MapFinder>();
-            PersistentObject.name = "PersistentObject";
+            //GameObject PersistentObject = new GameObject();
+            //PersistentObject.AddComponent<MapFinder>();
+            //PersistentObject.name = "PersistentObject";
 
-            GameObject Map = new GameObject();
-            Map.AddComponent<Map>();
-            Map.transform.parent = PersistentObject.transform;
-            Map.name = "Map";
+            //GameObject Map = new GameObject();
+            //Map.AddComponent<Map>();
+            //Map.transform.parent = PersistentObject.transform;
+            //Map.name = "Map";
 
-            GameObject selectedMap = new GameObject();
-            selectedMap.transform.parent = PersistentObject.transform;
-            selectedMap.name = "SelectedMap";
+            //GameObject selectedMap = new GameObject();
+            //selectedMap.transform.parent = PersistentObject.transform;
+            //selectedMap.name = "SelectedMap";
 
-            PersistentObject.GetComponent<MapFinder>().selectedMap = selectedMap;
-            PersistentObject.GetComponent<MapFinder>().map = Map;
+            //PersistentObject.GetComponent<MapFinder>().selectedMap = selectedMap;
+            //PersistentObject.GetComponent<MapFinder>().map = Map;
+
+            
 
         //Set up networking
         networkManager = NetworkManager.singleton;
@@ -51,6 +58,12 @@ public class MainMenu : MonoBehaviour {
         {
             networkManager.StartMatchMaker();
         }
+
+    }
+
+    public void InitialiseMapFinder()
+    {
+        //Initialise prefab but dont add to network
 
     }
     public void HostButton()
@@ -65,13 +78,12 @@ public class MainMenu : MonoBehaviour {
         GameObject gameInfo = new GameObject();
         gameInfo.AddComponent<GameInfo>();
         gameInfo.name = "gameInfo";
-        gameInfo.GetComponent<GameInfo>().name = nameInputHost.text;
-        gameInfo.GetComponent<GameInfo>().killLimit = killLimitDropdown.GetComponent<Dropdown>().value;
-        gameInfo.GetComponent<GameInfo>().timeLimit = timeLimitDropdown.GetComponent<Dropdown>().value;
+        gameInfo.GetComponent<GameInfo>().name = nameInputHostMultiplayer.text;
+        gameInfo.GetComponent<GameInfo>().killLimit = killLimitDropdownMultiplayer.GetComponent<Dropdown>().value;
+        gameInfo.GetComponent<GameInfo>().timeLimit = timeLimitDropdownMultiplayer.GetComponent<Dropdown>().value;
 
         //Create a match
-        Debug.Log("called network new");
-        networkManager.matchMaker.CreateMatch( nameInputHost.text + "'s room", 4, true, "", "", "", 0, 0, networkManager.OnMatchCreate);
+        networkManager.matchMaker.CreateMatch( nameInputHostMultiplayer.text + "'s room", 4, true, "", "", "", 0, 0, networkManager.OnMatchCreate);
         
     }
 
@@ -81,18 +93,39 @@ public class MainMenu : MonoBehaviour {
         GameObject gameInfo = new GameObject();
         gameInfo.AddComponent<GameInfo>();
         gameInfo.name = "gameInfo";
-        gameInfo.GetComponent<GameInfo>().name = nameInputJoin.text;
+        gameInfo.GetComponent<GameInfo>().name = nameInputJoinMultiplayer.text;
 
         networkManager.matchMaker.ListMatches(0, 20, "", false, 0, 0, OnMatchList);
     }
 
     public void HostButtonLAN()
     {
+        //Destroy any previously loaded games
+        if (GameObject.Find("game"))
+        {
+            Destroy(GameObject.Find("game"));
+        }
+
+        //Store info for the next scene
+        GameObject gameInfo = new GameObject();
+        gameInfo.AddComponent<GameInfo>();
+        gameInfo.name = "gameInfo";
+        gameInfo.GetComponent<GameInfo>().name = nameInputHostLAN.text;
+        gameInfo.GetComponent<GameInfo>().killLimit = killLimitDropdownLAN.GetComponent<Dropdown>().value;
+        gameInfo.GetComponent<GameInfo>().timeLimit = timeLimitDropdownLAN.GetComponent<Dropdown>().value;
+
+
         networkManager.StartHost();
     }
 
     public void JoinButtonLAN()
     {
+        //Store info for the next scene
+        GameObject gameInfo = new GameObject();
+        gameInfo.AddComponent<GameInfo>();
+        gameInfo.name = "gameInfo";
+        gameInfo.GetComponent<GameInfo>().name = nameInputJoinLAN.text;
+
         networkManager.StartClient();
     }
 

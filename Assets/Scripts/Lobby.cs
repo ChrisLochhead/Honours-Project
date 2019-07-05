@@ -15,7 +15,7 @@ public class Lobby : NetworkBehaviour
 
     public GameObject[] playerTags;
 
-    private int MinNumOfPlayers = 10;
+    private int MinNumOfPlayers = 2;
 
     public float timeTillGameStart = 10.0f;
 
@@ -32,10 +32,72 @@ public class Lobby : NetworkBehaviour
 
     public RawImage gamePreview;
 
+    public bool initialised = false;
+
     private void Start()
     {
+        ////Get the preview image path
+        ////Map m = GameObject.Find("PersistentObject").GetComponent<MapFinder>().selectedMap.GetComponent<Map>();
+        //Map m = GameObject.Find("PersistentObject").GetComponent<MapFinder>().maps[GameObject.Find("PersistentObject").GetComponent<MapFinder>().mapNumber].GetComponent<Map>();
+        //string mPath = m.imageTexturePath;
+
+        ////Set name
+        //mapName.text = m.gameObject.name;
+
+        ////Assign the preview image path to the lobby
+        //byte[] fileData = File.ReadAllBytes(mPath);
+        //Texture2D testTex = new Texture2D(2, 2);
+        //testTex.LoadImage(fileData);
+        //gamePreview.texture = testTex;
+
+        //GameObject gameInfo = GameObject.Find("gameInfo");
+        //Owner.CmdSetName(gameInfo.GetComponent<GameInfo>().name);
+        ////Owner.playerName = gameInfo.GetComponent<GameInfo>().name;
+        //if (gameInfo.GetComponent<GameInfo>().killLimit != 0 && gameInfo.GetComponent<GameInfo>().timeLimit != 0)
+        //{
+        //    gameManager.killLimit = gameInfo.GetComponent<GameInfo>().killLimit;
+        //    gameManager.timeLimit = gameInfo.GetComponent<GameInfo>().timeLimit;
+        //}
+        //Destroy(gameInfo);
+
+        ////Check if game already begun on host
+        //if (GameObject.FindGameObjectsWithTag("Client")[0].GetComponent<Client>().GameStarted == true)
+        //{
+        //    timeTillGameStart = 0.0f;
+        //    status.text = "Press start to join the game";
+        //}
+    }
+
+    //public void StartGame()
+    //{
+    //    //Start the game by removing the lobby
+    //    foreach (GameObject g in GameObject.FindGameObjectsWithTag("Client"))
+    //    {
+    //        g.GetComponent<Client>().InitialisePlayer();
+    //    }
+    //}
+
+    public void RefreshLobby()
+    {
+        currentNumberOfPlayers = 0;
+        foreach (GameObject g in GameObject.FindGameObjectsWithTag("Client"))
+        {
+            playerTags[NumberOfPlayers].GetComponentInChildren<TextMeshProUGUI>().text = g.GetComponent<Client>().playerName;
+            NumberOfPlayers++;
+            currentNumberOfPlayers++;
+        }
+
+        for (int i = NumberOfPlayers; i < playerTags.Length; i++)
+        {
+            playerTags[i].GetComponentInChildren<TextMeshProUGUI>().text = "";
+        }
+    }
+
+    private void Init()
+    {
         //Get the preview image path
-        Map m = GameObject.Find("PersistentObject").GetComponent<MapFinder>().selectedMap.GetComponent<Map>();
+        //Map m = GameObject.Find("PersistentObject").GetComponent<MapFinder>().selectedMap.GetComponent<Map>();
+        Map m = GameObject.Find("PersistentObject").GetComponent<MapFinder>().maps[GameObject.Find("PersistentObject").GetComponent<MapFinder>().mapNumber].GetComponent<Map>();
         string mPath = m.imageTexturePath;
 
         //Set name
@@ -64,35 +126,17 @@ public class Lobby : NetworkBehaviour
             status.text = "Press start to join the game";
         }
     }
-
-    //public void StartGame()
-    //{
-    //    //Start the game by removing the lobby
-    //    foreach (GameObject g in GameObject.FindGameObjectsWithTag("Client"))
-    //    {
-    //        g.GetComponent<Client>().InitialisePlayer();
-    //    }
-    //}
-
-    public void RefreshLobby()
-    {
-        currentNumberOfPlayers = 0;
-        foreach (GameObject g in GameObject.FindGameObjectsWithTag("Client"))
-        {
-            playerTags[NumberOfPlayers].GetComponentInChildren<TextMeshProUGUI>().text = g.GetComponent<Client>().playerName;
-            NumberOfPlayers++;
-            currentNumberOfPlayers++;
-        }
-
-        for (int i = NumberOfPlayers; i < playerTags.Length; i++)
-        {
-            playerTags[i].GetComponentInChildren<TextMeshProUGUI>().text = "";
-        }
-    }
-
     private void Update()
     {
 
+        //Check for initialisation
+        if(GameObject.Find("PersistentObject"))
+        {
+            Init();
+            initialised = true;
+        }
+
+        if (initialised) { 
         status.text = "Game will begin in " + ((int)timeTillGameStart).ToString() + " seconds";
 
 
@@ -104,39 +148,39 @@ public class Lobby : NetworkBehaviour
             status.text = "Press start to join the game";
         }
 
-        if (lobbyFinished == false)
-        {
-            NumberOfPlayers = 0;
-
-            GameObject[] clients = GameObject.FindGameObjectsWithTag("Client");
-            RefreshLobby();
-
-
-            if (currentNumberOfPlayers >= MinNumOfPlayers)
+            if (lobbyFinished == false)
             {
-                timeTillGameStart -= Time.deltaTime;
-            }
-            else
-            {
-                status.text = "Looking for " + (MinNumOfPlayers - currentNumberOfPlayers) + " more players";
-                timeTillGameStart = 10.0f;
-            }
+                NumberOfPlayers = 0;
 
-            if (timeTillGameStart <= 0 && StartButton.enabled == false)
-            {
-                status.text = "Press start to join the game";
+                GameObject[] clients = GameObject.FindGameObjectsWithTag("Client");
+                RefreshLobby();
 
-                //Start the game by removing the lobby
-                foreach (GameObject g in clients)
+
+                if (currentNumberOfPlayers >= MinNumOfPlayers)
                 {
-                    g.GetComponent<Client>().InitialisePlayer();
+                    timeTillGameStart -= Time.deltaTime;
                 }
-                
+                else
+                {
+                    status.text = "Looking for " + (MinNumOfPlayers - currentNumberOfPlayers) + " more players";
+                    timeTillGameStart = 10.0f;
+                }
 
-                lobbyFinished = true;
+                if (timeTillGameStart <= 0 && StartButton.enabled == false)
+                {
+                    status.text = "Press start to join the game";
+
+                    //Start the game by removing the lobby
+                    foreach (GameObject g in clients)
+                    {
+                        g.GetComponent<Client>().InitialisePlayer();
+                    }
+
+
+                    lobbyFinished = true;
+                }
+
             }
-
-
         }
     }
 

@@ -6,7 +6,6 @@ using UnityEngine.Networking;
 public class GameMap : NetworkBehaviour {
 
     private List<GameObject> mapInfo;
-    Vector2 mapSize;
 
     public GameObject ground;
 
@@ -26,7 +25,6 @@ public class GameMap : NetworkBehaviour {
     void Start () {
         mapInfo = new List<GameObject>();
         mapInfo = GameObject.Find("PersistentObject").GetComponent<MapFinder>().selectedMap.GetComponent<Map>().GetMapItems();
-        mapSize = GameObject.Find("PersistentObject").GetComponent<MapFinder>().selectedMap.GetComponent<Map>().getMapSize();
         InitMap();
 	}
 
@@ -43,63 +41,66 @@ public class GameMap : NetworkBehaviour {
         Instantiate(ground, new Vector3(-200, -200, 0), Quaternion.identity);
         Instantiate(ground, new Vector3(-200, 200, 0), Quaternion.identity);
         //get the size and then draw the floor
-        for (int i = 0; i < mapInfo.Count; i++) {
-            if (mapInfo[i].GetComponent<Wall>())
+        if (isServer)
+        {
+            for (int i = 0; i < mapInfo.Count; i++)
             {
-                if (mapInfo[i].GetComponent<Wall>().type == 0 && isServer)
+                if (mapInfo[i].GetComponent<Wall>())
                 {
-                    GameObject spawnObj = (GameObject)Instantiate(redWall, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, -5), Quaternion.identity * Quaternion.Euler(0,0, mapInfo[i].GetComponent<Wall>().rot));
+                    if (mapInfo[i].GetComponent<Wall>().type == 0 && isServer)
+                    {
+                        GameObject spawnObj = (GameObject)Instantiate(redWall, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, -5), Quaternion.identity * Quaternion.Euler(0, 0, mapInfo[i].GetComponent<Wall>().rot));
+                        NetworkServer.Spawn(spawnObj);
+                    }
+                    else
+                    if (mapInfo[i].GetComponent<Wall>().type == 1 && isServer)
+                    {
+                        GameObject spawnObj = (GameObject)Instantiate(orangeWall, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, -5), Quaternion.identity * Quaternion.Euler(0, 0, mapInfo[i].GetComponent<Wall>().rot));
+                        NetworkServer.Spawn(spawnObj);
+                    }
+                    else
+                    if (mapInfo[i].GetComponent<Wall>().type == 2 && isServer)
+                    {
+                        GameObject spawnObj = (GameObject)Instantiate(greenWall, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, -5), Quaternion.identity * Quaternion.Euler(0, 0, mapInfo[i].GetComponent<Wall>().rot));
+                        NetworkServer.Spawn(spawnObj);
+                    }
+                    if (mapInfo[i].GetComponent<Wall>().type == 3 && isServer)
+                    {
+                        GameObject spawnObj = (GameObject)Instantiate(greyWall, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, -5), Quaternion.identity * Quaternion.Euler(0, 0, mapInfo[i].GetComponent<Wall>().rot));
+                        NetworkServer.Spawn(spawnObj);
+                    }
+                }
+                else
+                    if (mapInfo[i].GetComponent<Coin>().type == 4 && isServer)
+                {
+                    GameObject spawnObj = (GameObject)Instantiate(goldCoin, new Vector3(mapInfo[i].GetComponent<Coin>().pos.x, mapInfo[i].GetComponent<Coin>().pos.y, -5), Quaternion.identity);
                     NetworkServer.Spawn(spawnObj);
                 }
                 else
-                if (mapInfo[i].GetComponent<Wall>().type == 1 && isServer)
+                    if (mapInfo[i].GetComponent<Coin>().type == 5 && isServer)
                 {
-                    GameObject spawnObj = (GameObject)Instantiate(orangeWall, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, -5), Quaternion.identity * Quaternion.Euler(0, 0, mapInfo[i].GetComponent<Wall>().rot));
+                    GameObject spawnObj = (GameObject)Instantiate(silverCoin, new Vector3(mapInfo[i].GetComponent<Coin>().pos.x, mapInfo[i].GetComponent<Coin>().pos.y, -5), Quaternion.identity);
                     NetworkServer.Spawn(spawnObj);
                 }
                 else
-                if (mapInfo[i].GetComponent<Wall>().type == 2 && isServer)
+                    if (mapInfo[i].GetComponent<Coin>().type == 6 && isServer)
                 {
-                    GameObject spawnObj = (GameObject)Instantiate(greenWall, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, -5), Quaternion.identity * Quaternion.Euler(0, 0, mapInfo[i].GetComponent<Wall>().rot));
+                    GameObject spawnObj = (GameObject)Instantiate(bronzeCoin, new Vector3(mapInfo[i].GetComponent<Coin>().pos.x, mapInfo[i].GetComponent<Coin>().pos.y, -5), Quaternion.identity);
                     NetworkServer.Spawn(spawnObj);
                 }
-                if (mapInfo[i].GetComponent<Wall>().type == 3 && isServer)
+                else
+                    if (mapInfo[i].GetComponent<Coin>().type == 7)
                 {
-                    GameObject spawnObj = (GameObject)Instantiate(greyWall, new Vector3(mapInfo[i].GetComponent<Wall>().pos.x, mapInfo[i].GetComponent<Wall>().pos.y, -5), Quaternion.identity * Quaternion.Euler(0, 0, mapInfo[i].GetComponent<Wall>().rot));
-                    NetworkServer.Spawn(spawnObj);
+                    GameObject tmp = Instantiate(teamFlag1, new Vector3(mapInfo[i].GetComponent<Coin>().pos.x, mapInfo[i].GetComponent<Coin>().pos.y, -5), Quaternion.identity);
+                    NetworkServer.Spawn(tmp);
                 }
-            }
-            else
-                if (mapInfo[i].GetComponent<Coin>().type == 4 && isServer)
-            {
-                GameObject spawnObj = (GameObject)Instantiate(goldCoin, new Vector3(mapInfo[i].GetComponent<Coin>().pos.x, mapInfo[i].GetComponent<Coin>().pos.y, -5), Quaternion.identity);
-                NetworkServer.Spawn(spawnObj);
-            }
-            else
-                if (mapInfo[i].GetComponent<Coin>().type == 5 && isServer)
-            {
-                GameObject spawnObj = (GameObject)Instantiate(silverCoin, new Vector3(mapInfo[i].GetComponent<Coin>().pos.x, mapInfo[i].GetComponent<Coin>().pos.y, -5), Quaternion.identity);
-                NetworkServer.Spawn(spawnObj);
-            }
-            else
-                if (mapInfo[i].GetComponent<Coin>().type == 6 && isServer)
-            {
-                GameObject spawnObj = (GameObject)Instantiate(bronzeCoin, new Vector3(mapInfo[i].GetComponent<Coin>().pos.x, mapInfo[i].GetComponent<Coin>().pos.y, -5), Quaternion.identity);
-                NetworkServer.Spawn(spawnObj);
-            }
-            else
-                if (mapInfo[i].GetComponent<Coin>().type == 7)
-            {
-                GameObject tmp = Instantiate(teamFlag1, new Vector3(mapInfo[i].GetComponent<Coin>().pos.x, mapInfo[i].GetComponent<Coin>().pos.y, -5), Quaternion.identity);
-                NetworkServer.Spawn(tmp);
-            }
-            else
-                if (mapInfo[i].GetComponent<Coin>().type == 8)
-            {
-                GameObject tmp = Instantiate(teamFlag2, new Vector3(mapInfo[i].GetComponent<Coin>().pos.x, mapInfo[i].GetComponent<Coin>().pos.y, -5), Quaternion.identity);
-                NetworkServer.Spawn(tmp);
+                else
+                    if (mapInfo[i].GetComponent<Coin>().type == 8)
+                {
+                    GameObject tmp = Instantiate(teamFlag2, new Vector3(mapInfo[i].GetComponent<Coin>().pos.x, mapInfo[i].GetComponent<Coin>().pos.y, -5), Quaternion.identity);
+                    NetworkServer.Spawn(tmp);
+                }
             }
         }
     }
-
 }

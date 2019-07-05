@@ -996,7 +996,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   manager: {fileID: 0}
-  showGUI: 1
+  showGUI: 0
   offsetX: 0
   offsetY: 0
 --- !u!114 &102276824
@@ -3933,7 +3933,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1882052815}
+      - m_Target: {fileID: 2078624012}
         m_MethodName: SetActive
         m_Mode: 6
         m_Arguments:
@@ -5140,7 +5140,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2020139458}
+      - m_Target: {fileID: 541875172}
         m_MethodName: SetActive
         m_Mode: 6
         m_Arguments:
@@ -7351,11 +7351,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec3fa9265da0dae429b6600e36a91602, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  killLimitDropdown: {fileID: 417266999}
-  timeLimitDropdown: {fileID: 822180903}
   gameManager: {fileID: 0}
-  nameInputHost: {fileID: 1141672841}
-  nameInputJoin: {fileID: 1874408594}
+  nameInputHostMultiplayer: {fileID: 1141672841}
+  nameInputJoinMultiplayer: {fileID: 1874408594}
+  killLimitDropdownMultiplayer: {fileID: 417266999}
+  timeLimitDropdownMultiplayer: {fileID: 822180903}
+  nameInputHostLAN: {fileID: 300479175}
+  nameInputJoinLAN: {fileID: 1369845737}
+  killLimitDropdownLAN: {fileID: 1956931733}
+  timeLimitDropdownLAN: {fileID: 1032115596}
 --- !u!1 &740062792
 GameObject:
   m_ObjectHideFlags: 0
@@ -12509,7 +12513,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 738656959}
-        m_MethodName: JoinButton
+        m_MethodName: JoinButtonLAN
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -13331,7 +13335,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2020139458}
+      - m_Target: {fileID: 541875172}
         m_MethodName: SetActive
         m_Mode: 6
         m_Arguments:

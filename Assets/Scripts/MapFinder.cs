@@ -5,8 +5,9 @@ using UnityEngine.UI;
 using System.IO;
 using System.Text.RegularExpressions;
 using UnityEngine.SceneManagement;
+using UnityEngine.Networking;
 
-public class MapFinder : MonoBehaviour {
+public class MapFinder : NetworkBehaviour {
 
                                  // Use this for initialization
     void Start () {
@@ -91,9 +92,11 @@ public class MapFinder : MonoBehaviour {
                 }
 
             selectedMap = maps[GameObject.Find("MapLoader").GetComponent<Dropdown>().value];
+            mapNumber = GameObject.Find("MapLoader").GetComponent<Dropdown>().value;
         }
-       // }
     }
+
+    public bool spawned = false;
 
     protected DirectoryInfo path = null;
     protected StreamReader reader = null;
@@ -101,6 +104,10 @@ public class MapFinder : MonoBehaviour {
 
     public List<GameObject> maps;
     public GameObject map;
+
+    [SyncVar]
+    public int mapNumber = 0;
+
     public GameObject selectedMap;
 
     protected bool listAdded;

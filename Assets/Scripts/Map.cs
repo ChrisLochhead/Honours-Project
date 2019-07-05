@@ -5,27 +5,6 @@ using UnityEngine;
 public class Map : MonoBehaviour {
 
     public string imageTexturePath;
-    //// Use this for initialization
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    public void setMapSize(Vector2 s)
-    {
-        mapSize = s;
-    }
-
-    public Vector2 getMapSize()
-    {
-        return mapSize;
-    }
 
     public void addWallItem(int t, float px, float py, float r)
     {
@@ -64,6 +43,5 @@ public class Map : MonoBehaviour {
         return mapItems;
     }
 
-    private Vector2 mapSize;
     private List<GameObject> mapItems;
 }
