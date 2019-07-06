@@ -69,7 +69,7 @@ public class Client : NetworkBehaviour
 
     //Registers which team the player is in
     [SyncVar]
-    public int team = 0;
+    public int team = 3;
 
     //For win conditions
     public bool hasWon = false;
@@ -103,6 +103,9 @@ public class Client : NetworkBehaviour
     //Accompanying textures
     public Material BlueTeamMaterial;
     public Material RedTeamMaterial;
+
+    [SyncVar]
+    public int teamMaterial = 0;
 
     //For pausing at the start of games
     public bool Paused = true;
@@ -166,7 +169,7 @@ public class Client : NetworkBehaviour
         }
 
         //Find team numbers
-        int temp1 = -1;
+        int temp1 = 0;
         int temp2 = 0;
 
         foreach (GameObject g in GameObject.FindGameObjectsWithTag("Client"))
@@ -292,6 +295,14 @@ public class Client : NetworkBehaviour
     public void Update()
     {
 
+        if(teamMaterial == 0)
+        {
+            characterModel.GetComponent<SkinnedMeshRenderer>().material = RedTeamMaterial;
+        }
+        else
+        {
+            characterModel.GetComponent<SkinnedMeshRenderer>().material = BlueTeamMaterial;
+        }
         //Toggle pause menu
         if (Input.GetKeyDown("p") && Paused == false)
         {
@@ -705,9 +716,15 @@ public class Client : NetworkBehaviour
 
         //Set the texture of the player
         if (team == 0)
+        {
             characterModel.GetComponent<SkinnedMeshRenderer>().material = RedTeamMaterial;
+            teamMaterial = 0;
+        }
         else
+        {
             characterModel.GetComponent<SkinnedMeshRenderer>().material = BlueTeamMaterial;
+            teamMaterial = 1;
+        }
     }
 
     public void SetTeam(int t)
