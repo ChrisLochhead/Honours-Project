@@ -24,7 +24,7 @@ public class GameMap : NetworkBehaviour {
     // Use this for initialization
     void Start () {
         mapInfo = new List<GameObject>();
-        mapInfo = GameObject.Find("PersistentObject").GetComponent<MapFinder>().selectedMap.GetComponent<Map>().GetMapItems();
+        mapInfo = GameObject.Find("MapFinder(Clone)").GetComponent<MapFinder>().selectedMap.GetComponent<Map>().GetMapItems();
         InitMap();
 	}
 

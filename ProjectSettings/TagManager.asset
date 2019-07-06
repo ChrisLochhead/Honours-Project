@@ -12,6 +12,7 @@ TagManager:
   - Client
   - SpawnPoint1
   - SpawnPoint2
+  - MapItem
   layers:
   - Default
   - TransparentFX

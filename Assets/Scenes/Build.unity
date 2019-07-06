@@ -383,6 +383,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1209184293}
+        m_MethodName: SetMovement
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &218320919
@@ -1379,6 +1390,17 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1209184293}
+        m_MethodName: SetMovement
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
@@ -3287,6 +3309,8 @@ MonoBehaviour:
   teamFlag2: {fileID: 1118116294114014, guid: 780e0415441fbdd43aca455e2350c2af, type: 2}
   errorMessage: {fileID: 1369353777}
   takingImage: 0
+  mapFinderPrefab: {fileID: 1504494890444854, guid: c08537cbfd8a1384a946a0b2e7e77418,
+    type: 2}
 --- !u!1 &1242408568
 GameObject:
   m_ObjectHideFlags: 0
@@ -4204,6 +4228,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70fc1c3ee596b2e4f844cc3a937a51d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  imageTexturePath: 
 --- !u!1 &1464272723
 GameObject:
   m_ObjectHideFlags: 0
@@ -5835,7 +5860,7 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 1
+          m_BoolArgument: 0
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null

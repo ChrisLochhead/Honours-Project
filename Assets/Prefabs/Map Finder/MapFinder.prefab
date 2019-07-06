@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4552040583735602}
   - component: {fileID: 114369332491688698}
+  - component: {fileID: 114409916122369010}
   m_Layer: 0
   m_Name: SelectedMap
   m_TagString: Untagged
@@ -38,12 +39,12 @@ GameObject:
   - component: {fileID: 114571349151596496}
   - component: {fileID: 114454329962495560}
   m_Layer: 0
-  m_Name: PersistentObject
+  m_Name: MapFinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1634133104996420
 GameObject:
   m_ObjectHideFlags: 0
@@ -125,6 +126,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   imageTexturePath: 
+--- !u!114 &114409916122369010
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1013154810897938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70fc1c3ee596b2e4f844cc3a937a51d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  imageTexturePath: 
 --- !u!114 &114454329962495560
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -138,8 +151,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawned: 1
   maps:
-  - {fileID: 0}
-  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   map: {fileID: 0}

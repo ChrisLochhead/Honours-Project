@@ -79,22 +79,22 @@ public class ClientScoreBoard : NetworkBehaviour {
         //Check if player has won or lost
         if (Owner.team == 0)
         {
-            if (team1ScoreNo >= 2)
+            if (team1ScoreNo >= Owner.killLimit && Owner.killLimit != 0)
             {
                 Owner.hasWon = true;            
             }
-            if (team2ScoreNo >= 2)
+            if (team2ScoreNo >= Owner.killLimit && Owner.killLimit != 0)
             {
                 Owner.hasLost = true;
             }
         }
         else
         {
-            if (team1ScoreNo >= 2)
+            if (team1ScoreNo >= Owner.killLimit && Owner.killLimit != 0)
             {
                 Owner.hasLost = true;
             }
-            if (team2ScoreNo >= 2)
+            if (team2ScoreNo >= Owner.killLimit && Owner.killLimit != 0)
             {
                 Owner.hasWon = true;
             }

@@ -6,10 +6,10 @@ public class Map : MonoBehaviour {
 
     public string imageTexturePath;
 
-    public void addWallItem(int t, float px, float py, float r)
+    public void addWallItem(int t, float px, float py, float r, GameObject p)
     {
         GameObject temp = new GameObject();
-
+        temp.name = "Wall";
         temp.AddComponent<Wall>();
 
         temp.GetComponent<Wall>().pos.x = px;
@@ -20,12 +20,15 @@ public class Map : MonoBehaviour {
         if(mapItems == null)
             mapItems = new List<GameObject>();
 
+        temp.transform.parent = p.transform;
+
         mapItems.Add(temp);
     }
 
-    public void addCoinItem(int t, float px, float py)
+    public void addCoinItem(int t, float px, float py, GameObject p)
     {
         GameObject temp = new GameObject();
+        temp.name = "Coin";
         temp.AddComponent<Coin>();
 
         temp.GetComponent<Coin>().pos.x = px;
@@ -34,6 +37,8 @@ public class Map : MonoBehaviour {
 
         if (mapItems == null)
             mapItems = new List<GameObject>();
+
+        temp.transform.parent = p.transform;
 
         mapItems.Add(temp);
     }

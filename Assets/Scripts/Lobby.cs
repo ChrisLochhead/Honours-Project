@@ -24,8 +24,6 @@ public class Lobby : NetworkBehaviour
 
     public Client Owner;
 
-    public GameManager gameManager;
-
     public bool lobbyFinished = false;
 
     public Button StartButton;
@@ -97,7 +95,7 @@ public class Lobby : NetworkBehaviour
     {
         //Get the preview image path
         //Map m = GameObject.Find("PersistentObject").GetComponent<MapFinder>().selectedMap.GetComponent<Map>();
-        Map m = GameObject.Find("PersistentObject").GetComponent<MapFinder>().maps[GameObject.Find("PersistentObject").GetComponent<MapFinder>().mapNumber].GetComponent<Map>();
+        Map m = GameObject.Find("MapFinder(Clone)").GetComponent<MapFinder>().maps[GameObject.Find("MapFinder(Clone)").GetComponent<MapFinder>().mapNumber].GetComponent<Map>();
         string mPath = m.imageTexturePath;
 
         //Set name
@@ -110,12 +108,18 @@ public class Lobby : NetworkBehaviour
         gamePreview.texture = testTex;
 
         GameObject gameInfo = GameObject.Find("gameInfo");
+
         Owner.CmdSetName(gameInfo.GetComponent<GameInfo>().name);
-        //Owner.playerName = gameInfo.GetComponent<GameInfo>().name;
         if (gameInfo.GetComponent<GameInfo>().killLimit != 0 && gameInfo.GetComponent<GameInfo>().timeLimit != 0)
         {
-            gameManager.killLimit = gameInfo.GetComponent<GameInfo>().killLimit;
-            gameManager.timeLimit = gameInfo.GetComponent<GameInfo>().timeLimit;
+            Owner.killLimit = gameInfo.GetComponent<GameInfo>().killLimit;
+            Owner.timeLimit = gameInfo.GetComponent<GameInfo>().timeLimit;
+        }
+        else
+        {
+            //Find the host and use his instead
+            Owner.killLimit = GameObject.FindGameObjectsWithTag("Client")[0].GetComponent<Client>().killLimit;
+            Owner.timeLimit = GameObject.FindGameObjectsWithTag("Client")[0].GetComponent<Client>().timeLimit;
         }
         Destroy(gameInfo);
 
@@ -130,7 +134,7 @@ public class Lobby : NetworkBehaviour
     {
 
         //Check for initialisation
-        if(GameObject.Find("PersistentObject"))
+        if(GameObject.Find("MapFinder(Clone)") && initialised == false)
         {
             Init();
             initialised = true;

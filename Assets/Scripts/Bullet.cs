@@ -30,9 +30,10 @@ public class Bullet : NetworkBehaviour {
         }
 
         //Check if its hit a friendly, or another bullet
-        if (collision.gameObject.tag == "Bullet" || collision.gameObject.transform.parent.GetComponent<Client>().team == shooter.transform.parent.GetComponent<Client>().team)
+        if (collision.gameObject.tag == "Bullet" || collision.gameObject.transform.parent.GetComponent<Client>().team == shooter.transform.parent.GetComponent<Client>().team || collision.gameObject.GetComponent<Coin>())
         {
             Physics.IgnoreCollision(collision.collider, GetComponent<Collider>());
+            if(!collision.gameObject.GetComponent<Coin>())
             Destroy(this.gameObject);
             return;
         }

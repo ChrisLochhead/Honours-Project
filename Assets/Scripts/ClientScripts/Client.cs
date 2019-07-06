@@ -117,6 +117,16 @@ public class Client : NetworkBehaviour
     //Pause Menu
     public GameObject clientPauseMenu;
 
+
+    //For map loading if host
+    public bool mapSpawned = false;
+
+    //For managing the game locally
+    [SyncVar]
+    public int killLimit;
+    [SyncVar]
+    public float timeLimit;
+
     // Use this for initialization
     void Start()
     {
@@ -124,9 +134,10 @@ public class Client : NetworkBehaviour
         networkManager = NetworkManager.singleton;
 
         //For host to spawn the map for everyone else
-        if(GameObject.FindGameObjectsWithTag("Client").Length == 1)
+        if(GameObject.FindGameObjectsWithTag("Client").Length == 1 && mapSpawned == false)
         {
-            NetworkServer.Spawn(GameObject.Find("PersistentObject"));
+            NetworkServer.Spawn(GameObject.Find("MapFinder(Clone)"));
+            mapSpawned = true;
         }
 
         if (!isLocalPlayer)

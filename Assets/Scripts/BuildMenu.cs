@@ -56,6 +56,9 @@ public class BuildMenu : MonoBehaviour {
     Texture2D currentImage;
     public bool takingImage = false;
 
+    //MapLoader prefab
+    public GameObject mapFinderPrefab;
+
     // Use this for initialization
     void Start () {
         currentState = 0;
@@ -269,7 +272,7 @@ public class BuildMenu : MonoBehaviour {
         sr.Close();
         CancelSave();
 
-        GameObject.Find("PersistentObject").GetComponent<MapFinder>().FindFiles();
+        mapFinderPrefab.GetComponent<MapFinder>().FindFiles();
         errorMessage.SetActive(false);
     }
 
@@ -319,7 +322,7 @@ public class BuildMenu : MonoBehaviour {
 
 
 
-        List<GameObject> mapInfo = GameObject.Find("PersistentObject").GetComponent<MapFinder>().selectedMap.GetComponent<Map>().GetMapItems();
+        List<GameObject> mapInfo = mapFinderPrefab.GetComponent<MapFinder>().selectedMap.GetComponent<Map>().GetMapItems();
 
 
         for (int i = 0; i < mapInfo.Count; i++)

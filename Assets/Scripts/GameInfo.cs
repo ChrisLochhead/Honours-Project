@@ -5,8 +5,8 @@ using UnityEngine;
 public class GameInfo : MonoBehaviour {
 
     public string name;
-    public float timeLimit;
-    public int killLimit;
+    public float timeLimit = 0;
+    public int killLimit = 0;
 
     private void Awake()
     {

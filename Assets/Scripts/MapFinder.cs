@@ -47,16 +47,15 @@ public class MapFinder : NetworkBehaviour {
                         }
                         else if (lineIterator == 1)
                         {
-                            //map.GetComponent<Map>().setMapSize(new Vector2(int.Parse(lines[0]), int.Parse(lines[1])));
                             map.GetComponent<Map>().imageTexturePath = lines[0];
                         }
                         else
                         {
 
                             if (lines.Length > 3)
-                                map.GetComponent<Map>().addWallItem(int.Parse(lines[0]), float.Parse(lines[1]), float.Parse(lines[2]), float.Parse(lines[3]));
+                                map.GetComponent<Map>().addWallItem(int.Parse(lines[0]), float.Parse(lines[1]), float.Parse(lines[2]), float.Parse(lines[3]), map);
                             else
-                                map.GetComponent<Map>().addCoinItem(int.Parse(lines[0]), float.Parse(lines[1]), float.Parse(lines[2]));
+                                map.GetComponent<Map>().addCoinItem(int.Parse(lines[0]), float.Parse(lines[1]), float.Parse(lines[2]), map);
                         }
                         lineIterator++;
                     }
