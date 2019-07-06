@@ -2,6 +2,7 @@
 using UnityEngine.SceneManagement;
 using TMPro;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 public class ClientScoreBoard : NetworkBehaviour {
 
@@ -37,6 +38,8 @@ public class ClientScoreBoard : NetworkBehaviour {
 
     public Client Owner;
 
+    public Image background;
+
     //For the end of the game
     public bool ConditionSet = false;
     public GameObject ContinueButton;
@@ -63,6 +66,11 @@ public class ClientScoreBoard : NetworkBehaviour {
         winCondition.gameObject.SetActive(true);
         winCondition.text = "You Win!";
         ContinueButton.SetActive(true);
+
+        //Set to opaque
+        Color c = background.color;
+        c.a = 1;
+        background.color = c;
     }
 
     public void ClientLost()
@@ -72,6 +80,12 @@ public class ClientScoreBoard : NetworkBehaviour {
         winCondition.gameObject.SetActive(true);
         winCondition.text = "You Lose!";
         ContinueButton.SetActive(true);
+
+        //Set to opaque
+        Color c = background.color;
+        c.a = 1;
+        background.color = c;
+
     }
 
     public void CheckVictory()

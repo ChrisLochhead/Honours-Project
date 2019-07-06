@@ -21,6 +21,8 @@ public class GameMap : NetworkBehaviour {
     public GameObject teamFlag1;
     public GameObject teamFlag2;
 
+    public GameObject borderWall;
+
     // Use this for initialization
     void Start () {
         mapInfo = new List<GameObject>();
@@ -40,6 +42,13 @@ public class GameMap : NetworkBehaviour {
         Instantiate(ground, new Vector3(200, 200, 0), Quaternion.identity);
         Instantiate(ground, new Vector3(-200, -200, 0), Quaternion.identity);
         Instantiate(ground, new Vector3(-200, 200, 0), Quaternion.identity);
+
+        //Draw the border walls
+        Instantiate(borderWall, new Vector3(300, 0, -10), Quaternion.identity);
+        Instantiate(borderWall, new Vector3(-300, 0, -10), Quaternion.identity);
+        Instantiate(borderWall, new Vector3(0, -300, -10), Quaternion.identity * Quaternion.Euler(0,0,90));
+        Instantiate(borderWall, new Vector3(0, 300, -10), Quaternion.identity * Quaternion.Euler(0, 0, 90));
+
         //get the size and then draw the floor
         if (isServer)
         {

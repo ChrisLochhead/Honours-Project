@@ -30,6 +30,7 @@ public class MainMenu : NetworkBehaviour {
         //Set up networking
         networkManager = NetworkManager.singleton;
 
+
         if(networkManager.matchMaker == null)
         {
             networkManager.StartMatchMaker();

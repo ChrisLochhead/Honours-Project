@@ -216,8 +216,7 @@ MonoBehaviour:
   bronzeCoin: {fileID: 1193338027445560, guid: 810dde9e6a2a1c04b8f291eda3ead9d7, type: 2}
   teamFlag1: {fileID: 1059214415926398, guid: 18f9d6679c495334d80b22f48ac6e005, type: 2}
   teamFlag2: {fileID: 1118116294114014, guid: 780e0415441fbdd43aca455e2350c2af, type: 2}
-  team1Spawns: []
-  team2Spawns: []
+  borderWall: {fileID: 1404414174940142, guid: 9eb15e86cfe015d4db4017e1ebaf0ea8, type: 2}
 --- !u!4 &1040102045
 Transform:
   m_ObjectHideFlags: 0

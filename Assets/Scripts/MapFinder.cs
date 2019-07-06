@@ -77,18 +77,20 @@ public class MapFinder : NetworkBehaviour {
     // Update is called once per frame
     void Update () {
 
-            if (GameObject.Find("MapLoader"))
+        if (GameObject.Find("MapLoader"))
+        {
+            Dropdown tmp = GameObject.Find("MapLoader").GetComponent<Dropdown>();
+            if (listAdded == false)
             {
+                tmp.options.Clear();
 
-                if (listAdded == false)
-                {
-                GameObject.Find("MapLoader").GetComponent<Dropdown>().options.Clear();
+                tmp.options.Add(new Dropdown.OptionData() { text = "" });
 
                 for (int i = 0; i < maps.Count; i++)
-                        GameObject.Find("MapLoader").GetComponent<Dropdown>().options.Add(new Dropdown.OptionData() { text = maps[i].name });
+                    tmp.options.Add(new Dropdown.OptionData() { text = maps[i].name });
 
-                    listAdded = true;
-                }
+                listAdded = true;
+            }
 
             selectedMap = maps[GameObject.Find("MapLoader").GetComponent<Dropdown>().value];
             mapNumber = GameObject.Find("MapLoader").GetComponent<Dropdown>().value;
