@@ -59,6 +59,8 @@ public class BuildMenu : MonoBehaviour {
     //MapLoader prefab
     public GameObject mapFinderPrefab;
 
+    public GameObject mapFinder;
+
     // Use this for initialization
     void Start () {
         currentState = 0;
@@ -306,6 +308,19 @@ public class BuildMenu : MonoBehaviour {
 
     }
 
+
+    public void InitialiseMapFinder()
+    {
+        //Initialise prefab but dont add to network
+        mapFinder = (GameObject)Instantiate(mapFinderPrefab);
+       
+    }
+
+    public void DeleteMapFinder()
+    {
+        Destroy(GameObject.Find("MapFinder(Clone)"));
+    }
+
     public void LoadMap()
     {
 
@@ -322,7 +337,7 @@ public class BuildMenu : MonoBehaviour {
 
 
 
-        List<GameObject> mapInfo = mapFinderPrefab.GetComponent<MapFinder>().selectedMap.GetComponent<Map>().GetMapItems();
+        List<GameObject> mapInfo = mapFinder.GetComponent<MapFinder>().selectedMap.GetComponent<Map>().GetMapItems();
 
 
         for (int i = 0; i < mapInfo.Count; i++)

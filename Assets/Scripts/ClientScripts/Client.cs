@@ -461,9 +461,21 @@ public class Client : NetworkBehaviour
 
     public void LeaveGame()
     {
-        MatchInfo matchInfo = networkManager.matchInfo;
-        networkManager.matchMaker.DropConnection(matchInfo.networkId, matchInfo.nodeId, 0, networkManager.OnDropConnection);
-        networkManager.StopHost();
+        //If in a multiplayer game
+        if (networkManager.matchMaker != null)
+        {
+            MatchInfo matchInfo = networkManager.matchInfo;
+            networkManager.matchMaker.DropConnection(matchInfo.networkId, matchInfo.nodeId, 0, networkManager.OnDropConnection);
+            networkManager.StopHost();
+        }
+        else
+        {
+            //In a LAN game
+            if (isServer && isLocalPlayer)
+                networkManager.StopHost();
+            else
+                networkManager.StopClient();
+        }
     }
 
     public void Respawn()
