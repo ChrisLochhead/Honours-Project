@@ -9,11 +9,10 @@ public class CameraMovement : MonoBehaviour {
     public Vector2 panLimit;
     public Vector2 zoomLimit;
 
-    public bool canMove = false;
+    public bool canMove;
 
 	// Use this for initialization
 	void Start () {
-        canMove = false;
 	}
 	
     public void SetMovement(bool m)

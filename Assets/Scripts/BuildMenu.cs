@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using TMPro;
 using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
@@ -62,11 +62,12 @@ public class BuildMenu : MonoBehaviour {
 
     //For controlling menus in code
     public GameObject loadMenu;
+    public GameObject saveMenu;
 
     // Use this for initialization
     void Start () {
         currentState = 0;
-        Camera.main.GetComponent<CameraMovement>().canMove = true;
+        //Camera.main.GetComponent<CameraMovement>().canMove = true;
     }
 
 	// Update is called once per frame
@@ -78,10 +79,6 @@ public class BuildMenu : MonoBehaviour {
         {
             TakeScreenShot();
         }
-
-        //Make sure camera can move at all times
-        if (Camera.main.GetComponent<CameraMovement>().canMove == false)
-            Camera.main.GetComponent<CameraMovement>().canMove = true;
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -199,6 +196,15 @@ public class BuildMenu : MonoBehaviour {
 
     public void ExitButtonPressed()
     {
+        //Clear the scene
+        Destroy(GameObject.Find("CurrentMapState"));
+
+        for (int i = 0; i < mapItems.Count; i++)
+        {
+            Destroy(mapItems[i]);
+        }
+
+        //Return to the main menu
         SceneManager.LoadScene(0);
     }
 
@@ -238,7 +244,36 @@ public class BuildMenu : MonoBehaviour {
     {
         if(mapItems.Count == 0)
         {
+            errorMessage.GetComponent<TextMeshProUGUI>().text = "Cannot save an empty map.";
             errorMessage.SetActive(true);
+            return;
+        }
+
+        if(currentImage == null)
+        {
+            errorMessage.GetComponent<TextMeshProUGUI>().text = "You must take a screenshot for this map.";
+            errorMessage.SetActive(true);
+            return;
+        }
+
+        //Cycle through objects and make sure at least one of each is a team spawn object.
+        int blues = 0;
+        int reds = 0;
+        for(int i = 0; i < mapItems.Count; i ++)
+        {
+            if(FindType(mapItems[i]) == 7)
+            {
+                reds++;
+            }
+            else if (FindType(mapItems[i]) == 8)
+            {
+                blues++;
+            }
+        }
+
+        if (blues == 0 || reds == 0)
+        {
+            errorMessage.GetComponent<TextMeshProUGUI>().text = "You need at least one spawn point for each team.";
             return;
         }
 
@@ -301,8 +336,8 @@ public class BuildMenu : MonoBehaviour {
     public void CancelSave()
     {
        saveField.text = "";
-       GameObject.Find("Save Menu").SetActive(false);
-
+       errorMessage.SetActive(false);
+       saveMenu.SetActive(false);
     }
 
 
