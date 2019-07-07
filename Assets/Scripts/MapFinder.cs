@@ -98,8 +98,11 @@ public class MapFinder : NetworkBehaviour {
                 listAdded = true;
             }
 
-            selectedMap = maps[GameObject.Find("MapLoader").GetComponent<Dropdown>().value];
-            mapNumber = GameObject.Find("MapLoader").GetComponent<Dropdown>().value;
+            if (GameObject.Find("MapLoader").GetComponent<Dropdown>().value != -1)
+            {
+                selectedMap = maps[GameObject.Find("MapLoader").GetComponent<Dropdown>().value];
+                mapNumber = GameObject.Find("MapLoader").GetComponent<Dropdown>().value;
+            }
         }
     }
 

@@ -15,7 +15,7 @@ public class Lobby : NetworkBehaviour
 
     public GameObject[] playerTags;
 
-    private int MinNumOfPlayers = 1;
+    private int MinNumOfPlayers = 2;
 
     public float timeTillGameStart = 10.0f;
 
@@ -112,7 +112,7 @@ public class Lobby : NetworkBehaviour
         Owner.CmdSetName(gameInfo.GetComponent<GameInfo>().name);
         if (gameInfo.GetComponent<GameInfo>().killLimit != 0 && gameInfo.GetComponent<GameInfo>().timeLimit != 0)
         {
-            Owner.killLimit = gameInfo.GetComponent<GameInfo>().killLimit;
+            Owner.killLimit = 1;// gameInfo.GetComponent<GameInfo>().killLimit;
             Owner.timeLimit = gameInfo.GetComponent<GameInfo>().timeLimit;
         }
         else

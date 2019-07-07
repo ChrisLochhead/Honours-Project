@@ -58,8 +58,10 @@ public class BuildMenu : MonoBehaviour {
 
     //MapLoader prefab
     public GameObject mapFinderPrefab;
-
     public GameObject mapFinder;
+
+    //For controlling menus in code
+    public GameObject loadMenu;
 
     // Use this for initialization
     void Start () {
@@ -198,11 +200,6 @@ public class BuildMenu : MonoBehaviour {
     public void ExitButtonPressed()
     {
         SceneManager.LoadScene(0);
-    }
-
-    public void LoadButtonPressed()
-    {
-
     }
 
     public int FindType(GameObject gameObj)
@@ -394,5 +391,7 @@ public class BuildMenu : MonoBehaviour {
             tmp.transform.parent = newState.transform;
             mapItems.Add(tmp);
         }
+
+        loadMenu.SetActive(false);
     }
 }
