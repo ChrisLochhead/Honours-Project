@@ -37,6 +37,8 @@ public class BuildMenu : MonoBehaviour {
 
     public bool isSaving = false;
 
+    Camera camera;
+
     //templates
     public GameObject redWall;
     public GameObject orangeWall;
@@ -50,11 +52,12 @@ public class BuildMenu : MonoBehaviour {
     public GameObject teamFlag1;
     public GameObject teamFlag2;
 
-    public GameObject errorMessage;
+    public TextMeshProUGUI errorMessage;
 
     //For taking screenshots
-    Texture2D currentImage;
+    private Texture2D currentImage;
     public bool takingImage = false;
+    private bool imageTaken = false;
 
     //MapLoader prefab
     public GameObject mapFinderPrefab;
@@ -64,18 +67,32 @@ public class BuildMenu : MonoBehaviour {
     public GameObject loadMenu;
     public GameObject saveMenu;
 
+
+    //For snapshot feedback
+    public AudioClip snapShotSound;
+
+    public bool shutterEffectActive = false;
+    public GameObject topShutter;
+    public GameObject bottomShutter;
+
     // Use this for initialization
     void Start () {
         currentState = 0;
-        //Camera.main.GetComponent<CameraMovement>().canMove = true;
+        camera = Camera.main;
     }
 
+    
 	// Update is called once per frame
 	void Update () {
 
+        if(shutterEffectActive)
+        {
+            ShutterEffect();
+        }
+        Debug.Log(topShutter.GetComponent<RectTransform>().position.y);
 
         //Check if taking a screenshot
-        if(Input.GetKeyDown("c"))
+        if (Input.GetKeyDown("c") && !shutterEffectActive)
         {
             TakeScreenShot();
         }
@@ -240,28 +257,21 @@ public class BuildMenu : MonoBehaviour {
         else
             return 0;
     }
-    public void SaveButton()
+
+    private void TriggerSaveError(string t)
     {
-        if(mapItems.Count == 0)
-        {
-            errorMessage.GetComponent<TextMeshProUGUI>().text = "Cannot save an empty map.";
-            errorMessage.SetActive(true);
-            return;
-        }
+        errorMessage.text = t;
+        errorMessage.gameObject.SetActive(true);
+    }
 
-        if(currentImage == null)
-        {
-            errorMessage.GetComponent<TextMeshProUGUI>().text = "You must take a screenshot for this map.";
-            errorMessage.SetActive(true);
-            return;
-        }
-
+    private bool CheckSpawnPoints()
+    {
         //Cycle through objects and make sure at least one of each is a team spawn object.
         int blues = 0;
         int reds = 0;
-        for(int i = 0; i < mapItems.Count; i ++)
+        for (int i = 0; i < mapItems.Count; i++)
         {
-            if(FindType(mapItems[i]) == 7)
+            if (FindType(mapItems[i]) == 7)
             {
                 reds++;
             }
@@ -272,8 +282,34 @@ public class BuildMenu : MonoBehaviour {
         }
 
         if (blues == 0 || reds == 0)
+            return false;
+        else
+            return true;
+    }
+
+    public void SaveButton()
+    {
+        if(saveField.text == "")
         {
-            errorMessage.GetComponent<TextMeshProUGUI>().text = "You need at least one spawn point for each team.";
+            TriggerSaveError("Please enter a name for your map");
+            return;
+        }
+
+        if(mapItems.Count == 0)
+        {
+            TriggerSaveError("Cannot save an empty map.");
+            return;
+        }
+
+        if(imageTaken == false)
+        {
+            TriggerSaveError("You must take a screenshot for this map.");
+            return;
+        }
+
+        if (!CheckSpawnPoints())
+        {
+            TriggerSaveError("You need at least one spawn point for each team.");
             return;
         }
 
@@ -307,13 +343,60 @@ public class BuildMenu : MonoBehaviour {
         CancelSave();
 
         mapFinderPrefab.GetComponent<MapFinder>().FindFiles();
-        errorMessage.SetActive(false);
+        errorMessage.gameObject.SetActive(false);
+        camera.GetComponent<CameraMovement>().SetMovement(true);
     }
 
-    public void TakeScreenShot()
+    private void TakeScreenShot()
     {
         Camera.main.targetTexture = RenderTexture.GetTemporary(Screen.width, Screen.height, 16);
         takingImage = true;
+        shutterEffectActive = true;
+        bottomShutter.GetComponent<AudioSource>().Play();
+    }
+
+    private void ShutterEffect()
+    {
+        bool tsClosed = false;
+        bool bsClosed = false;
+        if (topShutter.GetComponent<RectTransform>().position.y > 115.0f)
+        {
+            Vector3 tmp = topShutter.GetComponent<RectTransform>().position;
+            tmp.y -= 25;
+            topShutter.GetComponent<RectTransform>().position = tmp;
+        }
+        else
+        {
+            tsClosed = true;
+        }
+
+        if (bottomShutter.GetComponent<RectTransform>().position.y < 104.0f)
+        {
+            Vector3 tmp = bottomShutter.GetComponent<RectTransform>().position;
+            tmp.y += 25;
+            bottomShutter.GetComponent<RectTransform>().position = tmp;
+        }
+        else
+        {
+            bsClosed = true;
+        }
+
+        if (bsClosed || tsClosed)
+        {
+            //Restore
+            Vector3 topTmp = topShutter.GetComponent<RectTransform>().position;
+            topTmp.y = 561;
+            topShutter.GetComponent<RectTransform>().position = topTmp;
+
+            //Restore
+            Vector3 bottomTmp = bottomShutter.GetComponent<RectTransform>().position;
+            bottomTmp.y = -140;
+            bottomShutter.GetComponent<RectTransform>().position = bottomTmp;
+
+            //And then end routine
+            shutterEffectActive = false;
+            
+        }
     }
 
     private void OnPostRender()
@@ -322,21 +405,19 @@ public class BuildMenu : MonoBehaviour {
         if (takingImage)
         {
             RenderTexture renderTex = Camera.main.targetTexture;
-
             currentImage = new Texture2D(renderTex.width, renderTex.height, TextureFormat.ARGB32, false);
             Rect tmpRect = new Rect(0, 0, renderTex.width, renderTex.height);
             currentImage.ReadPixels(tmpRect, 0, 0);
-            Debug.Log("here");
             Camera.main.targetTexture = null;
-            Debug.Log("and here");
             takingImage = false;
+            imageTaken = true;
         }
     }
 
     public void CancelSave()
     {
        saveField.text = "";
-       errorMessage.SetActive(false);
+       errorMessage.gameObject.SetActive(false);
        saveMenu.SetActive(false);
     }
 
