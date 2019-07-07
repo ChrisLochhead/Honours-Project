@@ -12,6 +12,11 @@ public class MapFinder : NetworkBehaviour {
                                  // Use this for initialization
     void Start () {
         FindFiles();   
+
+        if(GameObject.Find("MainMenu"))
+        {
+            isMainMenu = true;
+        }
     }
 
     public void FindFiles()
@@ -84,6 +89,7 @@ public class MapFinder : NetworkBehaviour {
             {
                 tmp.options.Clear();
 
+                if(isMainMenu)
                 tmp.options.Add(new Dropdown.OptionData() { text = "" });
 
                 for (int i = 0; i < maps.Count; i++)
@@ -97,6 +103,7 @@ public class MapFinder : NetworkBehaviour {
         }
     }
 
+    public bool isMainMenu = false;
     public bool spawned = false;
 
     protected DirectoryInfo path = null;
