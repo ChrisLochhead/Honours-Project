@@ -11333,7 +11333,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1761941588893708}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 1392445389, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
@@ -11349,7 +11349,7 @@ MonoBehaviour:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.6981132, g: 0.68164825, b: 0.68164825, a: 1}
     m_PressedColor: {r: 0.4056604, g: 0.38843897, b: 0.38843897, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_DisabledColor: {r: 0.3679245, g: 0.3679245, b: 0.3679245, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -13286,8 +13286,6 @@ MonoBehaviour:
   - {fileID: 20680992628442072}
   - {fileID: 223509053943130352}
   - {fileID: 81428470592699848}
-  - {fileID: 20548905519410196}
-  - {fileID: 223142214204479288}
   lobbyCam: {fileID: 20548905519410196}
   player: {fileID: 1806145432638122}
   isLocal: 0
@@ -13320,6 +13318,7 @@ MonoBehaviour:
   characterModel: {fileID: 1627814130032520}
   BlueTeamMaterial: {fileID: 2100000, guid: c3067a8fe3d78cb43a98fa75e599d702, type: 2}
   RedTeamMaterial: {fileID: 2100000, guid: 663fab50bf0e215469884163d915f084, type: 2}
+  teamMaterial: 0
   Paused: 1
   GameStarted: 0
   clientPauseMenu: {fileID: 1263437199995080}
@@ -14221,9 +14220,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 114648311287741478}
+        m_MethodName: LeaveGame
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -14231,17 +14230,6 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 1525181493759908}
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null

@@ -34,6 +34,7 @@ public class Lobby : NetworkBehaviour
 
     private void Start()
     {
+        StartButton.interactable = false;
         ////Get the preview image path
         ////Map m = GameObject.Find("PersistentObject").GetComponent<MapFinder>().selectedMap.GetComponent<Map>();
         //Map m = GameObject.Find("PersistentObject").GetComponent<MapFinder>().maps[GameObject.Find("PersistentObject").GetComponent<MapFinder>().mapNumber].GetComponent<Map>();
@@ -91,8 +92,10 @@ public class Lobby : NetworkBehaviour
         }
     }
 
-    private void Init()
+
+    public void Init()
     {
+
         //Get the preview image path
         //Map m = GameObject.Find("PersistentObject").GetComponent<MapFinder>().selectedMap.GetComponent<Map>();
         Map m = GameObject.Find("MapFinder(Clone)").GetComponent<MapFinder>().maps[GameObject.Find("MapFinder(Clone)").GetComponent<MapFinder>().mapNumber].GetComponent<Map>();
@@ -108,20 +111,23 @@ public class Lobby : NetworkBehaviour
         gamePreview.texture = testTex;
 
         GameObject gameInfo = GameObject.Find("gameInfo");
+        if (gameInfo)
+        {
+            Owner.CmdSetName(gameInfo.GetComponent<GameInfo>().name);
+            if (gameInfo.GetComponent<GameInfo>().killLimit != 0 && gameInfo.GetComponent<GameInfo>().timeLimit != 0)
+            {
+                Owner.killLimit = 1;// gameInfo.GetComponent<GameInfo>().killLimit;
+                Owner.timeLimit = gameInfo.GetComponent<GameInfo>().timeLimit;
+            }
+            else
+            {
+                //Find the host and use his instead
+                Owner.killLimit = GameObject.FindGameObjectsWithTag("Client")[0].GetComponent<Client>().killLimit;
+                Owner.timeLimit = GameObject.FindGameObjectsWithTag("Client")[0].GetComponent<Client>().timeLimit;
+            }
 
-        Owner.CmdSetName(gameInfo.GetComponent<GameInfo>().name);
-        if (gameInfo.GetComponent<GameInfo>().killLimit != 0 && gameInfo.GetComponent<GameInfo>().timeLimit != 0)
-        {
-            Owner.killLimit = 1;// gameInfo.GetComponent<GameInfo>().killLimit;
-            Owner.timeLimit = gameInfo.GetComponent<GameInfo>().timeLimit;
+            //Destroy(gameInfo);
         }
-        else
-        {
-            //Find the host and use his instead
-            Owner.killLimit = GameObject.FindGameObjectsWithTag("Client")[0].GetComponent<Client>().killLimit;
-            Owner.timeLimit = GameObject.FindGameObjectsWithTag("Client")[0].GetComponent<Client>().timeLimit;
-        }
-        Destroy(gameInfo);
 
         //Check if game already begun on host
         if (GameObject.FindGameObjectsWithTag("Client")[0].GetComponent<Client>().GameStarted == true)
@@ -148,7 +154,7 @@ public class Lobby : NetworkBehaviour
         if (GameObject.FindGameObjectsWithTag("Client")[0].GetComponent<Client>().GameStarted == true)
         {
             timeTillGameStart = 0.0f;
-            StartButton.enabled = true;
+            StartButton.interactable = true;
             status.text = "Press start to join the game";
         }
 
@@ -170,7 +176,7 @@ public class Lobby : NetworkBehaviour
                     timeTillGameStart = 10.0f;
                 }
 
-                if (timeTillGameStart <= 0 && StartButton.enabled == false)
+                if (timeTillGameStart <= 0 && StartButton.interactable == false)
                 {
                     status.text = "Press start to join the game";
 

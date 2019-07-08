@@ -519,10 +519,10 @@ public class Client : NetworkBehaviour
         }
     }
 
-    public void exitGame()
-    {
-        NetworkManager.singleton.StopClient();
-    }
+    //public void exitGame()
+    //{
+    //    NetworkManager.singleton.StopClient();
+    //}
 
 
     private void FixedUpdate()

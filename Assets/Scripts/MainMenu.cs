@@ -27,6 +27,9 @@ public class MainMenu : NetworkBehaviour {
 
     private void Start()
     {
+
+        InitialiseMapFinder();
+
         //Set up networking
         networkManager = NetworkManager.singleton;
 
