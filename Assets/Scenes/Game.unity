@@ -206,7 +206,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a68703558b413b54599bbc920454e0c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ground: {fileID: 1199434456073256, guid: 7ae6c8b685404374290ff4100f217bea, type: 2}
+  ground: {fileID: 1422557617530908, guid: 0ce840963fbbbdb49850ec483dcf90a2, type: 2}
   redWall: {fileID: 1561674524923140, guid: db23f0c00f9d0494584a23bed5c6137b, type: 2}
   orangeWall: {fileID: 1593998960162694, guid: cd9c856e2c92ace4da2e63976947fa6b, type: 2}
   greenWall: {fileID: 1481424459068890, guid: 7f383559bb1acf944afa66173f4418d5, type: 2}
@@ -216,7 +216,7 @@ MonoBehaviour:
   bronzeCoin: {fileID: 1193338027445560, guid: 810dde9e6a2a1c04b8f291eda3ead9d7, type: 2}
   teamFlag1: {fileID: 1059214415926398, guid: 18f9d6679c495334d80b22f48ac6e005, type: 2}
   teamFlag2: {fileID: 1118116294114014, guid: 780e0415441fbdd43aca455e2350c2af, type: 2}
-  borderWall: {fileID: 1404414174940142, guid: 9eb15e86cfe015d4db4017e1ebaf0ea8, type: 2}
+  borderWall: {fileID: 1003699805990490, guid: c48bf626ebe01b14dbe4c9b692264bf4, type: 2}
 --- !u!4 &1040102045
 Transform:
   m_ObjectHideFlags: 0
