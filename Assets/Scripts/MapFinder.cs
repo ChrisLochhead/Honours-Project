@@ -1,76 +1,103 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
 using System.Text.RegularExpressions;
-using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
 
 public class MapFinder : NetworkBehaviour {
 
-                                 // Use this for initialization
-    void Start () {
-        FindFiles();   
+    //References to each scenes maploaders
+    public GameObject[] mapLoaderDropdowns;
+    private int currentNoOfDropdowns = 0;
 
-        if(GameObject.Find("MainMenu"))
-        {
-            isMainMenu = true;
-        }
+    //For reading the files
+    protected DirectoryInfo path = null;
+    protected StreamReader reader = null;
+    protected string text = " ";
+
+    //List to contain the maps that have been loaded
+    public List<GameObject> maps;
+    //For each map as it is loaded
+    public GameObject map;
+
+    //So clients can determine which map to load
+    [SyncVar]
+    public int mapNumber = 0;
+
+    //Reference for the currently selected map
+    public GameObject selectedMap;
+
+    void Start () {
+        //Initialise existing maps
+        FindFiles();
+
     }
 
     public void FindFiles()
     {
-        path = new DirectoryInfo("D:/repos/Honours Project/Code/Honours-Project/Assets/Maps");
+        //Get the path to the map folder
+        path = new DirectoryInfo(Application.dataPath + "/Maps");
+        //Get all .txt files to avoid the .meta files
         FileInfo[] info = path.GetFiles("*.txt");
-        int fileIterator = 0;
 
-        selectedMap.AddComponent<Map>();
+        //Initialise a list of maps
         maps = new List<GameObject>();
 
+        //Iterate through each file
         foreach (FileInfo f in info)
         {
-
+            //Initialise a new map
             map = new GameObject();
             map.transform.parent = this.transform;
             map.AddComponent<Map>();
 
+            //Record which line is being read
             int lineIterator = 0;
+
+            //Open the file
             reader = f.OpenText();
             text = "";
+
+            //While file has a valid line
             while (text != null)
             {
+                //Read the line into a text object
                 text = reader.ReadLine();
                 if (text != null)
                 {
+                    //Split the line into an array of strings, seperated by ","
                     string[] lines = Regex.Split(text, ",");
                     if (lines != null)
                     {
+                        //If the first line, assign this line as the name
                         if (lineIterator == 0)
                         {
                             map.name = lines[0];
                         }
                         else if (lineIterator == 1)
                         {
+                            //If the second line, this is the path to the texture
                             map.GetComponent<Map>().imageTexturePath = lines[0];
                         }
                         else
                         {
-
+                            //The rest will either be walls or coins (or spawn points, represented by coins)
                             if (lines.Length > 3)
                                 map.GetComponent<Map>().addWallItem(int.Parse(lines[0]), float.Parse(lines[1]), float.Parse(lines[2]), float.Parse(lines[3]), map);
                             else
                                 map.GetComponent<Map>().addCoinItem(int.Parse(lines[0]), float.Parse(lines[1]), float.Parse(lines[2]), map);
                         }
+                        //Iterate through the lines
                         lineIterator++;
                     }
                 }
             }
-
+            //Once the file is finished, add the map to the list
             maps.Add(map);
-            fileIterator++;
+            Debug.Log(map.GetComponent<Map>().GetMapItems().Count);
+            //Close the reader
             reader.Close();
-            listAdded = false;
         }
     }
 
@@ -82,44 +109,29 @@ public class MapFinder : NetworkBehaviour {
     // Update is called once per frame
     void Update () {
 
-        if (GameObject.Find("MapLoader"))
+        //Find this scenes map loaders
+        mapLoaderDropdowns = GameObject.FindGameObjectsWithTag("MapLoader");
+        if (mapLoaderDropdowns.Length > 0 && currentNoOfDropdowns != mapLoaderDropdowns.Length)
         {
-            Dropdown tmp = GameObject.Find("MapLoader").GetComponent<Dropdown>();
-            if (listAdded == false)
+            Debug.Log("stage 2");
+            foreach (GameObject d in mapLoaderDropdowns)
             {
+                Dropdown tmp = d.GetComponent<Dropdown>();
+                Debug.Log("stage 3");
+                //Clear the list
                 tmp.options.Clear();
 
-                if(isMainMenu)
-                tmp.options.Add(new Dropdown.OptionData() { text = "" });
-
+                //Add the list in
                 for (int i = 0; i < maps.Count; i++)
                     tmp.options.Add(new Dropdown.OptionData() { text = maps[i].name });
 
-                listAdded = true;
-            }
-
-            if (GameObject.Find("MapLoader").GetComponent<Dropdown>().value != -1)
-            {
-                selectedMap = maps[GameObject.Find("MapLoader").GetComponent<Dropdown>().value];
-                mapNumber = GameObject.Find("MapLoader").GetComponent<Dropdown>().value;
             }
         }
+        currentNoOfDropdowns = mapLoaderDropdowns.Length;
+        if (mapLoaderDropdowns.Length > 0)
+        {
+            selectedMap = maps[mapLoaderDropdowns[0].GetComponent<Dropdown>().value];
+            mapNumber = mapLoaderDropdowns[0].GetComponent<Dropdown>().value;
+        }
     }
-
-    public bool isMainMenu = false;
-    public bool spawned = false;
-
-    protected DirectoryInfo path = null;
-    protected StreamReader reader = null;
-    protected string text = " "; // assigned to allow first line to be read below
-
-    public List<GameObject> maps;
-    public GameObject map;
-
-    [SyncVar]
-    public int mapNumber = 0;
-
-    public GameObject selectedMap;
-
-    protected bool listAdded;
 }

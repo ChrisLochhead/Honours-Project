@@ -833,9 +833,9 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 502814136}
-  - {fileID: 815918766}
   - {fileID: 392375899}
   - {fileID: 2063266248}
+  - {fileID: 815918766}
   m_Father: {fileID: 743672328}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1280,7 +1280,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 325564845}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2842,7 +2842,7 @@ RectTransform:
   m_Children:
   - {fileID: 977523419}
   m_Father: {fileID: 325564845}
-  m_RootOrder: 1
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -4115,7 +4115,8 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 114701404347703254, guid: c48bf626ebe01b14dbe4c9b692264bf4, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: c48bf626ebe01b14dbe4c9b692264bf4, type: 2}
   m_IsPrefabParent: 0
 --- !u!1 &1081743195
@@ -4242,17 +4243,6 @@ MonoBehaviour:
       - m_Target: {fileID: 1209184293}
         m_MethodName: SetMovement
         m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1209184295}
-        m_MethodName: InitialiseMapFinder
-        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -4517,7 +4507,7 @@ MonoBehaviour:
   bronzeCoin: {fileID: 1684810227353058, guid: b018276685be4284aa010219e245fd24, type: 2}
   teamFlag1: {fileID: 1607663934289496, guid: fea650be54fe8ae44ae02a807dc2c6e0, type: 2}
   teamFlag2: {fileID: 1845099429739678, guid: 47670b887ea58144db079ec5e540d2b1, type: 2}
-  errorMessage: {fileID: 0}
+  errorMessage: {fileID: 1369353779}
   takingImage: 0
   mapFinderPrefab: {fileID: 1504494890444854, guid: c08537cbfd8a1384a946a0b2e7e77418,
     type: 2}
@@ -5800,7 +5790,8 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 114946762529838946, guid: 0ce840963fbbbdb49850ec483dcf90a2, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 0ce840963fbbbdb49850ec483dcf90a2, type: 2}
   m_IsPrefabParent: 0
 --- !u!1 &1630695484
@@ -6682,7 +6673,7 @@ GameObject:
   - component: {fileID: 1944450666}
   m_Layer: 0
   m_Name: MapLoader
-  m_TagString: Untagged
+  m_TagString: MapLoader
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7435,7 +7426,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 325564845}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}

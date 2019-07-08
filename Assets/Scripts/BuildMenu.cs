@@ -6,8 +6,6 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
-
-
 public class BuildMenu : MonoBehaviour {
 
     public List<GameObject> mapItems = new List<GameObject>();
@@ -79,6 +77,9 @@ public class BuildMenu : MonoBehaviour {
     void Start () {
         currentState = 0;
         camera = Camera.main;
+
+        InitialiseMapFinder();
+
     }
 
     
@@ -112,8 +113,7 @@ public class BuildMenu : MonoBehaviour {
                 {
                     dragObjectModel = Instantiate(objectToDrag.GetComponent<Buildbutton>().correspondingObject);
                     dragObjectModel.tag = "draggable";
-                    dragObjectModel.GetComponent<mapItem>().listPlace = mapItems.Count;
-                    dragObjectModel.GetComponent<mapItem>().type = dragObjectModel.name;
+                    dragObjectModel.GetComponent<MapItem>().listPlace = mapItems.Count;
                     mapItems.Add(dragObjectModel);
                 }
                 else
@@ -136,7 +136,7 @@ public class BuildMenu : MonoBehaviour {
             }
             if (Input.GetKeyDown("t"))
             {
-                mapItems.RemoveAt(dragObjectModel.GetComponent<mapItem>().listPlace);
+                mapItems.RemoveAt(dragObjectModel.GetComponent<MapItem>().listPlace);
                 Destroy(dragObjectModel);
                 dragObjectModel = null;
                 objectToDrag = null;
@@ -215,6 +215,7 @@ public class BuildMenu : MonoBehaviour {
     {
         //Clear the scene
         Destroy(GameObject.Find("CurrentMapState"));
+        Destroy(GameObject.Find("MapFinder(Clone)"));
 
         for (int i = 0; i < mapItems.Count; i++)
         {

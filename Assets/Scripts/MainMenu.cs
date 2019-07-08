@@ -215,6 +215,7 @@ public class MainMenu : NetworkBehaviour {
 
     public void BuildButton()
     {
+        Destroy(GameObject.Find("MapFinder(Clone)"));
         SceneManager.LoadScene(2);
     }
 

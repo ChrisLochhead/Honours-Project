@@ -20,9 +20,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4552040583735602}
   - component: {fileID: 114369332491688698}
-  - component: {fileID: 114409916122369010}
-  - component: {fileID: 114971999437084176}
-  - component: {fileID: 114530799579857030}
   m_Layer: 0
   m_Name: SelectedMap
   m_TagString: Untagged
@@ -128,18 +125,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   imageTexturePath: 
---- !u!114 &114409916122369010
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1013154810897938}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70fc1c3ee596b2e4f844cc3a937a51d4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  imageTexturePath: 
 --- !u!114 &114454329962495560
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -151,8 +136,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8733acde6edf9584aa349db055245cae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isMainMenu: 0
-  spawned: 1
+  mapLoaderDropdowns: []
   maps:
   - {fileID: 0}
   - {fileID: 0}
@@ -160,18 +144,6 @@ MonoBehaviour:
   map: {fileID: 0}
   mapNumber: 0
   selectedMap: {fileID: 1013154810897938}
---- !u!114 &114530799579857030
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1013154810897938}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70fc1c3ee596b2e4f844cc3a937a51d4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  imageTexturePath: 
 --- !u!114 &114571349151596496
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -204,15 +176,3 @@ MonoBehaviour:
     i15: 24
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
---- !u!114 &114971999437084176
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1013154810897938}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70fc1c3ee596b2e4f844cc3a937a51d4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  imageTexturePath: 
