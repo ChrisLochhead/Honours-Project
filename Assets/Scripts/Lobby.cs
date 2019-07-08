@@ -6,53 +6,55 @@ using System.IO;
 
 public class Lobby : NetworkBehaviour
 {
-
-    [SyncVar] public int NumberOfPlayers = 0;
-
+    //Player numbers
     private int currentNumberOfPlayers = 0;
-
-    public GameObject[] playerTags;
-
     private int MinNumOfPlayers = 2;
 
+    //Player names
+    public GameObject[] playerTags;
+
+    //Lobby timer
     public float timeTillGameStart = 10.0f;
 
+    //Status and map name
     public TextMeshProUGUI status;
     public TextMeshProUGUI mapName;
 
+    //Reference to the lobbies owner
     public Client Owner;
 
+    //For detecting when the game has started
     public bool lobbyFinished = false;
 
+    //References to lobby start button and map image
     public Button StartButton;
-
     public RawImage gamePreview;
 
+    //To check if lobby has been initialised
     public bool initialised = false;
 
-    private void Start()
+    private void RefreshLobby()
     {
-        StartButton.interactable = false;
-    }
-
-    public void RefreshLobby()
-    {
+        //Reset player count
         currentNumberOfPlayers = 0;
+
+        //Cycle through all present clients
         foreach (GameObject g in GameObject.FindGameObjectsWithTag("Client"))
         {
-            playerTags[NumberOfPlayers].GetComponentInChildren<TextMeshProUGUI>().text = g.GetComponent<Client>().playerName;
-            NumberOfPlayers++;
+            //Add their names to the list
+            playerTags[currentNumberOfPlayers].GetComponentInChildren<TextMeshProUGUI>().text = g.GetComponent<Client>().playerName;
             currentNumberOfPlayers++;
         }
 
-        for (int i = NumberOfPlayers; i < playerTags.Length; i++)
+        //Clear all the unused lobby spaces
+        for (int i = currentNumberOfPlayers; i < playerTags.Length; i++)
         {
             playerTags[i].GetComponentInChildren<TextMeshProUGUI>().text = "";
         }
     }
 
 
-    public void Init()
+    private void Init()
     {
 
         //Get the preview image path
@@ -94,8 +96,12 @@ public class Lobby : NetworkBehaviour
             status.text = "Press start to join the game";
         }
     }
+
     private void Update()
     {
+        //Dont update if game has begun
+        if (initialised && lobbyFinished)
+            return;
 
         //Check for initialisation
         if(GameObject.Find("MapFinder(Clone)") && initialised == false)
@@ -104,24 +110,24 @@ public class Lobby : NetworkBehaviour
             initialised = true;
         }
 
+        //Update once initialised
         if (initialised) { 
         status.text = "Game will begin in " + ((int)timeTillGameStart).ToString() + " seconds";
 
 
             if (lobbyFinished == false)
             {
-                NumberOfPlayers = 0;
-
-                GameObject[] clients = GameObject.FindGameObjectsWithTag("Client");
+                //Update the lobby
                 RefreshLobby();
 
-                //Timer
+                //If there is enough players to start, decrement the timer
                 if (currentNumberOfPlayers >= MinNumOfPlayers)
                 {
                     timeTillGameStart -= Time.deltaTime;
                 }
                 else
                 {
+                    //if someone has left, reset the timer 
                     status.text = "Looking for " + (MinNumOfPlayers - currentNumberOfPlayers) + " more players";
                     timeTillGameStart = 10.0f;
                 }
@@ -143,9 +149,8 @@ public class Lobby : NetworkBehaviour
                     StartButton.interactable = true;
                     status.text = "Press start to join the game";
                     lobbyFinished = true;
-                }//Otherwise if the game hasn't yet started
+                }
             }
         }
     }
-
 }
