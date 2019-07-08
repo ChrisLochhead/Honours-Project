@@ -11,10 +11,6 @@ public class CameraMovement : MonoBehaviour {
 
     public bool canMove;
 
-	// Use this for initialization
-	void Start () {
-	}
-	
     public void SetMovement(bool m)
     {
         canMove = m;
