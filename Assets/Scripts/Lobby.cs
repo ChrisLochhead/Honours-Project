@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Networking;
 using TMPro;
 using UnityEngine.UI;
@@ -35,46 +33,7 @@ public class Lobby : NetworkBehaviour
     private void Start()
     {
         StartButton.interactable = false;
-        ////Get the preview image path
-        ////Map m = GameObject.Find("PersistentObject").GetComponent<MapFinder>().selectedMap.GetComponent<Map>();
-        //Map m = GameObject.Find("PersistentObject").GetComponent<MapFinder>().maps[GameObject.Find("PersistentObject").GetComponent<MapFinder>().mapNumber].GetComponent<Map>();
-        //string mPath = m.imageTexturePath;
-
-        ////Set name
-        //mapName.text = m.gameObject.name;
-
-        ////Assign the preview image path to the lobby
-        //byte[] fileData = File.ReadAllBytes(mPath);
-        //Texture2D testTex = new Texture2D(2, 2);
-        //testTex.LoadImage(fileData);
-        //gamePreview.texture = testTex;
-
-        //GameObject gameInfo = GameObject.Find("gameInfo");
-        //Owner.CmdSetName(gameInfo.GetComponent<GameInfo>().name);
-        ////Owner.playerName = gameInfo.GetComponent<GameInfo>().name;
-        //if (gameInfo.GetComponent<GameInfo>().killLimit != 0 && gameInfo.GetComponent<GameInfo>().timeLimit != 0)
-        //{
-        //    gameManager.killLimit = gameInfo.GetComponent<GameInfo>().killLimit;
-        //    gameManager.timeLimit = gameInfo.GetComponent<GameInfo>().timeLimit;
-        //}
-        //Destroy(gameInfo);
-
-        ////Check if game already begun on host
-        //if (GameObject.FindGameObjectsWithTag("Client")[0].GetComponent<Client>().GameStarted == true)
-        //{
-        //    timeTillGameStart = 0.0f;
-        //    status.text = "Press start to join the game";
-        //}
     }
-
-    //public void StartGame()
-    //{
-    //    //Start the game by removing the lobby
-    //    foreach (GameObject g in GameObject.FindGameObjectsWithTag("Client"))
-    //    {
-    //        g.GetComponent<Client>().InitialisePlayer();
-    //    }
-    //}
 
     public void RefreshLobby()
     {
@@ -97,7 +56,6 @@ public class Lobby : NetworkBehaviour
     {
 
         //Get the preview image path
-        //Map m = GameObject.Find("PersistentObject").GetComponent<MapFinder>().selectedMap.GetComponent<Map>();
         Map m = GameObject.Find("MapFinder(Clone)").GetComponent<MapFinder>().maps[GameObject.Find("MapFinder(Clone)").GetComponent<MapFinder>().mapNumber].GetComponent<Map>();
         string mPath = m.imageTexturePath;
 
@@ -126,7 +84,7 @@ public class Lobby : NetworkBehaviour
                 Owner.timeLimit = GameObject.FindGameObjectsWithTag("Client")[0].GetComponent<Client>().timeLimit;
             }
 
-            //Destroy(gameInfo);
+            Destroy(gameInfo);
         }
 
         //Check if game already begun on host
@@ -150,14 +108,6 @@ public class Lobby : NetworkBehaviour
         status.text = "Game will begin in " + ((int)timeTillGameStart).ToString() + " seconds";
 
 
-        //Check if game already begun on host
-        if (GameObject.FindGameObjectsWithTag("Client")[0].GetComponent<Client>().GameStarted == true)
-        {
-            timeTillGameStart = 0.0f;
-            StartButton.interactable = true;
-            status.text = "Press start to join the game";
-        }
-
             if (lobbyFinished == false)
             {
                 NumberOfPlayers = 0;
@@ -165,7 +115,7 @@ public class Lobby : NetworkBehaviour
                 GameObject[] clients = GameObject.FindGameObjectsWithTag("Client");
                 RefreshLobby();
 
-
+                //Timer
                 if (currentNumberOfPlayers >= MinNumOfPlayers)
                 {
                     timeTillGameStart -= Time.deltaTime;
@@ -176,34 +126,26 @@ public class Lobby : NetworkBehaviour
                     timeTillGameStart = 10.0f;
                 }
 
-                if (timeTillGameStart <= 0 && StartButton.interactable == false)
+                //For all players in the initial load of the match
+                if (timeTillGameStart <= 0)
                 {
                     status.text = "Press start to join the game";
-
-                    //Start the game by removing the lobby
-                    foreach (GameObject g in clients)
-                    {
-                        g.GetComponent<Client>().InitialisePlayer();
-                    }
-
-
+                    Owner.InitialisePlayer();
                     lobbyFinished = true;
                 }
-
+            }
+            else
+            {
+                //Check if game already begun on host
+                if (GameObject.FindGameObjectsWithTag("Client")[0].GetComponent<Client>().GameStarted == true && Owner.GameStarted == false)
+                {
+                    timeTillGameStart = 0.0f;
+                    StartButton.interactable = true;
+                    status.text = "Press start to join the game";
+                    lobbyFinished = true;
+                }//Otherwise if the game hasn't yet started
             }
         }
     }
 
-    public void OnStartButtonClicked()
-    {
-
-        //GameObject[] clients = GameObject.FindGameObjectsWithTag("Client");
-
-        ////Start the game by removing the lobby
-        //foreach (GameObject g in clients)
-        //{
-        //    g.GetComponent<Client>().InitialisePlayer();
-        //}
-        //StartButton.enabled = true;
-    }
 }

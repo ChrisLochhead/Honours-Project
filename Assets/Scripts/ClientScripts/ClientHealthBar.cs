@@ -43,6 +43,7 @@ public class ClientHealthBar : NetworkBehaviour {
             Color tmp = floatingRankIcon.GetComponent<Image>().color;
             tmp.a = 1.0f;
             floatingRankIcon.GetComponent<Image>().color = tmp;
+            floatingName.SetActive(true);
             deathSet = false;
         }
     }
@@ -58,6 +59,7 @@ public class ClientHealthBar : NetworkBehaviour {
             Color tmp = floatingRankIcon.GetComponent<Image>().color;
             tmp.a = 1.0f;
             floatingRankIcon.GetComponent<Image>().color = tmp;
+            floatingName.SetActive(true);
             deathSet = false;
         }
     }
@@ -128,6 +130,7 @@ public class ClientHealthBar : NetworkBehaviour {
         Color tmp = floatingRankIcon.GetComponent<Image>().color;
         tmp.a = 0.0f;
         floatingRankIcon.GetComponent<Image>().color = tmp;
+        floatingName.SetActive(false);
     }
 
     [ClientRpc]
@@ -136,6 +139,7 @@ public class ClientHealthBar : NetworkBehaviour {
         Color tmp = floatingRankIcon.GetComponent<Image>().color;
         tmp.a = 0.0f;
         floatingRankIcon.GetComponent<Image>().color = tmp;
+        floatingName.SetActive(false);
     }
     [Command]
     public void CmdUpdateHealth()

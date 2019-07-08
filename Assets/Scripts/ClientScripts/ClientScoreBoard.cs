@@ -44,8 +44,8 @@ public class ClientScoreBoard : NetworkBehaviour {
     public bool ConditionSet = false;
     public GameObject ContinueButton;
 
-	// Update is called once per frame
-	void Update () {
+    // Update is called once per frame
+    void Update () {
         if (scoreBoardActive)
             UpdateScoreBoard();
 
@@ -95,11 +95,13 @@ public class ClientScoreBoard : NetworkBehaviour {
         {
             if (team1ScoreNo >= Owner.killLimit && Owner.killLimit != 0)
             {
-                Owner.hasWon = true;            
+                Owner.hasWon = true;
+                UpdateScoreBoard();
             }
             if (team2ScoreNo >= Owner.killLimit && Owner.killLimit != 0)
             {
                 Owner.hasLost = true;
+                UpdateScoreBoard();
             }
         }
         else
@@ -107,15 +109,17 @@ public class ClientScoreBoard : NetworkBehaviour {
             if (team1ScoreNo >= Owner.killLimit && Owner.killLimit != 0)
             {
                 Owner.hasLost = true;
+                UpdateScoreBoard();
             }
             if (team2ScoreNo >= Owner.killLimit && Owner.killLimit != 0)
             {
                 Owner.hasWon = true;
+                UpdateScoreBoard();
             }
         }
     }
 
-    void UpdateScoreBoard()
+    public void UpdateScoreBoard()
     {
         //Update each teams score
         team1Score.text = team1ScoreNo.ToString();

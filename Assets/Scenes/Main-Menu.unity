@@ -1037,6 +1037,8 @@ MonoBehaviour:
   - {fileID: 1059214415926398, guid: 18f9d6679c495334d80b22f48ac6e005, type: 2}
   - {fileID: 1118116294114014, guid: 780e0415441fbdd43aca455e2350c2af, type: 2}
   - {fileID: 1504494890444854, guid: c08537cbfd8a1384a946a0b2e7e77418, type: 2}
+  - {fileID: 1199434456073256, guid: 7ae6c8b685404374290ff4100f217bea, type: 2}
+  - {fileID: 1404414174940142, guid: 9eb15e86cfe015d4db4017e1ebaf0ea8, type: 2}
   m_CustomConfig: 0
   m_MaxConnections: 4
   m_ConnectionConfig:
@@ -9116,17 +9118,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 738656959}
-        m_MethodName: InitialiseMapFinder
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 541875172}
         m_MethodName: SetActive
         m_Mode: 6
@@ -14120,17 +14111,6 @@ MonoBehaviour:
       - m_Target: {fileID: 2020139458}
         m_MethodName: SetActive
         m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 738656959}
-        m_MethodName: InitialiseMapFinder
-        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

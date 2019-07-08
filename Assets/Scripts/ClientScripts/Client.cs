@@ -176,7 +176,7 @@ public class Client : NetworkBehaviour
         {
             if (g.GetComponent<Client>().team == 0)
                 temp1++;
-            else
+            else if (g.GetComponent<Client>().team == 1)
                 temp2++;
         }
 
@@ -205,6 +205,7 @@ public class Client : NetworkBehaviour
     {
         playerName = name;
     }
+
     public void InitialisePlayer()
     {
         //Disable the lobby now that the game has begun
@@ -485,7 +486,6 @@ public class Client : NetworkBehaviour
 
             //Spawn in random position
             int rand = Random.Range(0, spawnPoints.Length);
-            Debug.Log(rand);
             player.transform.position = spawnPoints[rand].transform.position;
             playerCam.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, playerCam.transform.position.z);
 

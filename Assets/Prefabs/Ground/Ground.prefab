@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4240199548436200}
   - component: {fileID: 33894139656859056}
   - component: {fileID: 23245582655452382}
+  - component: {fileID: 114373477744007290}
   m_Layer: 0
   m_Name: Ground
   m_TagString: Untagged
@@ -83,3 +84,35 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1199434456073256}
   m_Mesh: {fileID: 4300000, guid: 3bbefbd4fb2e47a4ca856c13549b8ab4, type: 3}
+--- !u!114 &114373477744007290
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1199434456073256}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 122
+    i1: 230
+    i2: 200
+    i3: 182
+    i4: 133
+    i5: 64
+    i6: 67
+    i7: 116
+    i8: 41
+    i9: 15
+    i10: 244
+    i11: 16
+    i12: 15
+    i13: 33
+    i14: 123
+    i15: 234
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
