@@ -7483,12 +7483,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nameInputHostMultiplayer: {fileID: 1141672841}
   nameInputJoinMultiplayer: {fileID: 1874408594}
-  killLimitDropdownMultiplayer: {fileID: 417266999}
-  timeLimitDropdownMultiplayer: {fileID: 822180903}
+  killLimitDropdownMultiplayer: {fileID: 417267001}
+  timeLimitDropdownMultiplayer: {fileID: 822180905}
   nameInputHostLAN: {fileID: 300479175}
   nameInputJoinLAN: {fileID: 1369845737}
-  killLimitDropdownLAN: {fileID: 1956931733}
-  timeLimitDropdownLAN: {fileID: 1032115596}
+  killLimitDropdownLAN: {fileID: 1956931735}
+  timeLimitDropdownLAN: {fileID: 1032115598}
   mapFinderPrefab: {fileID: 1504494890444854, guid: c08537cbfd8a1384a946a0b2e7e77418,
     type: 2}
   errorMessage: {fileID: 1553070311}

@@ -9,16 +9,19 @@ public class Client : NetworkBehaviour
     [SerializeField]
     Behaviour[] clientComponents;
 
+    //Player camera
+    public Camera playerCam;
+    //Lobby camera
     public Camera lobbyCam;
 
+    //Reference to the actual player object
     public GameObject player;
 
+    //Check if player is the host or not for bullet functionality
     public bool isLocal;
 
+    //Reference to this clients potential spawnpoints
     public GameObject[] spawnPoints;
-
-    //Camera
-    public Camera playerCam;
 
     //Physics
     float velocity;
@@ -68,6 +71,7 @@ public class Client : NetworkBehaviour
 
 
     //Registers which team the player is in
+    //Set to 3 because if set to 0 it skews the randomisation process
     [SyncVar]
     public int team = 3;
 
@@ -117,12 +121,11 @@ public class Client : NetworkBehaviour
     [SyncVar]
     public bool GameStarted = false;
 
-    //Pause Menu
-    public GameObject clientPauseMenu;
-
-
     //For map loading if host
     public bool mapSpawned = false;
+
+    //Pause Menu
+    public GameObject clientPauseMenu;
 
     //For managing the game locally
     [SyncVar]
@@ -133,7 +136,7 @@ public class Client : NetworkBehaviour
     // Use this for initialization
     void Start()
     {
-       
+        //Assign the network manager
         networkManager = NetworkManager.singleton;
 
         //For host to spawn the map for everyone else
@@ -161,7 +164,6 @@ public class Client : NetworkBehaviour
         else
         {
             isLocal = true;
-            //sceneCam.gameObject.SetActive(false);
 
             //Hide UI elements that player shouldn't see
             //floatingHealthBar.GetComponent<CanvasRenderer>().SetAlpha(0);
@@ -237,6 +239,7 @@ public class Client : NetworkBehaviour
         velocity = 0.3f;
         movementSpeed = 0.3f;
 
+        //Initialise camera position
         player.transform.position = new Vector3(playerCam.transform.position.x, playerCam.transform.position.y, -10);
         anim.enabled = false;
 
@@ -259,6 +262,7 @@ public class Client : NetworkBehaviour
     [ClientRpc]
     public void RpcTakeDamage(int damage)
     {
+        //Decrement players health and kill him if his health is 0
         if (isLocalPlayer)
         {
             if (!isDead)
@@ -277,6 +281,7 @@ public class Client : NetworkBehaviour
 
     public void TakeDamage(int damage)
     {
+        //Decrement players health and kill him if his health is 0
         if (!isLocalPlayer)
         {
             if (!isDead)
@@ -295,15 +300,12 @@ public class Client : NetworkBehaviour
 
     public void Update()
     {
-
+        //Update team texture information
         if(teamMaterial == 0)
-        {
             characterModel.GetComponent<SkinnedMeshRenderer>().material = RedTeamMaterial;
-        }
         else
-        {
             characterModel.GetComponent<SkinnedMeshRenderer>().material = BlueTeamMaterial;
-        }
+
         //Toggle pause menu
         if (Input.GetKeyDown("p") && Paused == false)
         {
@@ -311,11 +313,15 @@ public class Client : NetworkBehaviour
             Paused = true;
         }
 
+        //If the pause menu is open and the scene is not paused, close the menu
         if(Paused == false)
         {
             clientPauseMenu.SetActive(false);
         }
 
+        //If spawn points haven't been assigned yet, keep looking for them
+        //This is done in update because it causes problems in start because of 
+        //network latency issues
         if (spawnPoints.Length == 0)
         {
             if(GameObject.FindGameObjectsWithTag("SpawnPoint1").Length > 0 && team == 0)
@@ -519,17 +525,13 @@ public class Client : NetworkBehaviour
         }
     }
 
-    //public void exitGame()
-    //{
-    //    NetworkManager.singleton.StopClient();
-    //}
-
-
     private void FixedUpdate()
     {
+        //Dont update if the game is over or paused
         if (hasLost || hasWon || Paused)
             return;
 
+        //Hard deactivate the scoreboard if the player is dead
         if (isDead)
         {
             clientScoreBoard.DeactivateScoreBoard();
@@ -559,6 +561,7 @@ public class Client : NetworkBehaviour
 
         if (isLocal)
         {
+            //Get the direction the player should be facing
             if (ground.Raycast(cameraRay, out rayLength))
             {
                 Vector3 target = cameraRay.GetPoint(rayLength);
@@ -568,7 +571,6 @@ public class Client : NetworkBehaviour
                 player.transform.rotation = Quaternion.Euler(0, 0, -rotation);
 
             }
-
 
             if (Input.GetKey("w"))
             {
@@ -583,8 +585,11 @@ public class Client : NetworkBehaviour
                 anim.enabled = false;
             }
         }
+
+        //Update the crosshairs position
         crosshair.transform.position = playerCam.WorldToScreenPoint(crosshairMarker.transform.position) + currentDirection.normalized * 200;
 
+        //Stop rigidbody velocity from skewing the players position
         body.velocity = new Vector3(0, 0, 0);
         body.angularVelocity = new Vector3(0, 0, 0);
 
@@ -621,19 +626,22 @@ public class Client : NetworkBehaviour
         }
     }
 
-    public void SetHealth(int damage)
+    private void SetHealth(int damage)
     {
+        //Utility function for keeping the health at 0 or above
         if (damage == 0)
             health = 0;
         else
             health -= damage;
     }
 
+    //Utility function for bullet to update the players score remotely
     public void UpdateScore(int s)
     {
         CmdGainScore(s);
     }
 
+    //Utility function for bullet to update the players kills remotely
     public void UpdateKills(int k)
     {
         CmdUpdateKills(k);
@@ -643,10 +651,11 @@ public class Client : NetworkBehaviour
     {
         if (isServer)
         {
+            //Increment score
             score += s;
-
             int tmpRank = rank;
 
+            //Check if rank has changed and reassign it accordingly
             if (score <= 49) rank = 0;
             else if (score > 49 && score <= 99) rank = 1;
             else if (score > 100 && score <= 149) rank = 2;
@@ -665,9 +674,6 @@ public class Client : NetworkBehaviour
                 totalHealth = clientHUD.rankHealthValues[rank];
                 CmdTakeDamage(0);
             }
-
-
-
         }
     }
 
@@ -689,11 +695,11 @@ public class Client : NetworkBehaviour
     {
         if (!isServer)
         {
+            //Increment score
             score += s;
-
-
             int tmpRank = rank;
 
+            //Check if rank has changed and reassign it accordingly
             if (score <= 49) rank = 0;
             else if (score > 49 && score <= 99) rank = 1;
             else if (score > 100 && score <= 149) rank = 2;
@@ -712,7 +718,6 @@ public class Client : NetworkBehaviour
                 totalHealth = clientHUD.rankHealthValues[rank];
                 CmdTakeDamage(0);
             }
-
         }
     }
 
@@ -775,7 +780,7 @@ public class Client : NetworkBehaviour
         kills += k;
     }
 
-    //For button control
+    //For button control of the pause menu
     public void SetPaused(bool p)
     {
         Paused = p;
