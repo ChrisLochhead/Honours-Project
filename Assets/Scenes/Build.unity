@@ -4113,7 +4113,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4316939890064136, guid: c48bf626ebe01b14dbe4c9b692264bf4, type: 2}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 114701404347703254, guid: c48bf626ebe01b14dbe4c9b692264bf4, type: 2}
@@ -4300,6 +4300,8 @@ GameObject:
   - component: {fileID: 1209184293}
   - component: {fileID: 1209184294}
   - component: {fileID: 1209184295}
+  - component: {fileID: 1209184296}
+  - component: {fileID: 1209184297}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -4508,16 +4510,49 @@ MonoBehaviour:
   teamFlag1: {fileID: 1607663934289496, guid: fea650be54fe8ae44ae02a807dc2c6e0, type: 2}
   teamFlag2: {fileID: 1845099429739678, guid: 47670b887ea58144db079ec5e540d2b1, type: 2}
   errorMessage: {fileID: 1369353779}
-  takingImage: 0
-  mapFinderPrefab: {fileID: 1504494890444854, guid: c08537cbfd8a1384a946a0b2e7e77418,
-    type: 2}
-  mapFinder: {fileID: 0}
   loadMenu: {fileID: 1379806591}
   saveMenu: {fileID: 1242408568}
+  buildMenuMapLoader: {fileID: 1209184296}
+  buildMenuCamera: {fileID: 0}
+--- !u!114 &1209184296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1209184288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e0d97f3aa4536048acbebcda9901a7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  redWall: {fileID: 1744126536531200, guid: 15d211e83c32c014e8d83eba18b8fa20, type: 2}
+  orangeWall: {fileID: 1257864531734054, guid: 5485a1bbed1e9cb44bbb1dd8f3204f71, type: 2}
+  greenWall: {fileID: 1585524941553692, guid: 18030ac132cae554d9e730ed71e27c59, type: 2}
+  greyWall: {fileID: 1660004336968288, guid: a3768f49f25aa004484682c9299784e6, type: 2}
+  goldCoin: {fileID: 1049524726679572, guid: e7a694650ee63464b8f81d973e4b7d04, type: 2}
+  silverCoin: {fileID: 1480739355948570, guid: 3c99109154774bc408fb4bab4fb4cf06, type: 2}
+  bronzeCoin: {fileID: 1684810227353058, guid: b018276685be4284aa010219e245fd24, type: 2}
+  teamFlag1: {fileID: 1607663934289496, guid: fea650be54fe8ae44ae02a807dc2c6e0, type: 2}
+  teamFlag2: {fileID: 1845099429739678, guid: 47670b887ea58144db079ec5e540d2b1, type: 2}
+  buildMenu: {fileID: 1209184295}
+  mapFinderPrefab: {fileID: 1504494890444854, guid: c08537cbfd8a1384a946a0b2e7e77418,
+    type: 2}
+--- !u!114 &1209184297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1209184288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca97f2bf9f7a0d044ada197ba39c73d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   snapShotSound: {fileID: 8300000, guid: 2b33540efc364c14b96ea9b305c5a662, type: 3}
-  shutterEffectActive: 0
   topShutter: {fileID: 35033162}
   bottomShutter: {fileID: 175347937}
+  currentImage: {fileID: 0}
+  imageTaken: 0
 --- !u!1 &1242408568
 GameObject:
   m_ObjectHideFlags: 0
@@ -7195,7 +7230,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 1209184295}
+      - m_Target: {fileID: 1209184296}
         m_MethodName: LoadMap
         m_Mode: 1
         m_Arguments:

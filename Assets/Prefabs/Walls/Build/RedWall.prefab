@@ -25,7 +25,7 @@ GameObject:
   - component: {fileID: 65386564433943358}
   - component: {fileID: 114974483035569850}
   m_Layer: 0
-  m_Name: NewRedWall
+  m_Name: RedWall
   m_TagString: draggable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -114,6 +114,7 @@ MonoBehaviour:
   type: 0
   Health: 0
   totalHealth: 0
+  isNetworked: 0
 --- !u!114 &114974483035569850
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -126,4 +127,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   listPlace: 0
-  type: 

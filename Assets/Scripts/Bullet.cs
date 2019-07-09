@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Networking;
 
 public class Bullet : NetworkBehaviour {
@@ -16,9 +14,6 @@ public class Bullet : NetworkBehaviour {
         transform.localScale = new Vector3(8.1f, 8.1f, 23.1f);
     }
 
-    private void Update()
-    {
-    }
     private void OnCollisionEnter(Collision collision)
     {
 

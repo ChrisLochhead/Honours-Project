@@ -127,7 +127,10 @@ public class MapFinder : NetworkBehaviour {
 
             }
         }
+        //Assign the current number of dropdown menus present
         currentNoOfDropdowns = mapLoaderDropdowns.Length;
+
+        //Assign the selected map and its place in the list
         if (mapLoaderDropdowns.Length > 0)
         {
             selectedMap = maps[mapLoaderDropdowns[0].GetComponent<Dropdown>().value];
