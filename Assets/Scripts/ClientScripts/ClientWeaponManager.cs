@@ -47,15 +47,18 @@ public class ClientWeaponManager : NetworkBehaviour {
 	
     public void InitialiseWeapons()
     { 
-
+        //Initialise current weapon
         currentWeapon = 0;
 
+        //Set guns position
         guns[currentWeapon].transform.position = Owner.player.transform.position;
         guns[currentWeapon].transform.rotation = Owner.player.transform.rotation;
 
+        //Animation code not currently being applied
         weaponAnim = guns[currentWeapon].GetComponent<Animator>();
         weaponAnim.enabled = false;
 
+        //Deactivate all muzzle flashes
         for (int i = 0; i < muzzleFlashes.Length; i++)
             muzzleFlashes[i].SetActive(false);
 
@@ -71,6 +74,7 @@ public class ClientWeaponManager : NetworkBehaviour {
     [ClientRpc]
     public void RpcSetWeapon(int type)
     {
+        //Activate the correct weapon, and deactivate all the others
         currentWeapon = type;
 
         for (int i = 0; i < guns.Length; i++)
@@ -84,6 +88,7 @@ public class ClientWeaponManager : NetworkBehaviour {
 
     public void SetWeapon(int type)
     {
+        //Activate the correct weapon, and deactivate all the others
         currentWeapon = type;
 
         for (int i = 0; i < guns.Length; i++)
@@ -95,12 +100,12 @@ public class ClientWeaponManager : NetworkBehaviour {
         }
     }
 
-    // Update is called once per frame
     void Update () {
 
         //Game is not over, and player has set his name (and therefore has joined the game)
         if (!Owner.hasWon && !Owner.hasLost && !Owner.Paused)
         {
+            //If the player can and is shooting, create a bullet, decrement ammo and show a muzzle flash
             if (Input.GetMouseButton(0) && currentAmmo[currentWeapon] > 0 && Owner.isLocal && fireRates[currentWeapon] == currentFireRates[currentWeapon])
             {
                 CmdSpawnBullet();
@@ -110,6 +115,7 @@ public class ClientWeaponManager : NetworkBehaviour {
                 hasFired = true;
             }
 
+            //Simulates fire rate by preventing player shooting repeatedly
             if (hasFired)
             {
                 if (currentFireRates[currentFired] > 0)
@@ -124,6 +130,7 @@ public class ClientWeaponManager : NetworkBehaviour {
 
             }
 
+            //Timer to remove muzzle flash
             if (muzzleShot)
             {
 
@@ -139,10 +146,10 @@ public class ClientWeaponManager : NetworkBehaviour {
 
             ////Weapon switching
             if (Input.GetKey("1") && Owner.isLocal) CmdSetWeapon(0);
-            if (Input.GetKey("2") && Owner.isLocal && Owner.score > -1) CmdSetWeapon(1);
-            if (Input.GetKey("3") && Owner.isLocal && Owner.score > -1) CmdSetWeapon(2);
-            if (Input.GetKey("4") && Owner.isLocal && Owner.score > -1) CmdSetWeapon(3);
-            if (Input.GetKey("5") && Owner.isLocal && Owner.score > -1) CmdSetWeapon(4);
+            if (Input.GetKey("2") && Owner.isLocal && Owner.score > 100) CmdSetWeapon(1);
+            if (Input.GetKey("3") && Owner.isLocal && Owner.score > 200) CmdSetWeapon(2);
+            if (Input.GetKey("4") && Owner.isLocal && Owner.score > 400) CmdSetWeapon(3);
+            if (Input.GetKey("5") && Owner.isLocal && Owner.score > 750) CmdSetWeapon(4);
 
             //Reload sequence
             if (isReloading)
@@ -211,6 +218,7 @@ public class ClientWeaponManager : NetworkBehaviour {
 
     public void MuzzleFlash(bool istrue)
     {
+        //Create muzzle flash and play gunshot sound
         muzzleFlashes[currentWeapon].SetActive(istrue);
         if (isLocalPlayer && istrue == true)
         {
@@ -222,6 +230,7 @@ public class ClientWeaponManager : NetworkBehaviour {
     [ClientRpc]
     public void RpcMuzzleFlash(bool istrue)
     {
+        //Create muzzle flash and play gunshot sound
         muzzleFlashes[currentWeapon].SetActive(istrue);
         if (isLocalPlayer && istrue == true)
         {

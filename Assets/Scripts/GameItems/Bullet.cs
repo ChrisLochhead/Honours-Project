@@ -3,14 +3,19 @@ using UnityEngine.Networking;
 
 public class Bullet : NetworkBehaviour {
 
+    //Reference to the client who shot this bullet
     public GameObject shooter;
 
+    //Check if host, because this causes bullets to behave differently
     [SyncVar]
     public bool isHost;
 
+    //Amount of damage carried by this bullet
     public int damageAmount;
-	// Use this for initialization
+
+
 	void Start () {
+        //Set the objects scale as prefab doesn't keep it static
         transform.localScale = new Vector3(8.1f, 8.1f, 23.1f);
     }
 
@@ -45,12 +50,16 @@ public class Bullet : NetworkBehaviour {
     void CheckEnemyCollision(Collision collision)
     {
 
-        //If this shot killed the player, register it
-        if (isServer && isHost) // this works for host
+        //This applies damage differently depending on whose bullet fired it
+        //because of network latency. If a client shoots a kill shot it will not
+        //register until the next shot, so it calculates it before the damage is applied
+        //to circumvent this.
+        if (isServer && isHost)
         {
             //Apply damage
             collision.gameObject.transform.parent.GetComponent<Client>().Hit(damageAmount);
 
+            //Check if opponent is dead and apply points and kills appropriately
             if (collision.transform.parent.GetComponent<Client>().isDead)
             {
                 shooter.transform.parent.GetComponent<Client>().UpdateScore(100);
@@ -66,6 +75,8 @@ public class Bullet : NetworkBehaviour {
             //Apply damage
             collision.gameObject.transform.parent.GetComponent<Client>().Hit(damageAmount);
 
+            //Check (if client) if the opponent WILL die before the shot has hit
+            //then update kills and score as normal
             if (collision.transform.parent.GetComponent<Client>().health - damageAmount <= 0)
             {
                 shooter.transform.parent.GetComponent<Client>().UpdateScore(100);

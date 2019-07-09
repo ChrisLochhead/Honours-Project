@@ -61,6 +61,7 @@ public class ClientScoreBoard : NetworkBehaviour {
 
     public void ClientWon()
     {
+        //Activate the scoreboard according to win conditions
         scoreBoard.SetActive(true);
         scoreBoardActive = true;
         winCondition.gameObject.SetActive(true);
@@ -75,6 +76,7 @@ public class ClientScoreBoard : NetworkBehaviour {
 
     public void ClientLost()
     {
+        //Activate the scoreboard according to win conditions
         scoreBoard.SetActive(true);
         scoreBoardActive = true;
         winCondition.gameObject.SetActive(true);
@@ -154,8 +156,10 @@ public class ClientScoreBoard : NetworkBehaviour {
         team1ScoreNo = 0;
         team2ScoreNo = 0;
 
+
         foreach (GameObject g in players)
         {
+            //For all team one players, add their name to the team one side, then update their kills and deaths
             if (g.GetComponent<Client>().team == 0)
             {
                 team1Names[team1Count].gameObject.SetActive(true);
@@ -167,7 +171,7 @@ public class ClientScoreBoard : NetworkBehaviour {
                 team1Count++;
                 team1ScoreNo += g.GetComponent<Client>().kills;
             }
-            else
+            else //And do the same for team 2
             {
                 team2Names[team2Count].gameObject.SetActive(true);
                 team2Names[team2Count].text = g.GetComponent<Client>().playerName;
@@ -181,6 +185,7 @@ public class ClientScoreBoard : NetworkBehaviour {
         }
     }
 
+    //Toggle option for during the course of the game
     public void ToggleScoreBoard()
     {
         if (scoreBoardActive)
