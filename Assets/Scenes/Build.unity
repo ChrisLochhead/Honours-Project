@@ -145,8 +145,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000030517578, y: 391.5}
-  m_SizeDelta: {x: 800, y: 322.7}
+  m_AnchoredPosition: {x: 0.0000032501, y: 230}
+  m_SizeDelta: {x: 800, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &35033164
 MonoBehaviour:
@@ -541,8 +541,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000033768, y: -386.1}
-  m_SizeDelta: {x: 800, y: 311.9}
+  m_AnchoredPosition: {x: -2.7649e-10, y: -230}
+  m_SizeDelta: {x: 800, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &175347939
 MonoBehaviour:
@@ -1939,7 +1939,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 541c94ec9ec378a40a990f6d2bc98790, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  correspondingObject: {fileID: 1511394744824252, guid: 010da3ab5024dc14b8301bf3170cc1b0,
+  correspondingObject: {fileID: 1607663934289496, guid: fea650be54fe8ae44ae02a807dc2c6e0,
     type: 2}
 --- !u!114 &596793451
 MonoBehaviour:
@@ -4497,23 +4497,12 @@ MonoBehaviour:
   openState: {fileID: 906186114}
   closedState: {fileID: 1537343319}
   selectedObject: {fileID: 0}
-  buttons: []
   saveField: {fileID: 1242408570}
-  isSaving: 0
-  redWall: {fileID: 1744126536531200, guid: 15d211e83c32c014e8d83eba18b8fa20, type: 2}
-  orangeWall: {fileID: 1257864531734054, guid: 5485a1bbed1e9cb44bbb1dd8f3204f71, type: 2}
-  greenWall: {fileID: 1585524941553692, guid: 18030ac132cae554d9e730ed71e27c59, type: 2}
-  greyWall: {fileID: 1660004336968288, guid: a3768f49f25aa004484682c9299784e6, type: 2}
-  goldCoin: {fileID: 1049524726679572, guid: e7a694650ee63464b8f81d973e4b7d04, type: 2}
-  silverCoin: {fileID: 1480739355948570, guid: 3c99109154774bc408fb4bab4fb4cf06, type: 2}
-  bronzeCoin: {fileID: 1684810227353058, guid: b018276685be4284aa010219e245fd24, type: 2}
-  teamFlag1: {fileID: 1607663934289496, guid: fea650be54fe8ae44ae02a807dc2c6e0, type: 2}
-  teamFlag2: {fileID: 1845099429739678, guid: 47670b887ea58144db079ec5e540d2b1, type: 2}
   errorMessage: {fileID: 1369353779}
   loadMenu: {fileID: 1379806591}
   saveMenu: {fileID: 1242408568}
   buildMenuMapLoader: {fileID: 1209184296}
-  buildMenuCamera: {fileID: 0}
+  buildMenuCamera: {fileID: 1209184297}
 --- !u!114 &1209184296
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5163,7 +5152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 541c94ec9ec378a40a990f6d2bc98790, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  correspondingObject: {fileID: 1349140496532258, guid: 349e0777af2e39442a2ab47d0e42b138,
+  correspondingObject: {fileID: 1845099429739678, guid: 47670b887ea58144db079ec5e540d2b1,
     type: 2}
 --- !u!114 &1371659240
 MonoBehaviour:

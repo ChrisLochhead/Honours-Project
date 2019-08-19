@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 23256685458692622}
   - component: {fileID: 114708914182959318}
   - component: {fileID: 65362599906686968}
+  - component: {fileID: 114319384855890200}
   m_Layer: 0
   m_Name: SpawnPoint2
   m_TagString: draggable
@@ -97,6 +98,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.05355455, y: 0.020000001, z: 0.019999996}
   m_Center: {x: -0.016777273, y: -2.384194e-16, z: 7.549816e-17}
+--- !u!114 &114319384855890200
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1845099429739678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fa954f28239eb74f8705b289ed3e764, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  listPlace: 0
 --- !u!114 &114708914182959318
 MonoBehaviour:
   m_ObjectHideFlags: 1

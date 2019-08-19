@@ -38,7 +38,6 @@ GameObject:
   - component: {fileID: 33698068011028304}
   - component: {fileID: 23066844477415918}
   - component: {fileID: 65903335775096912}
-  - component: {fileID: 114580020968788658}
   m_Layer: 0
   m_Name: GreyWall - Left
   m_TagString: Obstacle
@@ -75,7 +74,6 @@ GameObject:
   - component: {fileID: 33936706895520496}
   - component: {fileID: 23732687466942474}
   - component: {fileID: 65239789888737872}
-  - component: {fileID: 114126416684113146}
   m_Layer: 0
   m_Name: GreyWall - Right
   m_TagString: Obstacle
@@ -386,70 +384,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.02, y: 0.019999996, z: 0.019999996}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &114126416684113146
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1789575166521994}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 196
-    i1: 139
-    i2: 246
-    i3: 38
-    i4: 235
-    i5: 224
-    i6: 27
-    i7: 20
-    i8: 219
-    i9: 228
-    i10: 201
-    i11: 182
-    i12: 146
-    i13: 38
-    i14: 75
-    i15: 244
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 0
---- !u!114 &114580020968788658
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1343422747562092}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 196
-    i1: 139
-    i2: 246
-    i3: 38
-    i4: 235
-    i5: 224
-    i6: 27
-    i7: 20
-    i8: 219
-    i9: 228
-    i10: 201
-    i11: 182
-    i12: 146
-    i13: 38
-    i14: 75
-    i15: 244
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 0
 --- !u!114 &114701404347703254
 MonoBehaviour:
   m_ObjectHideFlags: 1

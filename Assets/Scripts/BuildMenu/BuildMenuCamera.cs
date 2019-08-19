@@ -15,9 +15,21 @@ public class BuildMenuCamera : MonoBehaviour {
     private bool takingImage = false;
     public bool imageTaken = false;
 
+    //Shutter starting width and height
+    Vector2 startingSize = new Vector2(800, 0);
+
+    //For preventing its use when menus are open
+    private bool isDisabled = false;
+
+
+    public void ToggleCamera(bool t)
+    {
+        isDisabled = t;
+    }
 
     private void Update()
     {
+        Debug.Log(bottomShutter.GetComponent<RectTransform>().sizeDelta);
         //If in the middle of a shutter
         if (shutterEffectActive)
         {
@@ -25,7 +37,7 @@ public class BuildMenuCamera : MonoBehaviour {
         }
 
         //Check if taking a screenshot
-        if (Input.GetKeyDown("c") && !shutterEffectActive)
+        if (Input.GetKeyDown("c") && !shutterEffectActive && !isDisabled)
         {
             TakeScreenShot();
         }
@@ -44,43 +56,25 @@ public class BuildMenuCamera : MonoBehaviour {
     private void ShutterEffect()
     {
         //Just track the bottom shutter, there is no point in tracking both if they move at the same speed
-        bool bsClosed = false;
+        bool Closed = false;
 
-        //If the bottom shutter hasn't reached its termination point
-        if (bottomShutter.GetComponent<RectTransform>().position.y < 104.0f)
+        if (bottomShutter.GetComponent<RectTransform>().sizeDelta.y <= 475)
         {
-            //Update the bottom shutter
-            Vector3 tmp = bottomShutter.GetComponent<RectTransform>().position;
-            tmp.y += 25;
-            bottomShutter.GetComponent<RectTransform>().position = tmp;
-
-            //Then update the top
-            tmp = topShutter.GetComponent<RectTransform>().position;
-            tmp.y -= 25;
-            topShutter.GetComponent<RectTransform>().position = tmp;
+            topShutter.GetComponent<RectTransform>().sizeDelta = new Vector2(800, topShutter.GetComponent<RectTransform>().sizeDelta.y + 25);
+            bottomShutter.GetComponent<RectTransform>().sizeDelta = new Vector2(800, bottomShutter.GetComponent<RectTransform>().sizeDelta.y + 25);
         }
         else
         {
-            bsClosed = true;
+            Closed = true;
         }
 
-        //If the shutter is fully closed
-        if (bsClosed)
+        if(Closed)
         {
-            //Restore
-            Vector3 topTmp = topShutter.GetComponent<RectTransform>().position;
-            topTmp.y = 561;
-            topShutter.GetComponent<RectTransform>().position = topTmp;
-
-            //Restore
-            Vector3 bottomTmp = bottomShutter.GetComponent<RectTransform>().position;
-            bottomTmp.y = -140;
-            bottomShutter.GetComponent<RectTransform>().position = bottomTmp;
-
-            //And then end routine
             shutterEffectActive = false;
-
+            topShutter.GetComponent<RectTransform>().sizeDelta = new Vector2(800, 0);
+            bottomShutter.GetComponent<RectTransform>().sizeDelta = new Vector2(800, 0);
         }
+  
     }
 
     private void OnPostRender()

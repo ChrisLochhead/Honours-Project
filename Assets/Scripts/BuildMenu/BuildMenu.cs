@@ -66,6 +66,7 @@ public class BuildMenu : MonoBehaviour {
                 if (objectToDrag.GetComponent<Buildbutton>())
                 {
                     dragObjectModel = Instantiate(objectToDrag.GetComponent<Buildbutton>().correspondingObject);
+                    dragObjectModel.tag = "draggable";
                     dragObjectModel.GetComponent<MapItem>().listPlace = mapItems.Count;
                     mapItems.Add(dragObjectModel);
                 }
