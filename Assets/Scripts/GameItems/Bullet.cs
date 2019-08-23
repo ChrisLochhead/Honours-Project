@@ -56,35 +56,65 @@ public class Bullet : NetworkBehaviour {
         //to circumvent this.
         if (isServer && isHost)
         {
-            //Apply damage
-            collision.gameObject.transform.parent.GetComponent<Client>().Hit(damageAmount);
-
-            //Check if opponent is dead and apply points and kills appropriately
-            if (collision.transform.parent.GetComponent<Client>().isDead)
+            //Bullet code for AI training
+            if (collision.transform.GetComponent<EnemyAgentReinforcement>())
             {
-                shooter.transform.parent.GetComponent<Client>().UpdateScore(100);
-                shooter.transform.parent.GetComponent<Client>().UpdateKills(1);
+                if (collision.transform.GetComponent<EnemyAgentController>().isAlive == false)
+                {
+                    if (shooter.GetComponent<EnemyAgentReinforcement>())
+                    {
+                        shooter.GetComponent<EnemyAgentReinforcement>().GainedKill();
+                    }
+                }
             }
             else
             {
-                shooter.transform.parent.GetComponent<Client>().UpdateScore(10);
+
+                //Apply damage
+                collision.gameObject.transform.parent.GetComponent<Client>().Hit(damageAmount);
+
+                //Check if opponent is dead and apply points and kills appropriately
+                if (collision.transform.parent.GetComponent<Client>().isDead)
+                {
+                    shooter.transform.parent.GetComponent<Client>().UpdateScore(100);
+                    shooter.transform.parent.GetComponent<Client>().UpdateKills(1);
+                }
+                else
+                {
+                    shooter.transform.parent.GetComponent<Client>().UpdateScore(10);
+                }
             }
         }
-       else{
+        else
+        {
 
-            //Apply damage
-            collision.gameObject.transform.parent.GetComponent<Client>().Hit(damageAmount);
-
-            //Check (if client) if the opponent WILL die before the shot has hit
-            //then update kills and score as normal
-            if (collision.transform.parent.GetComponent<Client>().health - damageAmount <= 0)
+            //Bullet code for AI training
+            if (collision.transform.GetComponent<EnemyAgentReinforcement>())
             {
-                shooter.transform.parent.GetComponent<Client>().UpdateScore(100);
-                shooter.transform.parent.GetComponent<Client>().UpdateKills(1);
+                if (collision.transform.GetComponent<EnemyAgentController>().isAlive == false)
+                {
+                    if (shooter.GetComponent<EnemyAgentReinforcement>())
+                    {
+                        shooter.GetComponent<EnemyAgentReinforcement>().GainedKill();
+                    }
+                }
             }
             else
             {
-                shooter.transform.parent.GetComponent<Client>().UpdateScore(10);
+                //Apply damage
+                collision.gameObject.transform.parent.GetComponent<Client>().Hit(damageAmount);
+
+                //Check (if client) if the opponent WILL die before the shot has hit
+                //then update kills and score as normal
+                if (collision.transform.parent.GetComponent<Client>().health - damageAmount <= 0)
+                {
+                    shooter.transform.parent.GetComponent<Client>().UpdateScore(100);
+                    shooter.transform.parent.GetComponent<Client>().UpdateKills(1);
+                }
+                else
+                {
+                    shooter.transform.parent.GetComponent<Client>().UpdateScore(10);
+                }
             }
         }
 
