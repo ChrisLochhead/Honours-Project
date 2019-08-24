@@ -4,15 +4,10 @@ using System.Collections.Generic;
 public class EnemyAgentWeaponManager : NetworkBehaviour
 {
 
-    //Removes muzzle flashes and other uneccessary visuals for training purposes
-    public bool optimizeMode;
-
     //Weapons
     public int currentWeapon = 0;
 
     public GameObject[] guns;
-
-    public GameObject[] muzzleFlashes;
     public GameObject bullet;
 
     //weapon clips
@@ -38,12 +33,6 @@ public class EnemyAgentWeaponManager : NetworkBehaviour
     public float reloadStartTime = 0.0f;
     public float reloadTargetTime = 0.0f;
 
-    //For muzzle flash timing
-    float muzzleFlashTimer = 0.15f;
-    bool muzzleShot = false;
-
-
-    public AudioClip[] gunSounds;
     public EnemyAgentController controller;
     public GameObject crosshairMarker;
 
@@ -56,9 +45,6 @@ public class EnemyAgentWeaponManager : NetworkBehaviour
         guns[currentWeapon].transform.position = gameObject.transform.position;
         guns[currentWeapon].transform.rotation = gameObject.transform.rotation;
 
-        //Deactivate all muzzle flashes
-        for (int i = 0; i < muzzleFlashes.Length; i++)
-            muzzleFlashes[i].SetActive(false);
 
     }
 
@@ -84,7 +70,6 @@ public class EnemyAgentWeaponManager : NetworkBehaviour
             SpawnBullet();
             currentAmmo[currentWeapon]--;
             currentFired = currentWeapon;
-            muzzleShot = true;
             hasFired = true;
         }
     }
@@ -142,20 +127,6 @@ public class EnemyAgentWeaponManager : NetworkBehaviour
 
             }
 
-            //Timer to remove muzzle flash
-            if (muzzleShot)
-            {
-
-                muzzleFlashTimer -= Time.deltaTime;
-
-                if (muzzleFlashTimer <= 0.0f)
-                {
-                    MuzzleFlash(false);
-                    muzzleFlashTimer = 0.15f;
-                    muzzleShot = false;
-                }
-            }
-
             //Reload sequence
             if (isReloading)
             {
@@ -190,17 +161,5 @@ public class EnemyAgentWeaponManager : NetworkBehaviour
         b.GetComponent<Bullet>().shooter = gameObject;
         b.GetComponent<Bullet>().damageAmount = damageAmounts[currentWeapon];
 
-        MuzzleFlash(true);
-    }
-
-    public void MuzzleFlash(bool istrue)
-    {
-        //Create muzzle flash and play gunshot sound
-        muzzleFlashes[currentWeapon].SetActive(istrue);
-        if (istrue == true)
-        {
-            gameObject.GetComponent<AudioSource>().clip = gunSounds[currentWeapon];
-            gameObject.GetComponent<AudioSource>().Play();
-        }
     }
 }

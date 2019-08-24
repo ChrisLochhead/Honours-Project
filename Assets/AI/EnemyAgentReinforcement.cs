@@ -18,12 +18,6 @@ public class EnemyAgentReinforcement : Agent {
     //AI health
     private float health;
 
-    //Bullets in AI clip
-    private float clip;
-
-    //Bullets the AI has remaining outside of the current clip
-    private float ammo;
-
     //AI players rank
     private float rank;
 
@@ -39,6 +33,8 @@ public class EnemyAgentReinforcement : Agent {
     //Closest enemy to the AI agent
     private GameObject closestPlayer;
 
+    //Weapon manager
+    EnemyAgentWeaponManager weaponManager;
 
     //Academy variables
     ResetParameters resetParams;
@@ -53,8 +49,8 @@ public class EnemyAgentReinforcement : Agent {
 
     public override void AgentAction(float[] vectorAction, string textAction)
     {
-        /*Generates 4 actions in 5 actions
-         * Move, X and Y (can only move in the direction it is facing, so no extra variables for moving left/right/backwards
+        /*Generates 5 actions in 6 actions
+         * Move, (can only move in the direction it is facing, so no extra variables for moving left/right/backwards)
          * Rotate
          * Shoot (only available if canshoot is true, but can still be attempted)
          * Reload
@@ -62,8 +58,8 @@ public class EnemyAgentReinforcement : Agent {
          */
         if (brain.brainParameters.vectorActionSpaceType == SpaceType.continuous)
         {
-            //Move agent using first two actions as x and y amounts (vector values clamped within function) 
-            controller.move(new Vector2(vectorAction[0], vectorAction[1]));
+            //Move agent using first two actions as movement and rotation amounts
+            controller.move(new Vector2(Mathf.RoundToInt(Mathf.Clamp01(vectorAction[0])), vectorAction[1]));
             
             //Decides whether agent should shoot (clamped to 0 or 1 for dont shoot and shoot)
             controller.shoot(Mathf.RoundToInt(Mathf.Clamp01(vectorAction[2])));
@@ -103,9 +99,8 @@ public class EnemyAgentReinforcement : Agent {
         AddVectorObs(gameObject.transform.position.y);
 
         //Players weapon info like its max ammo, the ammo currently in clip and the weapon being used
-        AddVectorObs(controller.ammo);
-        AddVectorObs(controller.clip);
-        AddVectorObs(controller.weapon);
+        AddVectorObs(weaponManager.currentAmmo[weaponManager.currentWeapon]);
+        AddVectorObs(weaponManager.currentWeapon);
 
         //The players health is also added
         AddVectorObs(controller.health);
@@ -142,25 +137,46 @@ public class EnemyAgentReinforcement : Agent {
             }
         }
 
-        //First value is the number of visible players
-        AddVectorObs(visiblePlayers.Count);
-
-        /*This is followed by each players values
-         * health
-         * rank
-         * weapon
-         * distance from AI agent
-         * */
-        foreach(GameObject g2 in visiblePlayers)
+        if (visiblePlayers.Count > 0)
         {
-            Client g2c = g2.GetComponent<Client>();
+            //Find the closest player and add its values to the observations
+            GameObject closestPlayer = visiblePlayers[0];
+            float smallestDistance = Vector3.Distance(closestPlayer.transform.position, gameObject.transform.position);
+            foreach (GameObject g2 in visiblePlayers)
+            {
+                if (g2 == visiblePlayers[0])
+                    continue;
+
+                float currentDistance = Vector3.Distance(gameObject.transform.position, g2.transform.position);
+                if (currentDistance < smallestDistance)
+                {
+                    smallestDistance = currentDistance;
+                    closestPlayer = g2;
+                }
+
+            }
+
+            /*Then add the closest players values
+             * health
+             * rank
+             * weapon
+             * distance from AI agent
+             * */
+            Client g2c = closestPlayer.GetComponent<Client>();
             AddVectorObs(g2c.health);
             AddVectorObs(g2c.rank);
             AddVectorObs(g2c.clientWeaponManager.currentWeapon);
             AddVectorObs(Vector3.Distance(g2c.player.transform.position, gameObject.transform.position));
         }
-
-        
+        else
+        {
+            //No players in the vicinity
+            AddVectorObs(0);
+            AddVectorObs(0);
+            AddVectorObs(0);
+            AddVectorObs(0);
+        }
+                
     }
 
     public override void InitializeAgent()
@@ -184,10 +200,9 @@ public class EnemyAgentReinforcement : Agent {
 
         //Reset controller variables
         controller.health = resetParams["health"];
-        controller.ammo = (int)resetParams["ammo"];
-        controller.weapon = (int)resetParams["weapon"];
+        weaponManager.currentWeapon = (int)resetParams["weapon"];
+        weaponManager.currentAmmo = weaponManager.clipSize;
         controller.rank = (int)resetParams["rank"];
-        controller.velocity = resetParams["velocity"];
 
         //Reset Agents direction and rotation
         controller.direction = new Vector3(Random.Range(-resetParams["x-direction"], resetParams["x-direction"]), Random.Range(-resetParams["y-direction"], resetParams["y-direction"]), 0);

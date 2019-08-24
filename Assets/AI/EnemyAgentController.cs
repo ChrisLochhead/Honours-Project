@@ -7,10 +7,7 @@ public class EnemyAgentController : MonoBehaviour {
     public Vector3 direction;
     public float velocity;
     public int rank;
-    public int ammo;
-    public int weapon;
     public float health;
-    public int clip;
 
     public bool isAlive = true;
 
@@ -22,9 +19,15 @@ public class EnemyAgentController : MonoBehaviour {
 
     public void move(Vector2 actions)
     {
-        //Prevents agent from moving faster than the player or moving backwards
-        actions.x = Mathf.Clamp(actions.x, 0.0f, 0.3f);
-        gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, direction+gameObject.transform.position, actions.x);
+        //Assign it to either 1.0 or 0.0: as players cannot control their exact speed, only whether they are moving
+        //or not, then so must the AI
+        if (actions.x >= 0.5)
+            actions.x = 1.0f;
+        else
+            actions.x = 0.0f;
+
+        //Move at a fixed velocity of 0.3
+        gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, direction+gameObject.transform.position, actions.x/3.3333f);
 
         //Update the rotation
         actions.y = Mathf.Clamp(actions.y, -0.5f, 0.5f);
@@ -45,10 +48,5 @@ public class EnemyAgentController : MonoBehaviour {
     {
         weaponManager.Shoot(action);
     }
-
-    // Use this for initialization
-    void Start () {
-        velocity = 0.3f;
-	}
 
 }
