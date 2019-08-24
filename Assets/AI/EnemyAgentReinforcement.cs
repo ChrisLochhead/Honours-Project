@@ -68,7 +68,7 @@ public class EnemyAgentReinforcement : Agent {
             controller.Reload(Mathf.RoundToInt(Mathf.Clamp01(vectorAction[3])));
 
             //Decides to change weapon (0 for dont, 1 - 5 for which weapon to attempt to change to)
-            controller.ChangeWeapon(Mathf.RoundToInt(Mathf.Clamp(vectorAction[4],0,4)));
+            controller.ChangeWeapon(Mathf.RoundToInt(Mathf.Clamp(vectorAction[4],0,5)));
         }
         //Trigger if the controller has died
         if (!controller.isAlive)

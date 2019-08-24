@@ -16,6 +16,11 @@ public class EnemyAgentController : MonoBehaviour {
     public int kills;
     public int deaths;
 
+    private void Start()
+    {
+        score = 0;
+    }
+
     public void Move(Vector2 actions)
     {
         //Assign it to either 1.0 or 0.0: as players cannot control their exact speed, only whether they are moving

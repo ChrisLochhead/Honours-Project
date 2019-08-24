@@ -51,7 +51,7 @@ public class EnemyAgentWeaponManager : MonoBehaviour
     {
         //Activate the correct weapon, and deactivate all the others
         currentWeapon = type;
-
+        Debug.Log("setting weapon to = " + type);
         for (int i = 0; i < guns.Length; i++)
         {
             if (i == type)
@@ -96,13 +96,13 @@ public class EnemyAgentWeaponManager : MonoBehaviour
         if (weaponIndex >= 1)
         {
             //If actually changing to a different weapon
-            if (currentWeapon != weaponIndex)
+            if(currentWeapon != weaponIndex)
             {
                 //Cancel attempt at reloading 
                 isReloading = false;
                 initialReload = true;
             }
-
+            Debug.Log("setting weapon " + weaponIndex + " " + controller.score);
             if (weaponIndex == 1) SetWeapon(0);
             if (weaponIndex == 2 && controller.score > 100) SetWeapon(1);
             if (weaponIndex == 3 && controller.score > 200) SetWeapon(2);
