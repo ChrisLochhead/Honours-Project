@@ -9,7 +9,7 @@ public class EnemyAgentReinforcement : Agent {
     /*
     Camera is 78 wide by 22 X*Y
     */
-    EnemyAgentController controller;
+    public EnemyAgentController controller;
     Vector2 cameraDimensions = new Vector2(39, 11);
 
     //array of visible players
@@ -34,7 +34,7 @@ public class EnemyAgentReinforcement : Agent {
     private GameObject closestPlayer;
 
     //Weapon manager
-    EnemyAgentWeaponManager weaponManager;
+    public EnemyAgentWeaponManager weaponManager;
 
     //Academy variables
     ResetParameters resetParams;
@@ -59,16 +59,16 @@ public class EnemyAgentReinforcement : Agent {
         if (brain.brainParameters.vectorActionSpaceType == SpaceType.continuous)
         {
             //Move agent using first two actions as movement and rotation amounts
-            controller.move(new Vector2(Mathf.RoundToInt(Mathf.Clamp01(vectorAction[0])), vectorAction[1]));
+            controller.Move(new Vector2(Mathf.RoundToInt(Mathf.Clamp01(vectorAction[0])), vectorAction[1]));
             
             //Decides whether agent should shoot (clamped to 0 or 1 for dont shoot and shoot)
-            controller.shoot(Mathf.RoundToInt(Mathf.Clamp01(vectorAction[2])));
+            controller.Shoot(Mathf.RoundToInt(Mathf.Clamp01(vectorAction[2])));
 
             //Decides whether agent should reload (clamped to 0 or 1 for dont reload and reload)
-            controller.reload(Mathf.RoundToInt(Mathf.Clamp01(vectorAction[3])));
+            controller.Reload(Mathf.RoundToInt(Mathf.Clamp01(vectorAction[3])));
 
             //Decides to change weapon (0 for dont, 1 - 5 for which weapon to attempt to change to)
-            controller.changeWeapon(Mathf.RoundToInt(Mathf.Clamp(vectorAction[4],0,5)));
+            controller.ChangeWeapon(Mathf.RoundToInt(Mathf.Clamp(vectorAction[4],0,4)));
         }
         //Trigger if the controller has died
         if (!controller.isAlive)
@@ -105,6 +105,7 @@ public class EnemyAgentReinforcement : Agent {
         //The players health is also added
         AddVectorObs(controller.health);
 
+        bool checkCanShoot = false;
         //If any of these return true, the AI can try to shoot
         foreach (GameObject g3 in visiblePlayers)
         {
@@ -112,10 +113,12 @@ public class EnemyAgentReinforcement : Agent {
             if (aimDirection == controller.direction || aimDirection == -controller.direction)
             {
                 AddVectorObs(1);
-                break;
+                checkCanShoot = true;
+                return;
             }
             //Otherwise, he cant
-            AddVectorObs(0);
+            if (checkCanShoot == false)
+                AddVectorObs(0);
         }
     }
     public void GeneratePlayerInfo()
@@ -124,14 +127,13 @@ public class EnemyAgentReinforcement : Agent {
         visiblePlayers.Clear();
 
         //Get list of players
-        GameObject[] allPlayers = GameObject.FindGameObjectsWithTag("Client");
+        GameObject[] allPlayers = GameObject.FindGameObjectsWithTag("Player1");
 
         //Check if the player is visible to the AI
         foreach (GameObject g1 in allPlayers)
         {
-            GameObject model = g1.GetComponent<Client>().player;
-            if (Mathf.Abs(model.transform.position.x - gameObject.transform.position.x) <= cameraDimensions.x
-                && Mathf.Abs(model.transform.position.y - gameObject.transform.position.y) <= cameraDimensions.y)
+            if (Mathf.Abs(g1.transform.position.x - gameObject.transform.position.x) <= cameraDimensions.x
+                && Mathf.Abs(g1.transform.position.y - gameObject.transform.position.y) <= cameraDimensions.y)
             {
                 visiblePlayers.Add(g1);
             }
@@ -162,11 +164,24 @@ public class EnemyAgentReinforcement : Agent {
              * weapon
              * distance from AI agent
              * */
-            Client g2c = closestPlayer.GetComponent<Client>();
-            AddVectorObs(g2c.health);
-            AddVectorObs(g2c.rank);
-            AddVectorObs(g2c.clientWeaponManager.currentWeapon);
-            AddVectorObs(Vector3.Distance(g2c.player.transform.position, gameObject.transform.position));
+            if (closestPlayer.GetComponent<Client>())
+            {
+                //If playing in a real game
+                Client g2c = closestPlayer.GetComponent<Client>();
+                AddVectorObs(g2c.health);
+                AddVectorObs(g2c.rank);
+                AddVectorObs(g2c.clientWeaponManager.currentWeapon);
+                AddVectorObs(Vector3.Distance(g2c.player.transform.position, gameObject.transform.position));
+            }
+            else
+            {
+                //If training against other agents
+                EnemyAgentController g2c = closestPlayer.GetComponent<EnemyAgentController>();
+                AddVectorObs(g2c.health);
+                AddVectorObs(g2c.rank);
+                AddVectorObs(g2c.weaponManager.currentWeapon);
+                AddVectorObs(Vector3.Distance(g2c.transform.position, gameObject.transform.position));
+            }
         }
         else
         {

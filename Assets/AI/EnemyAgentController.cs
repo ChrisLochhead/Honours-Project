@@ -17,7 +17,7 @@ public class EnemyAgentController : MonoBehaviour {
     public int kills;
     public int deaths;
 
-    public void move(Vector2 actions)
+    public void Move(Vector2 actions)
     {
         //Assign it to either 1.0 or 0.0: as players cannot control their exact speed, only whether they are moving
         //or not, then so must the AI
@@ -34,17 +34,17 @@ public class EnemyAgentController : MonoBehaviour {
         gameObject.transform.rotation *= Quaternion.Euler(0, 0, actions.y);
     }
 
-    public void reload(int action)
+    public void Reload(int action)
     {
         weaponManager.Reload(action);
     }
 
-    public void changeWeapon(int action)
+    public void ChangeWeapon(int action)
     {
         weaponManager.SwitchWeapon(action);
     }
 
-    public void shoot(int action)
+    public void Shoot(int action)
     {
         weaponManager.Shoot(action);
     }

@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
-using UnityEngine.Networking;
 using System.Collections.Generic;
-public class EnemyAgentWeaponManager : NetworkBehaviour
+public class EnemyAgentWeaponManager : MonoBehaviour
 {
 
     //Weapons
@@ -79,12 +78,15 @@ public class EnemyAgentWeaponManager : NetworkBehaviour
         //Reloading
         if (action == 1)
         {
+            Debug.Log("called reload function");
             if (initialReload == true || currentAmmo[currentWeapon] == 0 && initialReload == true || isReloading == false)
             {
+                Debug.Log("into function of reload");
                 reloadStartTime = Time.time;
                 reloadTargetTime = reloadStartTime + reloadTimer[currentWeapon];
                 isReloading = true;
                 initialReload = false;
+                Debug.Log("out of function of reload");
             }
         }
     }
@@ -130,8 +132,10 @@ public class EnemyAgentWeaponManager : NetworkBehaviour
             //Reload sequence
             if (isReloading)
             {
+            Debug.Log("inside reload sequence");
                 if (reloadStartTime >= reloadTargetTime)
                 {
+                Debug.Log("reload finished");
                     currentAmmo[currentWeapon] = clipSize[currentWeapon];
                     reloadStartTime = 0.0f;
                     isReloading = false;
@@ -140,6 +144,7 @@ public class EnemyAgentWeaponManager : NetworkBehaviour
                 else
                 {
                     reloadStartTime = Time.time;
+                Debug.Log(reloadStartTime);
                 }
             }      
     }
