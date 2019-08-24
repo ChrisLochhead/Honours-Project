@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyAgentController : MonoBehaviour {
-
-    public Vector3 direction;
+    
     public float velocity;
     public int rank;
     public float health;
@@ -27,12 +26,15 @@ public class EnemyAgentController : MonoBehaviour {
             actions.x = 0.0f;
 
         //Move at a fixed velocity of 0.3
-        gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, direction+gameObject.transform.position, actions.x/3.3333f);
+        gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, transform.up+gameObject.transform.position, actions.x/3.3333f);
 
         //Update the rotation
-        actions.y = Mathf.Clamp(actions.y, -0.5f, 0.5f);
-        gameObject.transform.rotation *= Quaternion.Euler(0, 0, actions.y);
+        actions.y = Mathf.Clamp(actions.y, -1.5f, 1.5f);
+        transform.Rotate(new Vector3(0, 0, actions.y));
+
     }
+
+
 
     public void Reload(int action)
     {

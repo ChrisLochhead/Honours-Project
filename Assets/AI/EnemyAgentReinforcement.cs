@@ -88,11 +88,12 @@ public class EnemyAgentReinforcement : Agent {
 
     public void GenerateAIInfo()
     {
+
         //Player information 
         //Current direction
-        AddVectorObs(controller.direction.x);
-        AddVectorObs(controller.direction.y);
-        AddVectorObs(controller.direction.z);
+        AddVectorObs(controller.transform.up.x);
+        AddVectorObs(controller.transform.up.y);
+        AddVectorObs(controller.transform.up.z);
 
         //Players 2D position (because it cant move in z axis space anyway
         AddVectorObs(gameObject.transform.position.x);
@@ -110,15 +111,17 @@ public class EnemyAgentReinforcement : Agent {
         foreach (GameObject g3 in visiblePlayers)
         {
             Vector3 aimDirection = g3.transform.position - gameObject.transform.position;
-            if (aimDirection == controller.direction || aimDirection == -controller.direction)
+            if (aimDirection == controller.transform.up || aimDirection == -controller.transform.up)
             {
                 AddVectorObs(1);
                 checkCanShoot = true;
-                return;
             }
-            //Otherwise, he cant
-            if (checkCanShoot == false)
-                AddVectorObs(0);
+
+        }
+        //Otherwise, he cant
+        if (checkCanShoot == false)
+        {
+            AddVectorObs(0);
         }
     }
     public void GeneratePlayerInfo()
@@ -173,7 +176,7 @@ public class EnemyAgentReinforcement : Agent {
                 AddVectorObs(g2c.clientWeaponManager.currentWeapon);
                 AddVectorObs(Vector3.Distance(g2c.player.transform.position, gameObject.transform.position));
             }
-            else
+            else if (closestPlayer.GetComponent<EnemyAgentController>())
             {
                 //If training against other agents
                 EnemyAgentController g2c = closestPlayer.GetComponent<EnemyAgentController>();
@@ -191,7 +194,7 @@ public class EnemyAgentReinforcement : Agent {
             AddVectorObs(0);
             AddVectorObs(0);
         }
-                
+
     }
 
     public override void InitializeAgent()
@@ -220,8 +223,8 @@ public class EnemyAgentReinforcement : Agent {
         controller.rank = (int)resetParams["rank"];
 
         //Reset Agents direction and rotation
-        controller.direction = new Vector3(Random.Range(-resetParams["x-direction"], resetParams["x-direction"]), Random.Range(-resetParams["y-direction"], resetParams["y-direction"]), 0);
-        float rotation = Mathf.Atan2(controller.direction.x, controller.direction.y) * Mathf.Rad2Deg;
+        controller.transform.up = new Vector3(Random.Range(-resetParams["x-direction"], resetParams["x-direction"]), Random.Range(-resetParams["y-direction"], resetParams["y-direction"]), 0);
+        float rotation = Mathf.Atan2(controller.transform.up.x, controller.transform.up.y) * Mathf.Rad2Deg;
         gameObject.transform.rotation = Quaternion.Euler(0, 0, -rotation);
     }
 }
