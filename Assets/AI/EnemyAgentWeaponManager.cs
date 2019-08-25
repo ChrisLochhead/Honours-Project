@@ -64,7 +64,7 @@ public class EnemyAgentWeaponManager : MonoBehaviour
     public void Shoot(int action)
     {       
         //If the player can and is shooting, create a bullet, decrement ammo and show a muzzle flash
-        if (currentAmmo[currentWeapon] > 0 && fireRates[currentWeapon] == currentFireRates[currentWeapon] && action == 1)
+        if (currentAmmo[currentWeapon] > 0 && fireRates[currentWeapon] == currentFireRates[currentWeapon] && action == 1 && isReloading == false)
         {
             SpawnBullet();
             currentAmmo[currentWeapon]--;
@@ -79,7 +79,7 @@ public class EnemyAgentWeaponManager : MonoBehaviour
         if (action == 1)
         {
             Debug.Log("called reload function");
-            if (initialReload == true || currentAmmo[currentWeapon] == 0 && initialReload == true || isReloading == false)
+            if (initialReload == true || isReloading == false)
             {
                 Debug.Log("into function of reload");
                 reloadStartTime = Time.time;
@@ -129,24 +129,28 @@ public class EnemyAgentWeaponManager : MonoBehaviour
 
             }
 
-            //Reload sequence
-            if (isReloading)
-            {
+        if (currentAmmo[currentWeapon] == 0 && initialReload == true && isReloading == false)
+            Reload(1);
+
+        //Reload sequence
+        if (isReloading)
+        {
             Debug.Log("inside reload sequence");
-                if (reloadStartTime >= reloadTargetTime)
-                {
+            Debug.Log(reloadStartTime + " " + reloadTargetTime);
+            if (reloadStartTime >= reloadTargetTime)
+            {
                 Debug.Log("reload finished");
-                    currentAmmo[currentWeapon] = clipSize[currentWeapon];
-                    reloadStartTime = 0.0f;
-                    isReloading = false;
-                    initialReload = true;
-                }
-                else
-                {
-                    reloadStartTime = Time.time;
+                currentAmmo[currentWeapon] = clipSize[currentWeapon];
+                reloadStartTime = 0.0f;
+                isReloading = false;
+                initialReload = true;
+            }
+            else
+            {
+                reloadStartTime = Time.time;
                 Debug.Log(reloadStartTime);
-                }
-            }      
+            }
+        }      
     }
 
     public void SpawnBullet()

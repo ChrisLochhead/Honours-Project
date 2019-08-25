@@ -219,7 +219,12 @@ public class EnemyAgentReinforcement : Agent {
         //Reset controller variables
         controller.health = resetParams["health"];
         weaponManager.currentWeapon = (int)resetParams["weapon"];
-        weaponManager.currentAmmo = weaponManager.clipSize;
+
+        for (int i = 0; i < weaponManager.clipSize.Length; i++)
+        {
+            weaponManager.currentAmmo[i] = weaponManager.clipSize[i];
+        }
+
         controller.rank = (int)resetParams["rank"];
 
         //Reset Agents direction and rotation

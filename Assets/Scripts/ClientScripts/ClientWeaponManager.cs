@@ -106,7 +106,7 @@ public class ClientWeaponManager : NetworkBehaviour {
         if (!Owner.hasWon && !Owner.hasLost && !Owner.Paused)
         {
             //If the player can and is shooting, create a bullet, decrement ammo and show a muzzle flash
-            if (Input.GetMouseButton(0) && currentAmmo[currentWeapon] > 0 && Owner.isLocal && fireRates[currentWeapon] == currentFireRates[currentWeapon])
+            if (Input.GetMouseButton(0) && currentAmmo[currentWeapon] > 0 && Owner.isLocal && fireRates[currentWeapon] == currentFireRates[currentWeapon] && !isReloading)
             {
                 CmdSpawnBullet();
                 currentAmmo[currentWeapon]--;
