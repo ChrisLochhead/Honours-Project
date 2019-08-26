@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
-
+//Gonna need to probably split this class into bullet and training-bullet
 public class Bullet : NetworkBehaviour {
 
     //Reference to the client who shot this bullet
@@ -19,12 +19,28 @@ public class Bullet : NetworkBehaviour {
         transform.localScale = new Vector3(8.1f, 8.1f, 23.1f);
     }
 
+    private void Update()
+    {
+        if(Vector3.Distance(this.gameObject.transform.position, shooter.transform.position) > 40)
+        {
+            Destroy(this.gameObject);
+        }
+    }
     private void OnCollisionEnter(Collision collision)
     {
 
         //Check if its hit an obstacle
         if (collision.gameObject.tag == "Obstacle")
         {
+            Destroy(this.gameObject);
+            return;
+        }
+
+        //Training function for AI agents, commented out during study
+        //Check if it has hit an enemyplayer
+        if (collision.transform.GetComponent<EnemyAgentController>())
+        {
+            CheckEnemyCollision(collision);
             Destroy(this.gameObject);
             return;
         }
@@ -56,9 +72,11 @@ public class Bullet : NetworkBehaviour {
         //to circumvent this.
         if (isServer && isHost)
         {
+            Debug.Log("getting in here");
             //Bullet code for AI training
             if (collision.transform.GetComponent<EnemyAgentReinforcement>())
             {
+                Debug.Log("hit");
                 if (collision.transform.GetComponent<EnemyAgentController>().isAlive == false)
                 {
                     if (shooter.GetComponent<EnemyAgentReinforcement>())

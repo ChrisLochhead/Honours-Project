@@ -21,6 +21,16 @@ public class EnemyAgentController : MonoBehaviour {
         score = 0;
     }
 
+    private void Update()
+    {
+        Physics.IgnoreLayerCollision(9, 9);
+
+        //Ground the objects z co-ordinate 
+        transform.position = new Vector3(transform.position.x, transform.position.y, -10);
+
+        //transform.rotation = Quaternion.Euler(0, 0, transform.rotation.z);
+    }
+
     public void Move(Vector2 actions)
     {
         //Assign it to either 1.0 or 0.0: as players cannot control their exact speed, only whether they are moving
@@ -38,8 +48,6 @@ public class EnemyAgentController : MonoBehaviour {
         transform.Rotate(new Vector3(0, 0, actions.y));
 
     }
-
-
 
     public void Reload(int action)
     {

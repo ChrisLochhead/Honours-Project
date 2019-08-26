@@ -51,7 +51,6 @@ public class EnemyAgentWeaponManager : MonoBehaviour
     {
         //Activate the correct weapon, and deactivate all the others
         currentWeapon = type;
-        Debug.Log("setting weapon to = " + type);
         for (int i = 0; i < guns.Length; i++)
         {
             if (i == type)
@@ -78,15 +77,12 @@ public class EnemyAgentWeaponManager : MonoBehaviour
         //Reloading
         if (action == 1)
         {
-            Debug.Log("called reload function");
             if (initialReload == true || isReloading == false)
             {
-                Debug.Log("into function of reload");
                 reloadStartTime = Time.time;
                 reloadTargetTime = reloadStartTime + reloadTimer[currentWeapon];
                 isReloading = true;
                 initialReload = false;
-                Debug.Log("out of function of reload");
             }
         }
     }
@@ -102,7 +98,6 @@ public class EnemyAgentWeaponManager : MonoBehaviour
                 isReloading = false;
                 initialReload = true;
             }
-            Debug.Log("setting weapon " + weaponIndex + " " + controller.score);
             if (weaponIndex == 1) SetWeapon(0);
             if (weaponIndex == 2 && controller.score > 100) SetWeapon(1);
             if (weaponIndex == 3 && controller.score > 200) SetWeapon(2);
@@ -135,11 +130,8 @@ public class EnemyAgentWeaponManager : MonoBehaviour
         //Reload sequence
         if (isReloading)
         {
-            Debug.Log("inside reload sequence");
-            Debug.Log(reloadStartTime + " " + reloadTargetTime);
             if (reloadStartTime >= reloadTargetTime)
             {
-                Debug.Log("reload finished");
                 currentAmmo[currentWeapon] = clipSize[currentWeapon];
                 reloadStartTime = 0.0f;
                 isReloading = false;
@@ -148,7 +140,6 @@ public class EnemyAgentWeaponManager : MonoBehaviour
             else
             {
                 reloadStartTime = Time.time;
-                Debug.Log(reloadStartTime);
             }
         }      
     }
@@ -164,11 +155,11 @@ public class EnemyAgentWeaponManager : MonoBehaviour
         b.transform.rotation = rot;
 
         //calculate trajectory
-        b.GetComponent<Rigidbody>().velocity = b.transform.forward * 6.0f;
+        b.GetComponent<Rigidbody>().velocity = b.transform.forward * 36.0f;
 
         //add tag indicating whose bullet it is
-        b.GetComponent<Bullet>().shooter = gameObject;
-        b.GetComponent<Bullet>().damageAmount = damageAmounts[currentWeapon];
+        b.GetComponent<TrainingBullet>().shooter = gameObject;
+        b.GetComponent<TrainingBullet>().damageAmount = damageAmounts[currentWeapon];
 
     }
 }
