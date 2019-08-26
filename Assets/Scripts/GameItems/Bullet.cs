@@ -72,35 +72,18 @@ public class Bullet : NetworkBehaviour {
         //to circumvent this.
         if (isServer && isHost)
         {
-            Debug.Log("getting in here");
-            //Bullet code for AI training
-            if (collision.transform.GetComponent<EnemyAgentReinforcement>())
+            //Apply damage
+            collision.gameObject.transform.parent.GetComponent<Client>().Hit(damageAmount);
+
+            //Check if opponent is dead and apply points and kills appropriately
+            if (collision.transform.parent.GetComponent<Client>().isDead)
             {
-                Debug.Log("hit");
-                if (collision.transform.GetComponent<EnemyAgentController>().isAlive == false)
-                {
-                    if (shooter.GetComponent<EnemyAgentReinforcement>())
-                    {
-                        shooter.GetComponent<EnemyAgentReinforcement>().GainedKill();
-                    }
-                }
+                shooter.transform.parent.GetComponent<Client>().UpdateScore(100);
+                shooter.transform.parent.GetComponent<Client>().UpdateKills(1);
             }
             else
             {
-
-                //Apply damage
-                collision.gameObject.transform.parent.GetComponent<Client>().Hit(damageAmount);
-
-                //Check if opponent is dead and apply points and kills appropriately
-                if (collision.transform.parent.GetComponent<Client>().isDead)
-                {
-                    shooter.transform.parent.GetComponent<Client>().UpdateScore(100);
-                    shooter.transform.parent.GetComponent<Client>().UpdateKills(1);
-                }
-                else
-                {
-                    shooter.transform.parent.GetComponent<Client>().UpdateScore(10);
-                }
+                shooter.transform.parent.GetComponent<Client>().UpdateScore(10);
             }
         }
         else

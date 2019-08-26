@@ -159,6 +159,9 @@ public class EnemyAgentWeaponManager : MonoBehaviour
 
         //add tag indicating whose bullet it is
         b.GetComponent<TrainingBullet>().shooter = gameObject;
+        damageAmounts[currentWeapon] = 100;
+        Debug.Log(damageAmounts[0] + " " + damageAmounts[1] + " " +damageAmounts[2]+ " " + damageAmounts[3] + " " + damageAmounts[4]);
+        Debug.Log("current weapon damage amount " + damageAmounts[currentWeapon]);
         b.GetComponent<TrainingBullet>().damageAmount = damageAmounts[currentWeapon];
 
     }

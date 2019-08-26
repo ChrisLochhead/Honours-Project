@@ -56,19 +56,20 @@ public class TrainingBullet : MonoBehaviour
 
     void CheckEnemyCollision(Collision collision)
     {
-
-        Debug.Log("getting in here");
         //Bullet code for AI training
         if (collision.transform.GetComponent<EnemyAgentReinforcement>())
         {
-            Debug.Log("hit");
-            if (collision.transform.GetComponent<EnemyAgentController>().isAlive == false)
+            Debug.Log("getting into here allright");
+            //Apply damage
+            collision.transform.GetComponent<EnemyAgentController>().health -= damageAmount;
+            Debug.Log(collision.transform.GetComponent<EnemyAgentController>().health + "   :    " + damageAmount);
+            if(collision.transform.GetComponent<EnemyAgentController>().health <= 0)
             {
-                if (shooter.GetComponent<EnemyAgentReinforcement>())
-                {
-                    shooter.GetComponent<EnemyAgentReinforcement>().GainedKill();
-                }
+                collision.transform.GetComponent<EnemyAgentController>().isAlive = false;
+                shooter.GetComponent<EnemyAgentReinforcement>().GainedKill();
+                Debug.Log("assigned values sucessfully");
             }
+
         }
     }
 }
