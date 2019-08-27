@@ -75,7 +75,7 @@ public class EnemyAgentWeaponManager : MonoBehaviour
     public void Reload(int action)
     {
         //Reloading
-        if (action == 1)
+        if (action == 1 && currentAmmo[currentWeapon] != clipSize[currentWeapon])
         {
             if (initialReload == true || isReloading == false)
             {

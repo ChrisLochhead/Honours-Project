@@ -74,7 +74,7 @@ public class EnemyAgentReinforcement : Agent {
         if (!controller.isAlive)
         {
             Done();
-            SetReward(-1f);
+            SetReward(-0.1f);
             controller.deaths++;
         }
 
