@@ -35,10 +35,10 @@ public class EnemyAgentController : MonoBehaviour {
     {
         //Assign it to either 1.0 or 0.0: as players cannot control their exact speed, only whether they are moving
         //or not, then so must the AI
-        if (actions.x >= 0.5)
-            actions.x = 1.0f;
-        else
-            actions.x = 0.0f;
+        //if (actions.x >= 0.5)
+        //    actions.x = 1.0f;
+        //else
+        //    actions.x = 0.0f;
 
         //Move at a fixed velocity of 0.3
         gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, transform.up+gameObject.transform.position, actions.x/3.3333f);

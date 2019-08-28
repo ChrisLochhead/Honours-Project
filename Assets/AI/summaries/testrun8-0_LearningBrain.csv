@@ -1,0 +1,18 @@
+Brain name,Time to update policy,Time since start of training,Time for last experience collection,Number of experiences used for training,Mean return
+LearningBrain,1.564,10.651,11.855,10245,0.150
+LearningBrain,1.809,17.985,8.829,12330,0.186
+LearningBrain,1.494,24.660,8.596,10320,nan
+LearningBrain,1.726,32.726,10.340,12259,0.043
+LearningBrain,1.515,39.179,8.122,10320,nan
+LearningBrain,1.737,47.254,10.269,12260,0.000
+LearningBrain,1.513,53.722,8.125,10320,nan
+LearningBrain,1.731,63.220,12.430,12184,-0.005
+LearningBrain,1.731,70.944,9.628,12164,0.036
+LearningBrain,1.509,77.525,8.369,10320,nan
+LearningBrain,1.826,85.223,9.543,12308,0.090
+LearningBrain,1.515,91.844,8.422,10320,nan
+LearningBrain,1.847,100.018,10.223,12299,0.043
+LearningBrain,1.530,106.623,8.387,10320,nan
+LearningBrain,1.823,114.747,10.232,12340,0.050
+LearningBrain,1.771,122.513,9.608,12251,0.036
+LearningBrain,1.520,129.232,8.570,10261,-0.100

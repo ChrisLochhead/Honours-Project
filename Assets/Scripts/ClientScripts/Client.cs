@@ -25,7 +25,6 @@ public class Client : NetworkBehaviour
 
     //Physics
     float velocity;
-    float movementSpeed;
 
     //Crosshair
     Vector3 currentDirection;
@@ -67,7 +66,6 @@ public class Client : NetworkBehaviour
     //Recording whether character is currently alive
     [SyncVar(hook = "SetLiving")] public bool isDead = false;
     bool reset = false;
-    float deathRotation = 0;
 
 
     //Registers which team the player is in
@@ -237,7 +235,6 @@ public class Client : NetworkBehaviour
         clientWeaponManager.InitialiseWeapons();
         //currentWeapon = 0;
         velocity = 0.3f;
-        movementSpeed = 0.3f;
 
         //Initialise camera position
         player.transform.position = new Vector3(playerCam.transform.position.x, playerCam.transform.position.y, -10);

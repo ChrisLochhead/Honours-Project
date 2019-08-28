@@ -24,12 +24,6 @@ public class EnemyAgentReinforcement : Agent {
     //Direction the AI is facing
     private Vector3 direction;
 
-    //Marked true if the AI would hit someone if they shot
-    private bool lineOfSight = false;
-
-    //Marked true if shooting a wall behind which there would be a player
-    private bool weakLineOfSight = false;
-
     //Closest enemy to the AI agent
     private GameObject closestPlayer;
 

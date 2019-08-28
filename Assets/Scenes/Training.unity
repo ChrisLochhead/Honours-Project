@@ -8767,7 +8767,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 398376565}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -200, y: 44.7, z: 0}
+  m_LocalPosition: {x: 300, y: 300, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 351236541}
@@ -10974,7 +10974,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 513472511}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -200, y: 0, z: 0}
+  m_LocalPosition: {x: -300, y: -300, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 415391529}
@@ -16915,7 +16915,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 854893077}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -200, y: -49, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2000330799}
@@ -18470,11 +18470,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4419115351106030, guid: 6fd3c3b07a6338a4e9c00c4337c4cd74, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -200
+      value: -300
       objectReference: {fileID: 0}
     - target: {fileID: 4419115351106030, guid: 6fd3c3b07a6338a4e9c00c4337c4cd74, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 300
       objectReference: {fileID: 0}
     - target: {fileID: 4419115351106030, guid: 6fd3c3b07a6338a4e9c00c4337c4cd74, type: 2}
       propertyPath: m_LocalPosition.z
@@ -22745,9 +22745,7 @@ MonoBehaviour:
   broadcastHub:
     broadcastingBrains:
     - {fileID: 11400000, guid: e30ca0686c9d2804a8d299a526b48c7d, type: 2}
-    - {fileID: 11400000, guid: c89088df4f716ca48b46ca4f811605af, type: 2}
-    _brainsToControl:
-    - {fileID: 11400000, guid: e30ca0686c9d2804a8d299a526b48c7d, type: 2}
+    _brainsToControl: []
   maxSteps: 0
   trainingConfiguration:
     width: 80
@@ -22764,9 +22762,9 @@ MonoBehaviour:
   resetParameters:
     resetParameters:
     - key: x-position
-      value: 150
+      value: 125
     - key: y-position
-      value: 150
+      value: 125
     - key: health
       value: 100
     - key: weapon
@@ -25626,7 +25624,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!124 &1330039803
 Behaviour:
   m_ObjectHideFlags: 0
@@ -37240,7 +37238,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1862945281}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -200, y: 100, z: 0}
+  m_LocalPosition: {x: 300, y: -300, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1501362046}

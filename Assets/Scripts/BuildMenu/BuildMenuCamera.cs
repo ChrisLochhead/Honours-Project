@@ -15,9 +15,6 @@ public class BuildMenuCamera : MonoBehaviour {
     private bool takingImage = false;
     public bool imageTaken = false;
 
-    //Shutter starting width and height
-    Vector2 startingSize = new Vector2(800, 0);
-
     //For preventing its use when menus are open
     private bool isDisabled = false;
 
