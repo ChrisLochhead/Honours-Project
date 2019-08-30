@@ -60,10 +60,10 @@ public class EnemyAgentWeaponManager : MonoBehaviour
         }
     }
 
-    public void Shoot(int action)
+    public void Shoot(float action)
     {       
         //If the player can and is shooting, create a bullet, decrement ammo and show a muzzle flash
-        if (currentAmmo[currentWeapon] > 0 && fireRates[currentWeapon] == currentFireRates[currentWeapon] && action == 1 && isReloading == false)
+        if (currentAmmo[currentWeapon] > 0 && fireRates[currentWeapon] == currentFireRates[currentWeapon] && action > 0 && isReloading == false)
         {
             SpawnBullet();
             currentAmmo[currentWeapon]--;
@@ -72,10 +72,10 @@ public class EnemyAgentWeaponManager : MonoBehaviour
         }
     }
 
-    public void Reload(int action)
+    public void Reload(float action)
     {
         //Reloading
-        if (action == 1 && currentAmmo[currentWeapon] != clipSize[currentWeapon])
+        if (action > 0 && currentAmmo[currentWeapon]/clipSize[currentWeapon] < 0.6f)
         {
             if (initialReload == true || isReloading == false)
             {
@@ -87,25 +87,32 @@ public class EnemyAgentWeaponManager : MonoBehaviour
         }
     }
 
-    public void SwitchWeapon(int weaponIndex)
+    public void SwitchWeapon(float weaponIndex)
     {
-        if (weaponIndex >= 1)
+        if (weaponIndex > 0)
         {
             //If actually changing to a different weapon
-            if(currentWeapon != weaponIndex)
+            if(currentWeapon == 0 && weaponIndex <= 0.2f || currentWeapon == 1 && weaponIndex <= 0.4f && weaponIndex > 0.20f || currentWeapon == 2 && weaponIndex <= 0.6f && weaponIndex > 0.4f ||
+                currentWeapon == 3 && weaponIndex <= 0.8f && weaponIndex >= 0.6f || currentWeapon == 4 && weaponIndex > 0.8f)
             {
                 //Cancel attempt at reloading 
                 isReloading = false;
                 initialReload = true;
             }
-            if (weaponIndex == 1) SetWeapon(0);
-            if (weaponIndex == 2 && controller.score > 100) SetWeapon(1);
-            if (weaponIndex == 3 && controller.score > 200) SetWeapon(2);
-            if (weaponIndex == 4 && controller.score > 400) SetWeapon(3);
-            if (weaponIndex == 5 && controller.score > 750) SetWeapon(4);
+            //Cycle through weapons
+            if (currentWeapon == 0 && weaponIndex <= 0.2f) SetWeapon(0);
+            if (currentWeapon == 1 && weaponIndex > 0.2f && weaponIndex <= 0.4f && controller.score > 100) SetWeapon(1);
+            if (currentWeapon == 2 && weaponIndex > 0.4f && weaponIndex <= 0.6f && controller.score > 200) SetWeapon(2);
+            if (currentWeapon == 3 && weaponIndex > 0.6f && weaponIndex <= 0.8f && controller.score > 400) SetWeapon(3);
+            if (currentWeapon == 4 && weaponIndex > 0.8f && controller.score > 750) SetWeapon(4);
+
         }
     }
 
+    void CycleWeapon(int w, int s)
+    {
+        if (currentWeapon == w-1 && controller.score > 100) SetWeapon(1);
+    }
 
     void Update()
     {
@@ -160,8 +167,6 @@ public class EnemyAgentWeaponManager : MonoBehaviour
         //add tag indicating whose bullet it is
         b.GetComponent<TrainingBullet>().shooter = gameObject;
         damageAmounts[currentWeapon] = 100;
-        Debug.Log(damageAmounts[0] + " " + damageAmounts[1] + " " +damageAmounts[2]+ " " + damageAmounts[3] + " " + damageAmounts[4]);
-        Debug.Log("current weapon damage amount " + damageAmounts[currentWeapon]);
         b.GetComponent<TrainingBullet>().damageAmount = damageAmounts[currentWeapon];
 
     }

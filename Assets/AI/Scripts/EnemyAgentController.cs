@@ -9,6 +9,7 @@ public class EnemyAgentController : MonoBehaviour {
     public float health;
 
     public bool isAlive = true;
+    public bool hittingWall = false;
 
     public int score;
     public EnemyAgentWeaponManager weaponManager;
@@ -23,7 +24,7 @@ public class EnemyAgentController : MonoBehaviour {
 
     private void Update()
     {
-        Physics.IgnoreLayerCollision(9, 9);
+        //Physics.IgnoreLayerCollision(9, 9);
 
         //Ground the objects z co-ordinate 
         transform.position = new Vector3(transform.position.x, transform.position.y, -10);
@@ -33,35 +34,41 @@ public class EnemyAgentController : MonoBehaviour {
 
     public void Move(Vector2 actions)
     {
-        //Assign it to either 1.0 or 0.0: as players cannot control their exact speed, only whether they are moving
-        //or not, then so must the AI
-        //if (actions.x >= 0.5)
-        //    actions.x = 1.0f;
-        //else
-        //    actions.x = 0.0f;
-
-        //Move at a fixed velocity of 0.3
-        gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, transform.up+gameObject.transform.position, actions.x/3.3333f);
+        //Move at a fixed velocity of 0.3 or 0.0
+        if (actions.x > 0)
+        {
+            gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, transform.up + gameObject.transform.position, 0.9f);
+        }
 
         //Update the rotation
-        actions.y = Mathf.Clamp(actions.y, -1.5f, 1.5f);
-        transform.Rotate(new Vector3(0, 0, actions.y));
+        actions.y = Mathf.Clamp(actions.y, -3.5f, 3.5f);
+        transform.Rotate(new Vector3(0, 0, actions.y *2.5f));
 
     }
 
-    public void Reload(int action)
+    public void Reload(float action)
     {
         weaponManager.Reload(action);
     }
 
-    public void ChangeWeapon(int action)
+    public void ChangeWeapon(float action)
     {
         weaponManager.SwitchWeapon(action);
     }
 
-    public void Shoot(int action)
+    public void Shoot(float action)
     {
         weaponManager.Shoot(action);
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        GetComponent<Rigidbody>().velocity = Vector3.zero;
+        hittingWall = true;
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        hittingWall = false;
+    }
 }

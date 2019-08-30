@@ -32,7 +32,9 @@ public class EnemyAgentReinforcement : Agent {
 
     //Academy variables
     ResetParameters resetParams;
- 
+
+    bool checkCanShoot = false;
+
     //AI specific functionality
     public override void CollectObservations()
     {
@@ -43,6 +45,8 @@ public class EnemyAgentReinforcement : Agent {
 
     public override void AgentAction(float[] vectorAction, string textAction)
     {
+
+        //Debug.Log(vectorAction[0] + " :: "+  vectorAction[1] + " :: " + vectorAction[2] + " :: " + vectorAction[3] + " :: " + vectorAction[4]);
         /*Generates 5 actions in 6 actions
          * Move, (can only move in the direction it is facing, so no extra variables for moving left/right/backwards)
          * Rotate
@@ -54,30 +58,42 @@ public class EnemyAgentReinforcement : Agent {
         {
             //Move agent using first two actions as movement and rotation amounts
             controller.Move(new Vector2(Mathf.RoundToInt(Mathf.Clamp01(vectorAction[0])), vectorAction[1]));
-            
-            //Decides whether agent should shoot (clamped to 0 or 1 for dont shoot and shoot)
-            controller.Shoot(Mathf.RoundToInt(Mathf.Clamp01(vectorAction[2])));
+
+            if (checkCanShoot)
+            {
+                //Decides whether agent should shoot (clamped to 0 or 1 for dont shoot and shoot)
+                controller.Shoot(vectorAction[2]);
+            }
 
             //Decides whether agent should reload (clamped to 0 or 1 for dont reload and reload)
-            controller.Reload(Mathf.RoundToInt(Mathf.Clamp01(vectorAction[3])));
+            controller.Reload(vectorAction[3]);
 
             //Decides to change weapon (0 for dont, 1 - 5 for which weapon to attempt to change to)
-            controller.ChangeWeapon(Mathf.RoundToInt(Mathf.Clamp(vectorAction[4],0,5)));
+            controller.ChangeWeapon(vectorAction[4]);
         }
         //Trigger if the controller has died
         if (!controller.isAlive)
         {
             Done();
-            SetReward(-0.1f);
+            SetReward(-5f);
             controller.deaths++;
+            if(controller.deaths == 3)
+            {
+                SetReward(-10f);
+            }
         }
-
+        if (controller.hittingWall)
+            SetReward(-0.001f);
     }
 
     public void GainedKill()
     {
-        SetReward(1f);
+        SetReward(5f);
         controller.kills++;
+        if(controller.kills == 3)
+        {
+            SetReward(10f);
+        }
     }
 
     public void GenerateAIInfo()
@@ -85,29 +101,30 @@ public class EnemyAgentReinforcement : Agent {
 
         //Player information 
         //Current direction
-        AddVectorObs(controller.transform.up.x);
-        AddVectorObs(controller.transform.up.y);
-        AddVectorObs(controller.transform.up.z);
+        //AddVectorObs(controller.transform.up.x);
+        //AddVectorObs(controller.transform.up.y);
+        //AddVectorObs(controller.transform.up.z);
 
-        //Players 2D position (because it cant move in z axis space anyway
-        AddVectorObs(gameObject.transform.position.x);
-        AddVectorObs(gameObject.transform.position.y);
+        ////Players 2D position (because it cant move in z axis space anyway
+        //AddVectorObs(gameObject.transform.position.x);
+        //AddVectorObs(gameObject.transform.position.y);
 
         //Players weapon info like its max ammo, the ammo currently in clip and the weapon being used
         AddVectorObs(weaponManager.currentAmmo[weaponManager.currentWeapon]);
         AddVectorObs(weaponManager.currentWeapon);
 
         //The players health is also added
-        AddVectorObs(controller.health);
+        //AddVectorObs(controller.health);
 
-        bool checkCanShoot = false;
+        checkCanShoot = false;
         //If any of these return true, the AI can try to shoot
         foreach (GameObject g3 in visiblePlayers)
         {
             Vector3 aimDirection = g3.transform.position - gameObject.transform.position;
-            if (aimDirection == controller.transform.up || aimDirection == -controller.transform.up)
+            if (Vector3.Angle(aimDirection , controller.transform.up) < 3)
             {
                 AddVectorObs(1);
+                AddReward(0.1f);
                 checkCanShoot = true;
             }
 
@@ -116,6 +133,7 @@ public class EnemyAgentReinforcement : Agent {
         if (checkCanShoot == false)
         {
             AddVectorObs(0);
+            AddReward(0.01f);
         }
     }
     public void GeneratePlayerInfo()
@@ -155,7 +173,7 @@ public class EnemyAgentReinforcement : Agent {
 
             }
 
-            /*Then add the closest players values
+            /* Then add the closest players values
              * health
              * rank
              * weapon
@@ -179,6 +197,7 @@ public class EnemyAgentReinforcement : Agent {
                 AddVectorObs(g2c.weaponManager.currentWeapon);
                 AddVectorObs(Vector3.Distance(g2c.transform.position, gameObject.transform.position));
             }
+            SetReward(0.001f);
         }
         else
         {
@@ -187,6 +206,8 @@ public class EnemyAgentReinforcement : Agent {
             AddVectorObs(0);
             AddVectorObs(0);
             AddVectorObs(0);
+
+            SetReward(-0.001f);
         }
 
     }
@@ -225,5 +246,8 @@ public class EnemyAgentReinforcement : Agent {
         controller.transform.up = new Vector3(Random.Range(-resetParams["x-direction"], resetParams["x-direction"]), Random.Range(-resetParams["y-direction"], resetParams["y-direction"]), 0);
         float rotation = Mathf.Atan2(controller.transform.up.x, controller.transform.up.y) * Mathf.Rad2Deg;
         gameObject.transform.rotation = Quaternion.Euler(0, 0, -rotation);
+
+        controller.kills = 0;
+        controller.hittingWall = false;
     }
 }

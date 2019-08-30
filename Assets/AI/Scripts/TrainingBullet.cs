@@ -9,11 +9,10 @@ public class TrainingBullet : MonoBehaviour
     //Amount of damage carried by this bullet
     public int damageAmount;
 
-
     void Start()
     {
         //Set the objects scale as prefab doesn't keep it static
-        transform.localScale = new Vector3(8.1f, 8.1f, 23.1f);
+        //transform.localScale = new Vector3(8.1f, 8.1f, 23.1f);
     }
 
     private void Update()
@@ -27,6 +26,7 @@ public class TrainingBullet : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
 
+        Debug.Log("Hello");
         //Check if its hit an obstacle
         if (collision.gameObject.tag == "Obstacle")
         {
@@ -51,7 +51,7 @@ public class TrainingBullet : MonoBehaviour
                 Destroy(this.gameObject);
             return;
         }
-
+        
     }
 
     void CheckEnemyCollision(Collision collision)
