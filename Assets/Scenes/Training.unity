@@ -404,6 +404,7 @@ MonoBehaviour:
   rank: 0
   health: 100
   isAlive: 1
+  hittingWall: 0
   score: 0
   weaponManager: {fileID: 24238586}
   kills: 0
@@ -1162,7 +1163,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &84714147
 Transform:
   m_ObjectHideFlags: 0
@@ -1288,7 +1289,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &90296459
 Transform:
   m_ObjectHideFlags: 0
@@ -2822,6 +2823,7 @@ MonoBehaviour:
   rank: 0
   health: 100
   isAlive: 1
+  hittingWall: 0
   score: 0
   weaponManager: {fileID: 175115427}
   kills: 0
@@ -3765,7 +3767,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &265810242
 Transform:
   m_ObjectHideFlags: 0
@@ -5139,7 +5141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c9eb88473f605048a63c39db10a09ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  brain: {fileID: 11400000, guid: e30ca0686c9d2804a8d299a526b48c7d, type: 2}
+  brain: {fileID: 11400000, guid: c89088df4f716ca48b46ca4f811605af, type: 2}
   agentParameters:
     agentCameras: []
     agentRenderTextures: []
@@ -5301,7 +5303,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &419764430
 Transform:
   m_ObjectHideFlags: 0
@@ -6236,6 +6238,10 @@ Prefab:
       propertyPath: m_Constraints
       value: 120
       objectReference: {fileID: 0}
+    - target: {fileID: 1532381665865592, guid: 6fd3c3b07a6338a4e9c00c4337c4cd74, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6fd3c3b07a6338a4e9c00c4337c4cd74, type: 2}
   m_IsPrefabParent: 0
@@ -6600,6 +6606,10 @@ Prefab:
         type: 2}
       propertyPath: m_Constraints
       value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 1532381665865592, guid: 6fd3c3b07a6338a4e9c00c4337c4cd74, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6fd3c3b07a6338a4e9c00c4337c4cd74, type: 2}
@@ -7294,6 +7304,10 @@ Prefab:
         type: 2}
       propertyPath: m_Constraints
       value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 1532381665865592, guid: 6fd3c3b07a6338a4e9c00c4337c4cd74, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6fd3c3b07a6338a4e9c00c4337c4cd74, type: 2}
@@ -8466,6 +8480,10 @@ Prefab:
       propertyPath: m_Constraints
       value: 120
       objectReference: {fileID: 0}
+    - target: {fileID: 1532381665865592, guid: 6fd3c3b07a6338a4e9c00c4337c4cd74, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6fd3c3b07a6338a4e9c00c4337c4cd74, type: 2}
   m_IsPrefabParent: 0
@@ -8785,7 +8803,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &696258547
 Transform:
   m_ObjectHideFlags: 0
@@ -9384,6 +9402,7 @@ MonoBehaviour:
   rank: 0
   health: 100
   isAlive: 1
+  hittingWall: 0
   score: 0
   weaponManager: {fileID: 746955759}
   kills: 0
@@ -9993,6 +10012,7 @@ MonoBehaviour:
   rank: 0
   health: 100
   isAlive: 1
+  hittingWall: 0
   score: 0
   weaponManager: {fileID: 788714267}
   kills: 0
@@ -11194,6 +11214,7 @@ MonoBehaviour:
   rank: 0
   health: 100
   isAlive: 1
+  hittingWall: 0
   score: 0
   weaponManager: {fileID: 867378933}
   kills: 0
@@ -11927,6 +11948,7 @@ MonoBehaviour:
   rank: 0
   health: 100
   isAlive: 1
+  hittingWall: 0
   score: 0
   weaponManager: {fileID: 905267350}
   kills: 0
@@ -12479,7 +12501,7 @@ Prefab:
         type: 2}
       propertyPath: brain
       value: 
-      objectReference: {fileID: 11400000, guid: e30ca0686c9d2804a8d299a526b48c7d,
+      objectReference: {fileID: 11400000, guid: c89088df4f716ca48b46ca4f811605af,
         type: 2}
     - target: {fileID: 1733140871999008, guid: 6fd3c3b07a6338a4e9c00c4337c4cd74, type: 2}
       propertyPath: m_IsActive
@@ -13072,6 +13094,10 @@ Prefab:
         type: 2}
       propertyPath: m_Constraints
       value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 1532381665865592, guid: 6fd3c3b07a6338a4e9c00c4337c4cd74, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6fd3c3b07a6338a4e9c00c4337c4cd74, type: 2}
@@ -16161,6 +16187,7 @@ MonoBehaviour:
   rank: 0
   health: 100
   isAlive: 1
+  hittingWall: 0
   score: 0
   weaponManager: {fileID: 1181265192}
   kills: 0
@@ -16503,8 +16530,9 @@ MonoBehaviour:
   broadcastHub:
     broadcastingBrains:
     - {fileID: 11400000, guid: e30ca0686c9d2804a8d299a526b48c7d, type: 2}
+    - {fileID: 11400000, guid: c89088df4f716ca48b46ca4f811605af, type: 2}
     _brainsToControl: []
-  maxSteps: 3000
+  maxSteps: 0
   trainingConfiguration:
     width: 80
     height: 80
@@ -17671,6 +17699,7 @@ MonoBehaviour:
   rank: 0
   health: 100
   isAlive: 1
+  hittingWall: 0
   score: 0
   weaponManager: {fileID: 1311561657}
   kills: 0
@@ -18374,6 +18403,10 @@ Prefab:
       propertyPath: m_Constraints
       value: 120
       objectReference: {fileID: 0}
+    - target: {fileID: 1532381665865592, guid: 6fd3c3b07a6338a4e9c00c4337c4cd74, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6fd3c3b07a6338a4e9c00c4337c4cd74, type: 2}
   m_IsPrefabParent: 0
@@ -18657,7 +18690,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1377469728
 Transform:
   m_ObjectHideFlags: 0
@@ -20929,6 +20962,10 @@ Prefab:
       propertyPath: m_Constraints
       value: 120
       objectReference: {fileID: 0}
+    - target: {fileID: 1532381665865592, guid: 6fd3c3b07a6338a4e9c00c4337c4cd74, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6fd3c3b07a6338a4e9c00c4337c4cd74, type: 2}
   m_IsPrefabParent: 0
@@ -22219,7 +22256,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1721752359
 Transform:
   m_ObjectHideFlags: 0
@@ -24231,7 +24268,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1866995125
 Transform:
   m_ObjectHideFlags: 0
@@ -25039,6 +25076,7 @@ MonoBehaviour:
   rank: 0
   health: 100
   isAlive: 1
+  hittingWall: 0
   score: 0
   weaponManager: {fileID: 1919530880}
   kills: 0
@@ -26942,6 +26980,7 @@ MonoBehaviour:
   rank: 0
   health: 100
   isAlive: 1
+  hittingWall: 0
   score: 0
   weaponManager: {fileID: 2045515365}
   kills: 0
@@ -27244,6 +27283,10 @@ Prefab:
         type: 2}
       propertyPath: m_Constraints
       value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 1532381665865592, guid: 6fd3c3b07a6338a4e9c00c4337c4cd74, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6fd3c3b07a6338a4e9c00c4337c4cd74, type: 2}
@@ -27760,6 +27803,10 @@ Prefab:
         type: 2}
       propertyPath: m_Constraints
       value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 1532381665865592, guid: 6fd3c3b07a6338a4e9c00c4337c4cd74, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6fd3c3b07a6338a4e9c00c4337c4cd74, type: 2}
@@ -28285,7 +28332,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2134602583
 Transform:
   m_ObjectHideFlags: 0
