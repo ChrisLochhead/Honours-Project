@@ -115,13 +115,13 @@ public class EnemyAgentReinforcement : Agent {
 
         //The players health is also added
         //AddVectorObs(controller.health);
-
         checkCanShoot = false;
         //If any of these return true, the AI can try to shoot
         foreach (GameObject g3 in visiblePlayers)
         {
+         
             Vector3 aimDirection = g3.transform.position - gameObject.transform.position;
-            if (Vector3.Angle(aimDirection , controller.transform.up) < 3)
+            if (Vector3.Angle(aimDirection , controller.transform.up) < 10)
             {
                 AddVectorObs(1);
                 AddReward(0.1f);
@@ -147,6 +147,11 @@ public class EnemyAgentReinforcement : Agent {
         //Check if the player is visible to the AI
         foreach (GameObject g1 in allPlayers)
         {
+            //Ignore self
+            if (g1 == this.gameObject)
+                continue;
+
+            //Check if enemy is within the agents camera
             if (Mathf.Abs(g1.transform.position.x - gameObject.transform.position.x) <= cameraDimensions.x
                 && Mathf.Abs(g1.transform.position.y - gameObject.transform.position.y) <= cameraDimensions.y)
             {
