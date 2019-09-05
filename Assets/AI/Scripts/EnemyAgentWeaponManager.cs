@@ -14,7 +14,7 @@ public class EnemyAgentWeaponManager : MonoBehaviour
     public int[] currentAmmo = { 16, 10, 30, 50, 1 };
 
     //weapon damage and fire rates
-    public int[] damageAmounts = { 12, 15, 8, 6, 40 };
+    public int[] damageAmounts = { 30, 60, 16, 24, 85 };
 
     public float[] fireRates = { 0.75f, 1.8f, 0.25f, 0.35f, 2.0f };
     public float[] currentFireRates = { 0.75f, 1.8f, 0.25f, 0.35f, 2.0f };
@@ -162,11 +162,11 @@ public class EnemyAgentWeaponManager : MonoBehaviour
         b.transform.rotation = rot;
 
         //calculate trajectory
-        b.GetComponent<Rigidbody>().velocity = b.transform.forward * 36.0f;
+        b.GetComponent<Rigidbody>().velocity = b.transform.forward * 100.0f;
 
         //add tag indicating whose bullet it is
         b.GetComponent<TrainingBullet>().shooter = gameObject;
-        damageAmounts[currentWeapon] = 100;
+        //damageAmounts[currentWeapon] = 100;
         b.GetComponent<TrainingBullet>().damageAmount = damageAmounts[currentWeapon];
 
     }

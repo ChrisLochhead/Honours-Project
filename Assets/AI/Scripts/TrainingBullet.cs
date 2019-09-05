@@ -9,12 +9,6 @@ public class TrainingBullet : MonoBehaviour
     //Amount of damage carried by this bullet
     public int damageAmount;
 
-    void Start()
-    {
-        //Set the objects scale as prefab doesn't keep it static
-        //transform.localScale = new Vector3(8.1f, 8.1f, 23.1f);
-    }
-
     private void Update()
     {
         if (Vector3.Distance(this.gameObject.transform.position, shooter.transform.position) > 20)
@@ -26,13 +20,15 @@ public class TrainingBullet : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
 
-        Debug.Log("Hello");
         //Check if its hit an obstacle
         if (collision.gameObject.tag == "Obstacle")
         {
             Destroy(this.gameObject);
             return;
         }
+
+        if (collision.transform.gameObject == shooter)
+            return;
 
         //Training function for AI agents, commented out during study
         //Check if it has hit an enemyplayer
@@ -56,18 +52,16 @@ public class TrainingBullet : MonoBehaviour
 
     void CheckEnemyCollision(Collision collision)
     {
+
         //Bullet code for AI training
         if (collision.transform.GetComponent<EnemyAgentReinforcement>())
         {
-            Debug.Log("getting into here allright");
             //Apply damage
             collision.transform.GetComponent<EnemyAgentController>().health -= damageAmount;
-            Debug.Log(collision.transform.GetComponent<EnemyAgentController>().health + "   :    " + damageAmount);
             if(collision.transform.GetComponent<EnemyAgentController>().health <= 0)
             {
                 collision.transform.GetComponent<EnemyAgentController>().isAlive = false;
                 shooter.GetComponent<EnemyAgentReinforcement>().GainedKill();
-                Debug.Log("assigned values sucessfully");
             }
 
         }

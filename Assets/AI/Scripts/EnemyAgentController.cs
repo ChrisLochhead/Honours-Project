@@ -65,6 +65,8 @@ public class EnemyAgentController : MonoBehaviour {
     {
         GetComponent<Rigidbody>().velocity = Vector3.zero;
         hittingWall = true;
+
+        Physics.IgnoreLayerCollision(9, 9);
     }
 
     private void OnCollisionExit(Collision collision)

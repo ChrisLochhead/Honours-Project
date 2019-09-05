@@ -59,11 +59,11 @@ public class EnemyAgentReinforcement : Agent {
             //Move agent using first two actions as movement and rotation amounts
             controller.Move(new Vector2(Mathf.RoundToInt(Mathf.Clamp01(vectorAction[0])), vectorAction[1]));
 
-            if (checkCanShoot)
-            {
+           // if (checkCanShoot)
+           // {
                 //Decides whether agent should shoot (clamped to 0 or 1 for dont shoot and shoot)
                 controller.Shoot(vectorAction[2]);
-            }
+           // }
 
             //Decides whether agent should reload (clamped to 0 or 1 for dont reload and reload)
             controller.Reload(vectorAction[3]);
@@ -74,26 +74,21 @@ public class EnemyAgentReinforcement : Agent {
         //Trigger if the controller has died
         if (!controller.isAlive)
         {
+            SetReward(-1f);
             Done();
-            SetReward(-5f);
-            controller.deaths++;
-            if(controller.deaths == 3)
-            {
-                SetReward(-10f);
-            }
         }
+
         if (controller.hittingWall)
             SetReward(-0.001f);
+
+        //Existential penalty
+        SetReward(-0.000001f);
     }
 
     public void GainedKill()
     {
-        SetReward(5f);
-        controller.kills++;
-        if(controller.kills == 3)
-        {
-            SetReward(10f);
-        }
+        SetReward(1f);
+        Done();
     }
 
     public void GenerateAIInfo()
@@ -119,21 +114,22 @@ public class EnemyAgentReinforcement : Agent {
         //If any of these return true, the AI can try to shoot
         foreach (GameObject g3 in visiblePlayers)
         {
-         
-            Vector3 aimDirection = g3.transform.position - gameObject.transform.position;
-            if (Vector3.Angle(aimDirection , controller.transform.up) < 10)
+            if (checkCanShoot == false)
             {
-                AddVectorObs(1);
-                AddReward(0.1f);
-                checkCanShoot = true;
+                Vector3 aimDirection = g3.transform.position - gameObject.transform.position;
+                if (Vector3.Angle(aimDirection, controller.transform.up) < 2)
+                {
+                    checkCanShoot = true;
+                    AddVectorObs(1);
+                    //AddReward(0.1f);
+                }
             }
-
         }
         //Otherwise, he cant
         if (checkCanShoot == false)
         {
             AddVectorObs(0);
-            AddReward(0.01f);
+            //AddReward(-0.00001f);
         }
     }
     public void GeneratePlayerInfo()
@@ -202,7 +198,6 @@ public class EnemyAgentReinforcement : Agent {
                 AddVectorObs(g2c.weaponManager.currentWeapon);
                 AddVectorObs(Vector3.Distance(g2c.transform.position, gameObject.transform.position));
             }
-            SetReward(0.001f);
         }
         else
         {
