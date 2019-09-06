@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
 public class EnemyAgentWeaponManager : MonoBehaviour
 {
 
@@ -27,8 +26,8 @@ public class EnemyAgentWeaponManager : MonoBehaviour
 
 
     //Reloading and timer
-    public bool isReloading = false;
-    public bool initialReload = true;
+    public bool isReloading;
+    public bool initialReload;
     public float reloadStartTime = 0.0f;
     public float reloadTargetTime = 0.0f;
 
@@ -75,8 +74,10 @@ public class EnemyAgentWeaponManager : MonoBehaviour
     public void Reload(float action)
     {
         //Reloading
-        if (action > 0 && currentAmmo[currentWeapon]/clipSize[currentWeapon] < 0.6f)
+        if (action > 0 && (float)currentAmmo[currentWeapon] / (float)clipSize[currentWeapon] < 0.6f)
         {
+            Debug.Log(isReloading);
+
             if (initialReload == true || isReloading == false)
             {
                 reloadStartTime = Time.time;
@@ -96,8 +97,8 @@ public class EnemyAgentWeaponManager : MonoBehaviour
                 currentWeapon == 3 && weaponIndex <= 0.8f && weaponIndex >= 0.6f || currentWeapon == 4 && weaponIndex > 0.8f)
             {
                 //Cancel attempt at reloading 
-                isReloading = false;
-                initialReload = true;
+                //isReloading = false;
+                //initialReload = true;
             }
             //Cycle through weapons
             if (currentWeapon == 0 && weaponIndex <= 0.2f) SetWeapon(0);

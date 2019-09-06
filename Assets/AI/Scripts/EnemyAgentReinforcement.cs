@@ -45,7 +45,7 @@ public class EnemyAgentReinforcement : Agent {
 
     public override void AgentAction(float[] vectorAction, string textAction)
     {
-
+        //Debug.Log(controller.isAlive);
         //Debug.Log(vectorAction[0] + " :: "+  vectorAction[1] + " :: " + vectorAction[2] + " :: " + vectorAction[3] + " :: " + vectorAction[4]);
         /*Generates 5 actions in 6 actions
          * Move, (can only move in the direction it is facing, so no extra variables for moving left/right/backwards)
@@ -63,6 +63,10 @@ public class EnemyAgentReinforcement : Agent {
            // {
                 //Decides whether agent should shoot (clamped to 0 or 1 for dont shoot and shoot)
                 controller.Shoot(vectorAction[2]);
+
+            if (vectorAction[2] > 0)
+                AddReward(-0.000001f);
+
            // }
 
             //Decides whether agent should reload (clamped to 0 or 1 for dont reload and reload)
@@ -79,10 +83,10 @@ public class EnemyAgentReinforcement : Agent {
         }
 
         if (controller.hittingWall)
-            SetReward(-0.001f);
+            SetReward(-0.1f);
 
         //Existential penalty
-        SetReward(-0.000001f);
+        //SetReward(-0.000001f);
     }
 
     public void GainedKill()
@@ -121,7 +125,6 @@ public class EnemyAgentReinforcement : Agent {
                 {
                     checkCanShoot = true;
                     AddVectorObs(1);
-                    //AddReward(0.1f);
                 }
             }
         }
@@ -129,7 +132,6 @@ public class EnemyAgentReinforcement : Agent {
         if (checkCanShoot == false)
         {
             AddVectorObs(0);
-            //AddReward(-0.00001f);
         }
     }
     public void GeneratePlayerInfo()

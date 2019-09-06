@@ -23,5 +23,5 @@ MonoBehaviour:
     - reload(yes/no)
     - changeweapon(which one)
     vectorActionSpaceType: 1
-  model: {fileID: 11400000, guid: 38236c059c24317488ccd949c3b65fba, type: 3}
+  model: {fileID: 11400000, guid: 7c657039f5931ec4ebea4bfeefe1e3f1, type: 3}
   inferenceDevice: 0

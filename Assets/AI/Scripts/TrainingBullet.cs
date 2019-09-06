@@ -11,7 +11,7 @@ public class TrainingBullet : MonoBehaviour
 
     private void Update()
     {
-        if (Vector3.Distance(this.gameObject.transform.position, shooter.transform.position) > 20)
+        if (Vector3.Distance(this.gameObject.transform.position, shooter.transform.position) > 50)
         {
             Destroy(this.gameObject);
         }
