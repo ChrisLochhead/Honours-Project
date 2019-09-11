@@ -12,15 +12,13 @@ public class NMLAgent : MonoBehaviour {
 
     public GameObject player;
 
-    float idleTimer;
-    Vector2 idleDirection;
+    public PathGrid pathGrid;
 
 	// Use this for initialization
 	void Start () {
         actionMode = false;
         health = 100;
         ammo = 16;
-        idleTimer = 6.0f;
 	}
 
     void SearchArea()
@@ -30,21 +28,12 @@ public class NMLAgent : MonoBehaviour {
         bool onScreen = screenPoint.z > 0 && screenPoint.x > 0 && screenPoint.x < 1 && screenPoint.y > 0 && screenPoint.y < 1;
         onScreen = actionMode;
     }
-        
+
     void Idle()
     {
-        //pick a direction and check if its clear if starting to idle
-        if(idleTimer == 6.0f)
-        {
-            int randomAngle = Random.Range(0, 360);
-
-            idleDirection = ga
-            idleDirection = new Vector2(Random.Range())
-        }
+        //pick a node if starting to idle
 
         //if timer isnt up
-        if (idleTimer > 0)
-            idleTimer -= Time.deltaTime;
 
         //if its not clear, pick another one
 
@@ -75,6 +64,7 @@ public class NMLAgent : MonoBehaviour {
 
         //Set back to idle
         actionMode = false;
+
     }
 
     // Update is called once per frame
@@ -87,4 +77,9 @@ public class NMLAgent : MonoBehaviour {
         else
             Attack();
 	}
+
+    void PathFinding(Vector2 startPosition, Vector2 endPosition)
+    {
+    }
+
 }

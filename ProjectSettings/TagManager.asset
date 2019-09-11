@@ -14,6 +14,7 @@ TagManager:
   - SpawnPoint2
   - MapItem
   - MapLoader
+  - Enemy
   layers:
   - Default
   - TransparentFX
