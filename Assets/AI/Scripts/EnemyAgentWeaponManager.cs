@@ -76,8 +76,6 @@ public class EnemyAgentWeaponManager : MonoBehaviour
         //Reloading
         if (action > 0 && (float)currentAmmo[currentWeapon] / (float)clipSize[currentWeapon] < 0.6f)
         {
-            Debug.Log(isReloading);
-
             if (initialReload == true || isReloading == false)
             {
                 reloadStartTime = Time.time;

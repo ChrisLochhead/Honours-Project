@@ -90,13 +90,13 @@ public class Bullet : NetworkBehaviour {
         {
 
             //Bullet code for AI training
-            if (collision.transform.GetComponent<EnemyAgentReinforcement>())
+            if (collision.transform.GetComponent<CurriculumReinforcement>())
             {
                 if (collision.transform.GetComponent<EnemyAgentController>().isAlive == false)
                 {
-                    if (shooter.GetComponent<EnemyAgentReinforcement>())
+                    if (shooter.GetComponent<CurriculumReinforcement>())
                     {
-                        shooter.GetComponent<EnemyAgentReinforcement>().GainedKill();
+                        shooter.GetComponent<CurriculumReinforcement>().GainedKill();
                     }
                 }
             }

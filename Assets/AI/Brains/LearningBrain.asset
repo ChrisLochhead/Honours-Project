@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Name: LearningBrain
   m_EditorClassIdentifier: 
   brainParameters:
-    vectorObservationSize: 7
+    vectorObservationSize: 4
     numStackedVectorObservations: 1
     vectorActionSize: 05000000
     cameraResolutions: []
@@ -23,5 +23,5 @@ MonoBehaviour:
     - reload(yes/no)
     - changeweapon(which one)
     vectorActionSpaceType: 1
-  model: {fileID: 11400000, guid: 7c657039f5931ec4ebea4bfeefe1e3f1, type: 3}
+  model: {fileID: 11400000, guid: 933682f1cf42d2e499abee87dc63e76c, type: 3}
   inferenceDevice: 0

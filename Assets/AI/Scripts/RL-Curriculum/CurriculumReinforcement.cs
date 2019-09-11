@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using MLAgents;
-public class EnemyAgentReinforcement : Agent {
+public class CurriculumReinforcement : Agent {
 
     //Training module
 
@@ -33,7 +33,17 @@ public class EnemyAgentReinforcement : Agent {
     //Academy variables
     ResetParameters resetParams;
 
+    [SerializeField]
     bool checkCanShoot = false;
+
+    public Vector3 previousPosition;
+
+    public Camera personalCamera;
+
+    private void Start()
+    {
+        previousPosition = gameObject.transform.position;
+    }
 
     //AI specific functionality
     public override void CollectObservations()
@@ -59,15 +69,11 @@ public class EnemyAgentReinforcement : Agent {
             //Move agent using first two actions as movement and rotation amounts
             controller.Move(new Vector2(Mathf.RoundToInt(Mathf.Clamp01(vectorAction[0])), vectorAction[1]));
 
-           // if (checkCanShoot)
-           // {
-                //Decides whether agent should shoot (clamped to 0 or 1 for dont shoot and shoot)
-                controller.Shoot(vectorAction[2]);
+            //Decides whether agent should shoot (clamped to 0 or 1 for dont shoot and shoot)
+            controller.Shoot(vectorAction[2]);
 
             if (vectorAction[2] > 0)
-                AddReward(-0.000001f);
-
-           // }
+                AddReward(-0.01f);
 
             //Decides whether agent should reload (clamped to 0 or 1 for dont reload and reload)
             controller.Reload(vectorAction[3]);
@@ -75,72 +81,61 @@ public class EnemyAgentReinforcement : Agent {
             //Decides to change weapon (0 for dont, 1 - 5 for which weapon to attempt to change to)
             controller.ChangeWeapon(vectorAction[4]);
         }
+
+        //Set previous position to the current
+        previousPosition = gameObject.transform.position;
+
+
         //Trigger if the controller has died
         if (!controller.isAlive)
         {
-            SetReward(-1f);
+            SetReward(-0.5f);
             Done();
         }
 
-        if (controller.hittingWall)
-            SetReward(-0.1f);
-
-        //Existential penalty
-        //SetReward(-0.000001f);
+        //if (controller.hittingWall)
+          //  SetReward(-0.1f);
     }
 
     public void GainedKill()
     {
-        SetReward(1f);
-        Done();
+        SetReward(1.5f);
+    }
+
+    public bool FoundEnemy()
+    {
+        //If any of these return true, the AI can try to shoot
+        foreach (GameObject g3 in visiblePlayers)
+        {
+            Vector3 aimDirection = g3.transform.position - gameObject.transform.position;
+            if (Vector3.Angle(aimDirection, controller.transform.up) < 2)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void GenerateAIInfo()
     {
-
-        //Player information 
-        //Current direction
-        //AddVectorObs(controller.transform.up.x);
-        //AddVectorObs(controller.transform.up.y);
-        //AddVectorObs(controller.transform.up.z);
-
-        ////Players 2D position (because it cant move in z axis space anyway
-        //AddVectorObs(gameObject.transform.position.x);
-        //AddVectorObs(gameObject.transform.position.y);
-
-        //Players weapon info like its max ammo, the ammo currently in clip and the weapon being used
+        //Players weapon info
         AddVectorObs(weaponManager.currentAmmo[weaponManager.currentWeapon]);
-        AddVectorObs(weaponManager.currentWeapon);
 
-        //The players health is also added
-        //AddVectorObs(controller.health);
-        checkCanShoot = false;
-        //If any of these return true, the AI can try to shoot
-        foreach (GameObject g3 in visiblePlayers)
-        {
-            if (checkCanShoot == false)
-            {
-                Vector3 aimDirection = g3.transform.position - gameObject.transform.position;
-                if (Vector3.Angle(aimDirection, controller.transform.up) < 2)
-                {
-                    checkCanShoot = true;
-                    AddVectorObs(1);
-                }
-            }
-        }
-        //Otherwise, he cant
-        if (checkCanShoot == false)
-        {
-            AddVectorObs(0);
-        }
+        checkCanShoot = FoundEnemy();
+
+        if (checkCanShoot)
+            AddVectorObs(1);
+        else
+            AddVectorObs(0);      
     }
+
     public void GeneratePlayerInfo()
     {
         //Clear the list
         visiblePlayers.Clear();
 
         //Get list of players
-        GameObject[] allPlayers = GameObject.FindGameObjectsWithTag("Player1");
+        GameObject[] allPlayers = GameObject.FindGameObjectsWithTag("Enemy");
 
         //Check if the player is visible to the AI
         foreach (GameObject g1 in allPlayers)
@@ -150,11 +145,14 @@ public class EnemyAgentReinforcement : Agent {
                 continue;
 
             //Check if enemy is within the agents camera
-            if (Mathf.Abs(g1.transform.position.x - gameObject.transform.position.x) <= cameraDimensions.x
-                && Mathf.Abs(g1.transform.position.y - gameObject.transform.position.y) <= cameraDimensions.y)
+            Vector3 screenPoint = personalCamera.WorldToViewportPoint(g1.transform.position);
+            bool onScreen = screenPoint.z > 0 && screenPoint.x > 0 && screenPoint.x < 1 && screenPoint.y > 0 && screenPoint.y < 1;
+
+            if (onScreen)
             {
                 visiblePlayers.Add(g1);
             }
+
         }
 
         if (visiblePlayers.Count > 0)
@@ -187,8 +185,6 @@ public class EnemyAgentReinforcement : Agent {
                 //If playing in a real game
                 Client g2c = closestPlayer.GetComponent<Client>();
                 AddVectorObs(g2c.health);
-                AddVectorObs(g2c.rank);
-                AddVectorObs(g2c.clientWeaponManager.currentWeapon);
                 AddVectorObs(Vector3.Distance(g2c.player.transform.position, gameObject.transform.position));
             }
             else if (closestPlayer.GetComponent<EnemyAgentController>())
@@ -196,8 +192,6 @@ public class EnemyAgentReinforcement : Agent {
                 //If training against other agents
                 EnemyAgentController g2c = closestPlayer.GetComponent<EnemyAgentController>();
                 AddVectorObs(g2c.health);
-                AddVectorObs(g2c.rank);
-                AddVectorObs(g2c.weaponManager.currentWeapon);
                 AddVectorObs(Vector3.Distance(g2c.transform.position, gameObject.transform.position));
             }
         }
@@ -206,10 +200,9 @@ public class EnemyAgentReinforcement : Agent {
             //No players in the vicinity
             AddVectorObs(0);
             AddVectorObs(0);
-            AddVectorObs(0);
-            AddVectorObs(0);
 
-            SetReward(-0.001f);
+            //Penalise them for not seeing a player
+            SetReward(-0.01f);
         }
 
     }

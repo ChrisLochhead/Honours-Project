@@ -54,14 +54,14 @@ public class TrainingBullet : MonoBehaviour
     {
 
         //Bullet code for AI training
-        if (collision.transform.GetComponent<EnemyAgentReinforcement>())
+        if (collision.transform.GetComponent<CurriculumReinforcement>())
         {
             //Apply damage
             collision.transform.GetComponent<EnemyAgentController>().health -= damageAmount;
             if(collision.transform.GetComponent<EnemyAgentController>().health <= 0)
             {
                 collision.transform.GetComponent<EnemyAgentController>().isAlive = false;
-                shooter.GetComponent<EnemyAgentReinforcement>().GainedKill();
+                shooter.GetComponent<CurriculumReinforcement>().GainedKill();
             }
 
         }
