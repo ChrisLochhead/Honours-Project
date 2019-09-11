@@ -78,8 +78,4 @@ public class NMLAgent : MonoBehaviour {
             Attack();
 	}
 
-    void PathFinding(Vector2 startPosition, Vector2 endPosition)
-    {
-    }
-
 }

@@ -10,12 +10,19 @@ public class PathNode : MonoBehaviour {
     public int hCost;
     int fCost;
 
+    public int XGridPos;
+    public int YGridPos;
+
     public Vector3 worldPos;
 
-    public PathNode(bool w, Vector3 p)
+    public PathNode parent;
+
+    public PathNode(bool w, Vector3 p, int x, int y)
     {
         canWalk = w;
         worldPos = p;
+        XGridPos = x;
+        YGridPos = y;
     }
 	
     public int getFCost()
