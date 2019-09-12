@@ -21,6 +21,7 @@ public class PathGrid : MonoBehaviour {
 
 
     public GameObject player;
+
     public List<PathNode> path;
 
     void Start () {
