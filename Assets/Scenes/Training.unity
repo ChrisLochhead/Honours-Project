@@ -612,6 +612,33 @@ Transform:
   m_PrefabParentObject: {fileID: 4419115351106030, guid: 6fd3c3b07a6338a4e9c00c4337c4cd74,
     type: 2}
   m_PrefabInternal: {fileID: 940784801}
+--- !u!114 &940784804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 940784802}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a073fbf184a34d469e2d4ad6d05e7b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &940784805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 940784802}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0805ffa59457a3469deb8f3112e2205, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  personalCamera: {fileID: 1863933009}
+  player: {fileID: 940784802}
+  pathFinder: {fileID: 940784804}
+  pathGrid: {fileID: 130295974}
+  target: {x: 90, y: 75, z: -10}
 --- !u!1001 &1131553444
 Prefab:
   m_ObjectHideFlags: 0

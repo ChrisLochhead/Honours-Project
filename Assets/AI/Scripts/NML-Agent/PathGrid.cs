@@ -23,7 +23,7 @@ public class PathGrid : MonoBehaviour {
     public GameObject player;
     public List<PathNode> path;
 
-	void Start () {
+    void Start () {
         //Calculate the grid to node ratio 
         gridXDimension = Mathf.RoundToInt(gridDimensions.x / (nodeRadius * 2));
         gridYDimension = Mathf.RoundToInt(gridDimensions.y / (nodeRadius * 2));

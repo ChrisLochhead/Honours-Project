@@ -92,7 +92,7 @@ public class PathFinder : MonoBehaviour {
         List<PathNode> p = new List<PathNode>();
         PathNode current = end;
 
-        while(current.worldPos != start.worldPos)
+        while(current != start)
         {
             p.Add(current);
             current = current.parent;

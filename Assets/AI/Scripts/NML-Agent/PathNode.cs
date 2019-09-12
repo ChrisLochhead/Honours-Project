@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PathNode : MonoBehaviour {
+public class PathNode {
 
     public bool canWalk;
 

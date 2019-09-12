@@ -11,9 +11,9 @@ public class NMLAgent : MonoBehaviour {
     bool actionMode;
 
     public GameObject player;
-
+    public PathFinder pathFinder;
     public PathGrid pathGrid;
-
+    public Vector3 target;
 	// Use this for initialization
 	void Start () {
         actionMode = false;
@@ -76,6 +76,8 @@ public class NMLAgent : MonoBehaviour {
             Idle();
         else
             Attack();
+
+        pathFinder.FindPath(pathGrid, player.transform.position, target);
 	}
 
 }
