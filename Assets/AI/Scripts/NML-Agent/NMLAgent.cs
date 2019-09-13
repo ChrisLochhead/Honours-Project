@@ -21,12 +21,12 @@ public class NMLAgent : MonoBehaviour {
 
     int pathPosition;
     int pathSize;
-    bool pathToTarget;
+    //bool pathToTarget;
     bool canShoot;
     bool pathCompleted;
     [SerializeField]
     GameObject target;
-
+    Vector3 targetPosition;
     [SerializeField]
     Vector3 idleTarget;
 
@@ -80,6 +80,7 @@ public class NMLAgent : MonoBehaviour {
         }
         else
             escapeCollisionTimer -= Time.deltaTime;
+
     }
 
     void Idle()
@@ -139,14 +140,10 @@ public class NMLAgent : MonoBehaviour {
                 //Find the angle between the players current direction and its target
                 float angle = Vector3.Angle(gameObject.transform.up, direction);
 
-                //snap to correct rotation 
-                if (angle > 2)
-                {
-                Debug.Log(direction);
-                transform.Rotate(new Vector3(0, 0,angle));
-                Debug.Log("called rotation");
-               }
-
+                //snap to correct rotation within error margin of 2 degrees 
+                //if (angle > 2)
+                // transform.Rotate(new Vector3(0, 0,angle));
+                Debug.Log("in idle");
                 //Prevent getting stuck on walls when idling
                 Vector3 previousPosition = gameObject.transform.position;
 
@@ -168,65 +165,62 @@ public class NMLAgent : MonoBehaviour {
 
     void Attack()
     {
+        CheckCanShoot();
 
-        if (!pathToTarget)
+        if (targetPosition != target.transform.position)
         {
-            //Find a path to the target location
-            Debug.Log("C");
+            //Find a path to the targets new location
             pathPosition = 0;
             pathFinder.FindPath(pathGrid, gameObject.transform.position, target.transform.position);
             pathSize = pathGrid.path.Count;
-            pathToTarget = true;
-
-            CheckCanShoot();
-
         }
-        else
-        if(pathToTarget && !canShoot){
-            //depending on how close to the right direction, start moving
-            if (gameObject.transform.position == pathGrid.path[pathPosition].worldPos && pathPosition <= pathSize -2)
+
+        //If the AI is currently unable to get a shot
+        if (!canShoot)
+        {
+            //start moving towards the player
+            if (gameObject.transform.position == pathGrid.path[pathPosition].worldPos && pathPosition <= pathSize - 2)
                 pathPosition++;
 
-            if (pathPosition >= pathSize)
+            Debug.Log("getting into cant shoot");
+
+            //If still moving
+            if (pathPosition < pathSize - 2)
             {
-                idleTimer = 8.0f;
-                Debug.Log("D");
-                pathPosition = 0;
-            }
-            else
-            {
-                //rotate towards this direction (determined by difficulty setting)
                 //find the vector pointing from our position to the target
                 Vector3 direction = (pathGrid.path[pathPosition].worldPos - transform.position);
 
                 //Find the angle between the players current direction and its target
                 float angle = Vector3.Angle(gameObject.transform.up, direction);
 
-                //snap to correct rotation 
-                if (angle > 2)
-                    transform.Rotate(new Vector3(0, 0, angle));
+                //snap to correct rotation within boundary
+                 if (angle > 2)
+                     transform.Rotate(new Vector3(0, 0, angle));
+                //transform.LookAt(target.transform, -transform.up);
+                //if the AI happens to be facing the right direction, shoot
 
-                //if facing the right direction, shoot
                 Vector3 shootAngle = (pathGrid.path[pathSize - 1].worldPos - transform.position);
                 if (Vector3.Angle(gameObject.transform.up, shootAngle) < 2)
                 {
-                    weaponManager.Shoot(1);
+                   // weaponManager.Shoot(1);
                 }
-
+                Debug.Log("attempting movement");
                 gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, pathGrid.path[pathPosition].worldPos, 0.3f);
             }
-        }else//If the agent can shoot from where they are
-            if(canShoot)
+
+        }
+        else//If the agent can shoot from where they are
+        if (canShoot)
         {
+            Debug.Log("getting into can shoot");
             //Check again that they can shoot 
             CheckCanShoot();
 
             //If they still can, shoot
             if (canShoot)
             {
-
-            }else //if can no longer see the enemy, recalculate a new path next frame
-                pathToTarget = false;
+                //weaponManager.Shoot(1);
+            }
         }
     }
 
@@ -243,10 +237,21 @@ public class NMLAgent : MonoBehaviour {
             //If there is no obstruction
             if (hit.transform.tag == "Player1")
             {
+                Debug.Log("getting into linecast");
                 //Rotate towards them and shoot immediately
                 float angle = Vector3.Angle(gameObject.transform.up, directionToTarget);
-                transform.Rotate(new Vector3(0, 0, angle));
-                canShoot = true;
+
+                Debug.Log(angle);
+                if (angle > 2)
+                {
+                    transform.Rotate(new Vector3(0, 0, angle));
+                    Debug.Log("still rotating");
+                }
+
+                if (Vector3.Distance(gameObject.transform.position, target.transform.position) < 15)
+                    canShoot = true;
+                else
+                    canShoot = false;
             }
         }
         else 
@@ -277,6 +282,18 @@ public class NMLAgent : MonoBehaviour {
             Attack();
 
         idlecube.transform.position = idleTarget;
-	}
+
+        if(target)
+        targetPosition = target.transform.position;
+
+        //if (actionMode)
+        //    Debug.Log("attacking");
+        //else
+        //    Debug.Log("idling");
+
+        GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
+        GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+    }
+
 
 }

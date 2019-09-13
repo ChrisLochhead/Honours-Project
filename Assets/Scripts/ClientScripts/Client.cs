@@ -298,7 +298,7 @@ public class Client : NetworkBehaviour
     public void Update()
     {
         //Update team texture information
-        if(teamMaterial == 0)
+        if (teamMaterial == 0)
             characterModel.GetComponent<SkinnedMeshRenderer>().material = RedTeamMaterial;
         else
             characterModel.GetComponent<SkinnedMeshRenderer>().material = BlueTeamMaterial;
@@ -399,6 +399,9 @@ public class Client : NetworkBehaviour
             playerCam.GetComponent<CameraMovement>().canMove = false;
         }
 
+        //Remove rigidbody physics effects
+        GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
+        Debug.Log("velocity : " + GetComponent<Rigidbody>().velocity);
     }
 
     private void OnDisable()

@@ -24,12 +24,11 @@ public class EnemyAgentController : MonoBehaviour {
 
     private void Update()
     {
-        //Physics.IgnoreLayerCollision(9, 9);
+        GetComponent<Rigidbody>().velocity = Vector3.zero;
+        GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
 
         //Ground the objects z co-ordinate 
         transform.position = new Vector3(transform.position.x, transform.position.y, -10);
-
-        //transform.rotation = Quaternion.Euler(0, 0, transform.rotation.z);
     }
 
     public void Move(Vector2 actions)
