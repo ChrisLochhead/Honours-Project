@@ -516,6 +516,26 @@ Prefab:
       propertyPath: idlecube
       value: 
       objectReference: {fileID: 1752594036}
+    - target: {fileID: 4529562168587846, guid: a669ed9b147be6044b41d3a6f31a5129, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4529562168587846, guid: a669ed9b147be6044b41d3a6f31a5129, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4529562168587846, guid: a669ed9b147be6044b41d3a6f31a5129, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4529562168587846, guid: a669ed9b147be6044b41d3a6f31a5129, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4529562168587846, guid: a669ed9b147be6044b41d3a6f31a5129, type: 2}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a669ed9b147be6044b41d3a6f31a5129, type: 2}
   m_IsPrefabParent: 0

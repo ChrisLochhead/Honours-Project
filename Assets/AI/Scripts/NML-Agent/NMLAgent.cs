@@ -92,7 +92,6 @@ public class NMLAgent : MonoBehaviour {
             //Keep looking for random target until it is a viable position
             while(pathGrid.GetNodeEmpty(idleTarget) == false)
             {
-                Debug.Log("looking for new path");
                 idleTarget = new Vector3(gameObject.transform.position.x + Random.Range(-150, 150), gameObject.transform.position.y + Random.Range(-150, 150), -10);
             }
 
@@ -143,9 +142,10 @@ public class NMLAgent : MonoBehaviour {
                 //snap to correct rotation 
                 if (angle > 2)
                 {
-                    transform.Rotate(new Vector3(0, 0, angle));
-
-                }
+                Debug.Log(direction);
+                transform.Rotate(new Vector3(0, 0,angle));
+                Debug.Log("called rotation");
+               }
 
                 //Prevent getting stuck on walls when idling
                 Vector3 previousPosition = gameObject.transform.position;

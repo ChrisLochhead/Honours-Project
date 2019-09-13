@@ -47,6 +47,7 @@ public class PathGrid : MonoBehaviour {
             {
                 //Find the centre of the node
                 Vector3 NodeCentre = bottomLeft + Vector3.right * (x * (nodeRadius * 2) + nodeRadius) + Vector3.up * (y * (nodeRadius * 2) + nodeRadius);
+                NodeCentre.z = -10;
                 //Use physics to check for any obstruction
                 bool canwalk = !(Physics.CheckSphere(NodeCentre, nodeRadius, boundaryMask));
                 //Create a new node with this information
