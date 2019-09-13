@@ -74,6 +74,26 @@ public class PathGrid : MonoBehaviour {
         return grid[NodeRow, NodeColumn];
     }
 
+    public bool GetNodeEmpty(Vector3 p)
+    {
+        //Get X and Y as a position local to the grid
+        float xPoint = (p.x + gridDimensions.x / 2) / gridDimensions.x;
+        float yPoint = (p.y + gridDimensions.y / 2) / gridDimensions.y;
+
+        //Clamp to 0 and 1 for cases where p is outside the scope of the grid
+        xPoint = Mathf.Clamp01(xPoint);
+        yPoint = Mathf.Clamp01(yPoint);
+
+        //Using these values, find which node this position corresponds to
+        int NodeRow = Mathf.RoundToInt((gridXDimension - 1) * xPoint);
+        int NodeColumn = Mathf.RoundToInt((gridYDimension - 1) * yPoint);
+
+        if (grid[NodeRow, NodeColumn].canWalk)
+            return true;
+
+        return false;
+    }
+
     public List<PathNode> GetNeighbours(PathNode current)
     {
         List<PathNode> neighbours = new List<PathNode>();
@@ -102,7 +122,7 @@ public class PathGrid : MonoBehaviour {
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireCube(transform.position, new Vector3(gridDimensions.x, gridDimensions.y, 10));
+        Gizmos.DrawWireCube(transform.position, new Vector3(gridDimensions.x, gridDimensions.y, 1));
         if(grid != null)
         {
 
