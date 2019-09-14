@@ -30,6 +30,10 @@ public class NMLAgent : MonoBehaviour {
     [SerializeField]
     Vector3 idleTarget;
 
+    public GameObject agentTrainer;
+
+    public bool idlecontroller;
+
     public GameObject idlecube;
 
     public EnemyAgentWeaponManager weaponManager;
@@ -52,23 +56,30 @@ public class NMLAgent : MonoBehaviour {
 
     void SearchArea()
     {
-        //Check if player is within the agents camera
-        foreach (GameObject g in GameObject.FindGameObjectsWithTag("Player1"))
+        //Check if player is within the agents camera, 
+        //uncomment this for game code, change agenttrainer in this function to g.
+        //foreach (GameObject g in GameObject.FindGameObjectsWithTag("Player1"))
+        //{
+        //    if (g == this.gameObject)
+        //        continue;
+        if (agentTrainer.GetComponent<EnemyAgentController>().isAlive)
         {
-            if (g == this.gameObject)
-                continue;
-
-            Vector3 screenPoint = personalCamera.WorldToViewportPoint(g.transform.position);
+            Vector3 screenPoint = personalCamera.WorldToViewportPoint(agentTrainer.transform.position);
             bool onScreen = screenPoint.x > 0 && screenPoint.x < 1 && screenPoint.y > 0 && screenPoint.y < 1;
-            actionMode = onScreen;
+
+            if (!idlecontroller)
+                actionMode = onScreen;
+            else
+                actionMode = false;
 
             if (onScreen)
-            {
-                target = g;
-                Debug.Log("found target");
-            }
-
+                target = agentTrainer;
         }
+        else
+        {
+            actionMode = false;
+        }
+       // }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -137,23 +148,20 @@ public class NMLAgent : MonoBehaviour {
                 //find the vector pointing from our position to the target
                 Vector3 direction = (pathGrid.path[pathPosition].worldPos - transform.position);
 
-                //Find the angle between the players current direction and its target
-                float angle = Vector3.Angle(gameObject.transform.up, direction);
+                //rotate towards the way the agent is facing
+                float rotation = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
+                gameObject.transform.rotation = Quaternion.Slerp(gameObject.transform.rotation, Quaternion.Euler(0, 0, -rotation), 0.1f);
 
-                //snap to correct rotation within error margin of 2 degrees 
-                //if (angle > 2)
-                // transform.Rotate(new Vector3(0, 0,angle));
                 Debug.Log("in idle");
-                //Prevent getting stuck on walls when idling
-                Vector3 previousPosition = gameObject.transform.position;
 
-                
+                //Prevent getting stuck on walls when idling
+                //Record position then move
+                Vector3 previousPosition = gameObject.transform.position;               
                 gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, pathGrid.path[pathPosition].worldPos, 0.3f);
 
-                //Reset path if stuck
+                //Reset path if stuck (position hasn't changed
                 if (gameObject.transform.position == previousPosition)
                 {
-                    Debug.Log("is stuck");
                     idleTimer = 1.0f;
                     return;
                 }
@@ -182,29 +190,22 @@ public class NMLAgent : MonoBehaviour {
             if (gameObject.transform.position == pathGrid.path[pathPosition].worldPos && pathPosition <= pathSize - 2)
                 pathPosition++;
 
-            Debug.Log("getting into cant shoot");
-
             //If still moving
             if (pathPosition < pathSize - 2)
             {
                 //find the vector pointing from our position to the target
                 Vector3 direction = (pathGrid.path[pathPosition].worldPos - transform.position);
 
-                //Find the angle between the players current direction and its target
-                float angle = Vector3.Angle(gameObject.transform.up, direction);
+                //rotate towards the way the agent is facing
+                float rotation = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
+                gameObject.transform.rotation = Quaternion.Slerp(gameObject.transform.rotation, Quaternion.Euler(0, 0, -rotation), 0.1f);
 
-                //snap to correct rotation within boundary
-                 if (angle > 2)
-                     transform.Rotate(new Vector3(0, 0, angle));
-                //transform.LookAt(target.transform, -transform.up);
                 //if the AI happens to be facing the right direction, shoot
-
                 Vector3 shootAngle = (pathGrid.path[pathSize - 1].worldPos - transform.position);
                 if (Vector3.Angle(gameObject.transform.up, shootAngle) < 2)
                 {
                    // weaponManager.Shoot(1);
                 }
-                Debug.Log("attempting movement");
                 gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, pathGrid.path[pathPosition].worldPos, 0.3f);
             }
 
@@ -212,7 +213,6 @@ public class NMLAgent : MonoBehaviour {
         else//If the agent can shoot from where they are
         if (canShoot)
         {
-            Debug.Log("getting into can shoot");
             //Check again that they can shoot 
             CheckCanShoot();
 
@@ -226,6 +226,14 @@ public class NMLAgent : MonoBehaviour {
 
     void CheckCanShoot()
     {
+        //Check agent is still alive
+        if (!agentTrainer.GetComponent<EnemyAgentController>().isAlive)
+        {
+            actionMode = false;
+            canShoot = false;
+            return;
+        }
+
         //Calculate direction to target player
         Vector3 directionToTarget = target.transform.position - gameObject.transform.position;
 
@@ -237,17 +245,15 @@ public class NMLAgent : MonoBehaviour {
             //If there is no obstruction
             if (hit.transform.tag == "Player1")
             {
-                Debug.Log("getting into linecast");
                 //Rotate towards them and shoot immediately
-                float angle = Vector3.Angle(gameObject.transform.up, directionToTarget);
+                //Calculate the direction to face
+                Vector3 direction = target.transform.position - gameObject.transform.position;
+                //Calculate the required rotation
+                float rotation = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
+                //Slerp at 0.1 to mimic smooth rotation from mouse
+                gameObject.transform.rotation = Quaternion.Slerp(gameObject.transform.rotation, Quaternion.Euler(0, 0, -rotation), 0.1f);
 
-                Debug.Log(angle);
-                if (angle > 2)
-                {
-                    transform.Rotate(new Vector3(0, 0, angle));
-                    Debug.Log("still rotating");
-                }
-
+                //If the agent is close enough, allow it to shoot
                 if (Vector3.Distance(gameObject.transform.position, target.transform.position) < 15)
                     canShoot = true;
                 else
@@ -273,6 +279,10 @@ public class NMLAgent : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
+
+        if (idlecontroller)
+            actionMode = false;
+
         if (!actionMode)
             SearchArea();
 
