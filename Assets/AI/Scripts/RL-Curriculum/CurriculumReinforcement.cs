@@ -31,7 +31,9 @@ public class CurriculumReinforcement : Agent {
     public EnemyAgentWeaponManager weaponManager;
 
     //Academy variables
-    ResetParameters resetParams;
+    public ResetParameters resetParams;
+
+    public GameObject [] trainingAgents;
 
     [SerializeField]
     bool checkCanShoot = false;
@@ -244,5 +246,15 @@ public class CurriculumReinforcement : Agent {
 
         controller.kills = 0;
         controller.hittingWall = false;
+
+        //Reset the agents training this agent
+        if(trainingAgents.Length > 0 && trainingAgents[0].GetComponent<NMLAgent>())
+        {
+            for(int i = 0; i < trainingAgents.Length; i++)
+            {
+                trainingAgents[i].GetComponent<NMLAgent>().Respawn();
+                Debug.Log("called");
+            }
+        }
     }
 }

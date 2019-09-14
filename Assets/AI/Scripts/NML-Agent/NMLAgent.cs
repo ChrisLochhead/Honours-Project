@@ -1,10 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+
+//something fucks up when respawns but player doesnt move, then corrects itself.
 
 public class NMLAgent : MonoBehaviour {
 
-    int health;
+    public float health;
     int ammo;
     public Camera personalCamera;
 
@@ -38,15 +38,20 @@ public class NMLAgent : MonoBehaviour {
 
     public EnemyAgentWeaponManager weaponManager;
 
+    public bool isAlive;
+
+    public bool justRespawned;
+
 	// Use this for initialization
 	void Start () {
+
+        justRespawned = false;
         actionMode = false;
         health = 100;
         ammo = 16;
         idleTimer = 1.0f;
         escapeCollisionTimer = 0.0f;
         idleTarget = new Vector3(0, 0, 0);
-        Debug.Log("start");
         pathPosition = 0;
         pathSize = 0;
         canShoot = false;
@@ -106,7 +111,7 @@ public class NMLAgent : MonoBehaviour {
             {
                 idleTarget = new Vector3(gameObject.transform.position.x + Random.Range(-150, 150), gameObject.transform.position.y + Random.Range(-150, 150), -10);
             }
-
+            Debug.Log("new path");
             //Find a path to the target location
             pathPosition = 0;
             pathFinder.FindPath(pathGrid, gameObject.transform.position, idleTarget);
@@ -151,9 +156,7 @@ public class NMLAgent : MonoBehaviour {
                 //rotate towards the way the agent is facing
                 float rotation = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
                 gameObject.transform.rotation = Quaternion.Slerp(gameObject.transform.rotation, Quaternion.Euler(0, 0, -rotation), 0.1f);
-
-                Debug.Log("in idle");
-
+               // Debug.Log("rotating and moving");
                 //Prevent getting stuck on walls when idling
                 //Record position then move
                 Vector3 previousPosition = gameObject.transform.position;               
@@ -175,12 +178,13 @@ public class NMLAgent : MonoBehaviour {
     {
         CheckCanShoot();
 
-        if (targetPosition != target.transform.position)
+        if (targetPosition != target.transform.position || justRespawned)
         {
             //Find a path to the targets new location
             pathPosition = 0;
             pathFinder.FindPath(pathGrid, gameObject.transform.position, target.transform.position);
             pathSize = pathGrid.path.Count;
+            justRespawned = false;
         }
 
         //If the AI is currently unable to get a shot
@@ -254,7 +258,7 @@ public class NMLAgent : MonoBehaviour {
                 gameObject.transform.rotation = Quaternion.Slerp(gameObject.transform.rotation, Quaternion.Euler(0, 0, -rotation), 0.1f);
 
                 //If the agent is close enough, allow it to shoot
-                if (Vector3.Distance(gameObject.transform.position, target.transform.position) < 15)
+                if (Vector3.Distance(gameObject.transform.position, target.transform.position) < 55)
                     canShoot = true;
                 else
                     canShoot = false;
@@ -263,46 +267,84 @@ public class NMLAgent : MonoBehaviour {
         else 
             canShoot = false;
     }
-    void ResetAgent()
+
+    public void Respawn()
     {
-        //Reset stats
-        health = 100;
-        ammo = 16;
+        //Set the players position to a random space within the range offered by the academies parameters
+        gameObject.transform.position = new Vector3(Random.Range(-target.GetComponent<CurriculumReinforcement>().resetParams["x-position"], target.GetComponent<CurriculumReinforcement>().resetParams["x-position"]),
+            Random.Range(-target.GetComponent<CurriculumReinforcement>().resetParams["y-position"], target.GetComponent<CurriculumReinforcement>().resetParams["y-position"]), -10);
+        
+        //Reset controller variables
+        health = target.GetComponent<CurriculumReinforcement>().resetParams["health"];
+        weaponManager.currentWeapon = (int)target.GetComponent<CurriculumReinforcement>().resetParams["weapon"];
 
-        //Reset position
-        transform.position = new Vector3(Random.Range(-250, 250), Random.Range(-250, 250), -10);
+        for (int i = 0; i < weaponManager.clipSize.Length; i++)
+        {
+            weaponManager.currentAmmo[i] = weaponManager.clipSize[i];
+        }
 
-        //Set back to idle
+        Debug.Log("resetting");
+        //Reset Agents direction and rotation
+        //gameObject.transform.up = new Vector3(Random.Range(-target.GetComponent<CurriculumReinforcement>().resetParams["x-direction"], target.GetComponent<CurriculumReinforcement>().resetParams["x-direction"]), 
+        //    Random.Range(-target.GetComponent<CurriculumReinforcement>().resetParams["y-direction"], target.GetComponent<CurriculumReinforcement>().resetParams["y-direction"]), 0);
+
+        //float rotation = Mathf.Atan2(gameObject.transform.up.x, gameObject.transform.up.y) * Mathf.Rad2Deg;
+        //gameObject.transform.rotation = Quaternion.Euler(0, 0, -rotation);
+
+        canShoot = false;
         actionMode = false;
+        isAlive = true;
+        idleTimer = 1.0f;
+        pathCompleted = true;
+        pathPosition = 0;
+        pathSize = 0;
+        justRespawned = true;
+
+        //Find a path to the targets new location
+        pathFinder.FindPath(pathGrid, gameObject.transform.position, target.transform.position);
+        pathSize = pathGrid.path.Count;
 
     }
 
     // Update is called once per frame
     void Update () {
 
-        if (idlecontroller)
-            actionMode = false;
+        //Check if still alive
+        if (health <= 0)
+            isAlive = false;
 
-        if (!actionMode)
-            SearchArea();
+        if (isAlive)
+        {
+            if (idlecontroller)
+                actionMode = false;
 
-        if (!actionMode)
-            Idle();
-        else
-            Attack();
+            if (!actionMode)
+                SearchArea();
 
-        idlecube.transform.position = idleTarget;
+            if (!actionMode)
+                Idle();
+            else
+                Attack();
 
-        if(target)
-        targetPosition = target.transform.position;
+            idlecube.transform.position = idleTarget;
 
-        //if (actionMode)
-        //    Debug.Log("attacking");
-        //else
-        //    Debug.Log("idling");
+            if (target)
+                targetPosition = target.transform.position;
 
-        GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
-        GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+            if (actionMode)
+            {
+                Debug.Log("attacking");
+                Debug.Log("can shoot : " + canShoot);
+            }
+            else
+                Debug.Log("idling");
+
+            GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
+            GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+        }else
+        {
+            Respawn();
+        }
     }
 
 
