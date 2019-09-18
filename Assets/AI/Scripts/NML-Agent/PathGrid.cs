@@ -24,6 +24,8 @@ public class PathGrid : MonoBehaviour {
 
     public List<PathNode> path;
 
+    public Vector2 gridCentre;
+
     void Start () {
         //Calculate the grid to node ratio 
         gridXDimension = Mathf.RoundToInt(gridDimensions.x / (nodeRadius * 2));
@@ -39,6 +41,8 @@ public class PathGrid : MonoBehaviour {
 
         //Find starting position for building the grid
         Vector3 bottomLeft = transform.position - Vector3.right * gridDimensions.x / 2 - Vector3.up * gridDimensions.y / 2;
+        bottomLeft.x += gridCentre.x;
+        bottomLeft.y += gridCentre.y;
 
         //Iterate through both rows and columns
         for (int x = 0; x < gridXDimension; x++)
@@ -124,7 +128,7 @@ public class PathGrid : MonoBehaviour {
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireCube(transform.position, new Vector3(gridDimensions.x, gridDimensions.y, 1));
-        if(grid != null)
+        if (grid != null)
         {
 
             PathNode playerNode = GetNode(player.transform.position);

@@ -11,6 +11,9 @@ public class TrainingBullet : MonoBehaviour
 
     private void Update()
     {
+        //ignore collisions from other bullets
+        Physics.IgnoreLayerCollision(10, 10);
+
         if (Vector3.Distance(this.gameObject.transform.position, shooter.transform.position) > 150)
         {
             Destroy(this.gameObject);
@@ -32,7 +35,7 @@ public class TrainingBullet : MonoBehaviour
 
         //Training function for AI agents, commented out during study
         //Check if it has hit an enemyplayer (DRL or NMLA), this function is specific to DRL training
-        if (collision.transform.GetComponent<EnemyAgentController>() || collision.transform.GetComponent<NMLAgent>() && shooter.gameObject.GetComponent<CurriculumReinforcement>())
+        if (collision.transform.GetComponent<EnemyAgentController>() || collision.transform.GetComponent<NMLAgentTrainer>() && shooter.gameObject.GetComponent<CurriculumReinforcement>())
         {
             CheckEnemyCollision(collision);
             Destroy(this.gameObject);
@@ -47,7 +50,11 @@ public class TrainingBullet : MonoBehaviour
                 Destroy(this.gameObject);
             return;
         }
-        
+
+        //It should be destroyed no matter what it hits other than another bullet
+        //so destroy this for any edge cases like friendly fire
+        Destroy(this.gameObject);
+
     }
 
     void CheckEnemyCollision(Collision collision)
@@ -63,23 +70,28 @@ public class TrainingBullet : MonoBehaviour
             if(enemyController.health <= 0)
             {
                 enemyController.isAlive = false;
+
+                //Check the shooter isn't an NMLAgent
+                if(shooter.GetComponent<CurriculumReinforcement>())
                 shooter.GetComponent<CurriculumReinforcement>().GainedKill();
             }
 
         }
 
         //Bullet code for AI training
-        if (collision.transform.GetComponent<NMLAgent>())
+        if (collision.transform.GetComponent<NMLAgentTrainer>())
         {
             //Apply damage
-            collision.transform.GetComponent<NMLAgent>().health -= damageAmount;
-            if (collision.transform.GetComponent<NMLAgent>().health <= 0)
+            collision.transform.GetComponent<NMLAgentTrainer>().health -= damageAmount;
+            if (collision.transform.GetComponent<NMLAgentTrainer>().health <= 0)
             {
-                collision.transform.GetComponent<NMLAgent>().isAlive = false;
+                collision.transform.GetComponent<NMLAgentTrainer>().isAlive = false;
                 shooter.GetComponent<CurriculumReinforcement>().GainedKill();
             }
 
         }
+
+        Destroy(this.gameObject);
     }
 }
 

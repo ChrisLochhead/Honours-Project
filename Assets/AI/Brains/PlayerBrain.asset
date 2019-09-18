@@ -12,17 +12,16 @@ MonoBehaviour:
   m_Name: PlayerBrain
   m_EditorClassIdentifier: 
   brainParameters:
-    vectorObservationSize: 4
+    vectorObservationSize: 2
     numStackedVectorObservations: 1
-    vectorActionSize: 05000000
+    vectorActionSize: 02000000030000000200000002000000
     cameraResolutions: []
     vectorActionDescriptions:
     - move(yes or no)
-    - rotate(how much)
+    - rotate(no/left/right)
     - shoot(yes or no)
     - reload(yes or no)
-    - change weapon (which one 0-4)
-    vectorActionSpaceType: 1
+    vectorActionSpaceType: 0
   keyContinuousPlayerActions:
   - key: 119
     index: 0
@@ -43,4 +42,19 @@ MonoBehaviour:
     index: 4
     value: 3
   axisContinuousPlayerActions: []
-  discretePlayerActions: []
+  discretePlayerActions:
+  - key: 119
+    branchIndex: 0
+    value: 1
+  - key: 97
+    branchIndex: 1
+    value: 1
+  - key: 100
+    branchIndex: 1
+    value: 2
+  - key: 32
+    branchIndex: 2
+    value: 1
+  - key: 114
+    branchIndex: 3
+    value: 1

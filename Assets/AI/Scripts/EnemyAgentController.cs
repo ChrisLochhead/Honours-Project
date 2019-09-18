@@ -33,15 +33,17 @@ public class EnemyAgentController : MonoBehaviour {
 
     public void Move(Vector2 actions)
     {
-        //Move at a fixed velocity of 0.3 or 0.0
-        if (actions.x > 0)
-        {
+        //Move at a fixed velocity
+        if (actions.x == 1)
             gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, transform.up + gameObject.transform.position, 0.9f);
-        }
 
         //Update the rotation
-        actions.y = Mathf.Clamp(actions.y, -3.5f, 3.5f);
-        transform.Rotate(new Vector3(0, 0, actions.y *2.5f));
+        //rotate left
+        if(actions.y == 1)
+        transform.Rotate(new Vector3(0, 0, -8));
+        //rotate right
+        if(actions.y == 2)
+        transform.Rotate(new Vector3(0, 0, 8));
 
     }
 

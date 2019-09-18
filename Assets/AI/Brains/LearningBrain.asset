@@ -12,16 +12,15 @@ MonoBehaviour:
   m_Name: LearningBrain
   m_EditorClassIdentifier: 
   brainParameters:
-    vectorObservationSize: 4
+    vectorObservationSize: 2
     numStackedVectorObservations: 1
-    vectorActionSize: 05000000
+    vectorActionSize: 02000000030000000200000002000000
     cameraResolutions: []
     vectorActionDescriptions:
-    - move(yes/no)
-    - rotate(how much)
-    - shoot(yes/no)
-    - reload(yes/no)
-    - changeweapon(which one)
-    vectorActionSpaceType: 1
-  model: {fileID: 0}
+    - Move
+    - Rotate
+    - Shoot
+    - Reload
+    vectorActionSpaceType: 0
+  model: {fileID: 11400000, guid: b69d79ca23b175b4fbf8bb5f28baba5d, type: 3}
   inferenceDevice: 0

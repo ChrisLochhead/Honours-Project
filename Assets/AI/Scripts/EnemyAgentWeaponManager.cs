@@ -62,7 +62,7 @@ public class EnemyAgentWeaponManager : MonoBehaviour
     public void Shoot(float action)
     {       
         //If the player can and is shooting, create a bullet, decrement ammo and show a muzzle flash
-        if (currentAmmo[currentWeapon] > 0 && fireRates[currentWeapon] == currentFireRates[currentWeapon] && action > 0 && isReloading == false)
+        if (currentAmmo[currentWeapon] > 0 && fireRates[currentWeapon] == currentFireRates[currentWeapon] && action == 1 && isReloading == false)
         {
             SpawnBullet();
             currentAmmo[currentWeapon]--;
@@ -74,7 +74,7 @@ public class EnemyAgentWeaponManager : MonoBehaviour
     public void Reload(float action)
     {
         //Reloading
-        if (action > 0 && (float)currentAmmo[currentWeapon] / (float)clipSize[currentWeapon] < 0.6f)
+        if (action == 1 && (float)currentAmmo[currentWeapon] / (float)clipSize[currentWeapon] < 0.6f)
         {
             if (initialReload == true || isReloading == false)
             {
@@ -160,12 +160,19 @@ public class EnemyAgentWeaponManager : MonoBehaviour
         rot *= Quaternion.Euler(-90, 0, 0);
         b.transform.rotation = rot;
 
-        //calculate trajectory
-        b.GetComponent<Rigidbody>().velocity = b.transform.forward * 100.0f;
+        //calculate trajectory and velocity
+        if (gameObject.GetComponent<CurriculumReinforcement>())
+            b.GetComponent<Rigidbody>().velocity = b.transform.forward * 100.0f;
+        else
+            b.GetComponent<Rigidbody>().velocity = b.transform.forward * 30.0f;
 
         //add tag indicating whose bullet it is
         b.GetComponent<TrainingBullet>().shooter = gameObject;
-        b.GetComponent<TrainingBullet>().damageAmount = 100;// damageAmounts[currentWeapon];
 
+        //give agent more damaging bullets than enemies
+        if(gameObject.GetComponent<CurriculumReinforcement>())
+        b.GetComponent<TrainingBullet>().damageAmount = 100;// damageAmounts[currentWeapon];
+        else
+            b.GetComponent<TrainingBullet>().damageAmount = 10;// damageAmounts[currentWeapon];
     }
 }
