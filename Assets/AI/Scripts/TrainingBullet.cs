@@ -14,10 +14,13 @@ public class TrainingBullet : MonoBehaviour
         //ignore collisions from other bullets
         Physics.IgnoreLayerCollision(10, 10);
 
-        if (Vector3.Distance(this.gameObject.transform.position, shooter.transform.position) > 150)
+        if (Vector3.Distance(this.gameObject.transform.position, shooter.transform.position) > 30 && shooter.GetComponent<CurriculumReinforcement>())
         {
             Destroy(this.gameObject);
         }
+        else if (Vector3.Distance(this.gameObject.transform.position, shooter.transform.position) > 150)
+            Destroy(this.gameObject);
+
     }
 
     private void OnCollisionEnter(Collision collision)

@@ -35,25 +35,43 @@ public class CurriculumReinforcement : Agent {
     [SerializeField]
     bool checkCanShoot = false;
 
+    public List<GameObject> visiblePlayers = new List<GameObject>();
     public Vector3 previousPosition;
 
     public Camera personalCamera;
 
-    public Vector2 spawnCentre;
+    public GameObject[] walls;
 
-    public bool enemyVisible = false;
+    public GameObject worldPosition;
+
+    RayPerception3D rayPerception;
+    float rayDistance = 50.0f;
+    float[] rayAngles = { 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300, 320, 340, 360 };
+    string[] detectableObjects = { "Obstacle", "Player1" };
+    List<float> debugRays = new List<float>();
 
     private void Start()
     {
         previousPosition = gameObject.transform.position;
+        rayPerception = GetComponent<RayPerception3D>();
+
+    }
+
+    private void OnDrawGizmos()
+    {
+        //foreach (float f in debugRays) {
+        //    Vector3 dir = 
+        //    Debug.DrawRay(gameObject.transform.position, );
+        //}
     }
 
     //AI specific functionality
     public override void CollectObservations()
     {
+        List<float> tmp = rayPerception.Perceive(rayDistance, rayAngles, detectableObjects, 0.0f, 0.0f);
+        AddVectorObs(rayPerception.Perceive(rayDistance, rayAngles, detectableObjects, 0.0f, 0.0f));
         //Generate a list of visible players complete with attributes
-        GeneratePlayerInfo();
-        GenerateAIInfo();
+        //GeneratePlayerInfo();
     }
 
     public override void AgentAction(float[] vectorAction, string textAction)
@@ -76,7 +94,7 @@ public class CurriculumReinforcement : Agent {
             controller.Shoot(vectorAction[2]);
 
             //if (vectorAction[2] > 0)
-            //    AddReward(-0.01f);
+            //    AddReward(-0.001f);
 
             //Decides whether agent should reload (clamped to 0 or 1 for dont reload and reload)
             controller.Reload(vectorAction[3]);
@@ -92,113 +110,145 @@ public class CurriculumReinforcement : Agent {
         //Trigger if the controller has died
         if (!controller.isAlive)
         {
-            SetReward(-0.5f);
-            //Done();
+            AddReward(-1f);
+            Done();
         }
 
-        //Penalise for loosing health
-        if(controller.health < 100)
-        {
-            float difference = 100 - health;
-            difference = difference * -0.000001f;
-            SetReward(difference);
-        }
+        ////Penalise for loosing health
+        //if (controller.health < 100)
+        //{
+        //    float difference = 100 - health;
+        //    difference = difference * -0.000001f;
+        //    SetReward(difference);
+        //}
 
-        //existential penalty
-        SetReward(-0.000001f);
-
-        //penalty for hitting a wall
     }
 
     private void OnCollisionStay(Collision collision)
     {
-        if (collision.collider.tag == "obstacle")
+        if (collision.gameObject.tag == "Obstacle")
         {
-            AddReward(-0.001f);
-            Debug.Log("still colliding");
+            //ebug.Log("colliding");
+            AddReward(-0.1f);
+            Done();
         }
     }
 
     public void GainedKill()
     {
         Debug.Log("gained kill");
-        SetReward(30f);
-        Done();
+        AddReward(1f);
+        //Done();
     }
 
-    public bool FoundEnemy()
-    {
-        ////If any of these return true, the AI can try to shoot
-        //foreach (GameObject g3 in visiblePlayers)
-        //{
-        //    Vector3 aimDirection = g3.transform.position - gameObject.transform.position;
-        //    if (Vector3.Angle(aimDirection, controller.transform.up) < 2)
-        //    {
-        //        return true;
-        //    }
-        //}
-        return false;
-    }
+    //public void GeneratePlayerInfo()
+    //{
+    //    //Add the players x and y co-ordinates (z never changes so it wont be necessary)
+        
+    //    AddVectorObs(Mathf.Clamp01(gameObject.transform.position.x/60.0f));
+    //    AddVectorObs(Mathf.Clamp01(gameObject.transform.position.y/50.0f));
 
-    public void GenerateAIInfo()
-    {
-        //Players weapon info
-        //AddVectorObs(weaponManager.currentAmmo[weaponManager.currentWeapon]);
+    //    //Add the players up direction in x and y (Z never changes for this vector either)
+    //    AddVectorObs(Mathf.Clamp01(gameObject.transform.up.x));
+    //    AddVectorObs(Mathf.Clamp01(gameObject.transform.up.y));
 
-        checkCanShoot = FoundEnemy();
+    //    //Clear the previous frames list of visible players
+    //    visiblePlayers.Clear();
 
-        if (checkCanShoot)
-            AddVectorObs(1);
-        else
-            AddVectorObs(0);      
-    }
+    //    //Get list of players
+    //    GameObject[] allPlayers = GameObject.FindGameObjectsWithTag("Player1");
 
-    public void GeneratePlayerInfo()
-    {
-        Debug.Log(transform.up);
-        //Add the players x and y co-ordinates (z never changes so it wont be necessary)
-        AddVectorObs(gameObject.transform.position.x);
-        AddVectorObs(gameObject.transform.position.y);
+    //    //Check if the player is visible to the AI
+    //    foreach (GameObject g1 in allPlayers)
+    //    {
+    //        //If looking at itself, ignore it
+    //        if (g1.transform.position == gameObject.transform.position)
+    //            continue;
 
-        enemyVisible = false;
+    //        //Check if enemy is visible within the agents camera
+    //        Vector3 screenPoint = personalCamera.WorldToViewportPoint(g1.transform.position);
+    //        bool onScreen = screenPoint.x > 0 && screenPoint.x < 1 && screenPoint.y > 0 && screenPoint.y < 1;
 
-        //Get list of players
-        GameObject[] allPlayers = GameObject.FindGameObjectsWithTag("Player1");
+    //        //If so, calculate the angle between them and add it to the vector of observations
+    //        if (onScreen)
+    //        {                
+    //            visiblePlayers.Add(g1);
+    //            Vector3 directionToAim = gameObject.transform.position - g1.transform.position;
+    //            float angleBetweenAgents = Vector3.Angle(gameObject.transform.up, -directionToAim);
 
-        //Check if the player is visible to the AI
-        foreach (GameObject g1 in allPlayers)
-        {
-            if (g1.transform.position == gameObject.transform.position)
-            {
-                continue;
-            }
+    //            AddVectorObs(angleBetweenAgents/360.0f);
 
-            //Check if enemy is within the agents camera
-            Vector3 screenPoint = personalCamera.WorldToViewportPoint(g1.transform.position);
-            bool onScreen = screenPoint.x > 0 && screenPoint.x < 1 && screenPoint.y > 0 && screenPoint.y < 1;
+    //            //if (Vector3.Angle(gameObject.transform.up, -directionToAim) < 2)
+    //            //{
+    //            //    //AddReward(0.01f);
+    //            //    AddVectorObs(1);
+    //            //}
+    //            //else
+    //            //    AddVectorObs(0);
 
-            if (onScreen)
-            {
-                Vector3 directionToAim = gameObject.transform.position - g1.transform.position;
-               // Vector3 angleBetweenAgents = Vector3.Angle(gameObject.transform.up, -directionToAim);
+    //            break;
+    //        }
 
-                if (Vector3.Angle(gameObject.transform.up, -directionToAim) < 2)
-                {
-                    AddReward(0.0001f);
-                    enemyVisible = true;
-                }
+    //    }
 
-            }
+    //    if(visiblePlayers.Count > 0)
+    //    {
+    //        //Indicate that a player is visible
+    //        //AddVectorObs(1);
 
-        }
+    //        //Add the enemies position in x and y
+    //        AddVectorObs(visiblePlayers[0].transform.position.x/60.0f);
+    //        AddVectorObs(visiblePlayers[0].transform.position.y/50.0f);
 
-        if (enemyVisible)
-            AddVectorObs(1);
-        else
-            AddVectorObs(0);
+    //        //Check if the enemy is looking at the agent
+    //        Vector3 directionEnemyAim = visiblePlayers[0].transform.position - gameObject.transform.position;
+    //        float angleBetweenAgents = Vector3.Angle(gameObject.transform.up, -directionEnemyAim);
+
+    //        //if (Vector3.Angle(gameObject.transform.up, -directionEnemyAim) < 2)
+    //        //{
+    //        //    AddReward(-0.0001f);
+    //        //    AddVectorObs(1);
+    //        //}
+    //        //else
+    //        //    AddVectorObs(0);
 
 
-    }
+
+    //    }
+    //    else
+    //    {
+    //        //Otherwise, add -1 to indicate no angle between agents
+    //        //and 0 to indicate that it cant see any agents
+    //        //then three more -1's to indicate it cannot add this information
+    //        //AddVectorObs(-1);
+    //        //AddVectorObs(-1);
+    //        //AddVectorObs(-1);
+    //        AddVectorObs(-1);
+    //        AddVectorObs(-1);
+    //        AddVectorObs(-1);
+    //    }
+
+    //   // int wallCounter = 0;
+
+    //    ////Finally, add walls to the vector of observations
+    //    //foreach(GameObject w in walls)
+    //    //{
+    //    //    //Min X
+    //    //    if (wallCounter == 0)
+    //    //        AddVectorObs(Mathf.Clamp01(w.transform.position.x));
+    //    //    //Min Y
+    //    //    if (wallCounter == 1)
+    //    //        AddVectorObs(Mathf.Clamp01(w.transform.position.y));
+    //    //    //Max X
+    //    //    if (wallCounter == 2)
+    //    //        AddVectorObs(Mathf.Clamp01(w.transform.position.x));
+    //    //    //Max Y
+    //    //    if (wallCounter == 3)
+    //    //        AddVectorObs(Mathf.Clamp01(w.transform.position.y));
+
+    //    //    wallCounter++;
+    //    //}
+    //}
 
     public override void InitializeAgent()
     {
@@ -217,7 +267,7 @@ public class CurriculumReinforcement : Agent {
     private void ResetAgentModel()
     {
         //Set the players position to a random space within the range offered by the academies parameters
-        gameObject.transform.position = new Vector3(Random.Range(-resetParams["x-position"], resetParams["x-position"]) + spawnCentre.x, Random.Range(-resetParams["y-position"], resetParams["y-position"]) + spawnCentre.y, -10);
+        gameObject.transform.position = new Vector3(Random.Range(-resetParams["x-position"], resetParams["x-position"]) + worldPosition.transform.position.x, Random.Range(-resetParams["y-position"], resetParams["y-position"]) + worldPosition.transform.position.y, -10);
 
         //Reset controller variables
         controller.health = resetParams["health"];

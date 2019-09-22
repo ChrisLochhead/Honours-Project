@@ -286,10 +286,10 @@ public class NMLAgent : MonoBehaviour {
                 gameObject.transform.rotation = Quaternion.Slerp(gameObject.transform.rotation, Quaternion.Euler(0, 0, -rotation), 0.1f);
 
                 //If the agent is close enough, allow it to shoot
-                if (Vector3.Distance(gameObject.transform.position, target.transform.position) < 55)
+                //if (Vector3.Distance(gameObject.transform.position, target.transform.position) < 55)
                     canShoot = true;
-                else
-                    canShoot = false;
+                //else
+                //    canShoot = false;
             }
         }
         else 

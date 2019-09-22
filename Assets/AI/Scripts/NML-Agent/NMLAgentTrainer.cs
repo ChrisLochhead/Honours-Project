@@ -27,7 +27,7 @@ public class NMLAgentTrainer : MonoBehaviour {
     //records whether the agent is alive
     public bool isAlive;
 
-    public Vector2 spawnCentre;
+    public GameObject worldPosition;
 
     void Start()
     {
@@ -76,7 +76,7 @@ public class NMLAgentTrainer : MonoBehaviour {
             //If they still can, shoot
             if (canShoot)
             {
-                //weaponManager.Shoot(1);
+                weaponManager.Shoot(1);
             }
         }
     }
@@ -121,8 +121,8 @@ public class NMLAgentTrainer : MonoBehaviour {
     public void Respawn()
     {
         //Set the players position to a random space within the range offered by the academies parameters
-        gameObject.transform.position = new Vector3(Random.Range(-agentTrainer.GetComponent<CurriculumReinforcement>().resetParams["x-position"], agentTrainer.GetComponent<CurriculumReinforcement>().resetParams["x-position"]) + spawnCentre.x,
-            Random.Range(-agentTrainer.GetComponent<CurriculumReinforcement>().resetParams["y-position"], agentTrainer.GetComponent<CurriculumReinforcement>().resetParams["y-position"]) + spawnCentre.y, -10);
+        gameObject.transform.position = new Vector3(Random.Range(-agentTrainer.GetComponent<CurriculumReinforcement>().resetParams["x-position"], agentTrainer.GetComponent<CurriculumReinforcement>().resetParams["x-position"]) + worldPosition.transform.position.x,
+            Random.Range(-agentTrainer.GetComponent<CurriculumReinforcement>().resetParams["y-position"], agentTrainer.GetComponent<CurriculumReinforcement>().resetParams["y-position"]) + worldPosition.transform.position.y, -10);
 
         //Reset controller variables
         health = agentTrainer.GetComponent<CurriculumReinforcement>().resetParams["health"];

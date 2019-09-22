@@ -47,13 +47,12 @@ namespace MLAgents
             // along with object distance.
             foreach (float angle in rayAngles)
             {
-                endPosition = transform.TransformDirection(
-                    PolarToCartesian(rayDistance, angle));
-                endPosition.y = endOffset;
+                endPosition = transform.TransformDirection(PolarToCartesian(rayDistance, angle));
+                //endPosition.y = endOffset;
                 if (Application.isEditor)
                 {
                     Debug.DrawRay(transform.position + new Vector3(0f, startOffset, 0f),
-                        endPosition, Color.black, 0.01f, true);
+                      endPosition, Color.red, 0.01f, true);
                 }
 
                 Array.Clear(subList, 0, subList.Length);
@@ -90,7 +89,7 @@ namespace MLAgents
         {
             float x = radius * Mathf.Cos(DegreeToRadian(angle));
             float z = radius * Mathf.Sin(DegreeToRadian(angle));
-            return new Vector3(x, 0f, z);
+            return new Vector3(x, z, 0f);
         }
 
     }
