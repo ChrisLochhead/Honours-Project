@@ -662,7 +662,7 @@ PlayerSettings:
   cloudServicesEnabled:
     UNet: 1
   facebookSdkVersion: 7.9.4
-  apiCompatibilityLevel: 2
+  apiCompatibilityLevel: 3
   cloudProjectId: c5e3ff80-5f75-4fb7-9391-b0c0e3890ed7
   projectName: Honours-Project
   organizationId: chrislochhead123

@@ -216,6 +216,13 @@ public class MainMenu : NetworkBehaviour {
         SceneManager.LoadScene(2);
     }
 
+    public void TrainButton()
+    {
+        //Destroy the main menus copy of mapfinder
+        Destroy(GameObject.Find("MapFinder(Clone)"));
+        SceneManager.LoadScene(4);
+    }
+
     public void QuitButton()
     {
         //Close the application

@@ -1074,6 +1074,7 @@ GameObject:
   - component: {fileID: 114947690192203220}
   - component: {fileID: 114483305580446492}
   - component: {fileID: 114231815613507098}
+  - component: {fileID: 114584896678501224}
   m_Layer: 9
   m_Name: Player1
   m_TagString: Player1
@@ -4745,6 +4746,17 @@ MonoBehaviour:
   weaponManager: {fileID: 114231815613507098}
   kills: 0
   deaths: 0
+--- !u!114 &114584896678501224
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1547853218925660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb172294dbbcc408286b156a2c4b553c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114639008460651382
 MonoBehaviour:
   m_ObjectHideFlags: 1
