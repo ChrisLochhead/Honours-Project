@@ -44,10 +44,12 @@ public class CurriculumReinforcement : Agent {
 
     public GameObject worldPosition;
 
+    public bool isLearning;
+
     RayPerception3D rayPerception;
     float rayDistance = 50.0f;
-    float[] rayAngles = new float[37];
-    string[] detectableObjects = { "Obstacle", "Player1" };
+    float[] rayAngles = new float[19];
+    string[] detectableObjects = { "Obstacle", "AdversaryPlayer" };
     List<float> debugRays = new List<float>();
 
     private void Start()
@@ -55,12 +57,13 @@ public class CurriculumReinforcement : Agent {
         previousPosition = gameObject.transform.position;
         rayPerception = GetComponent<RayPerception3D>();
 
-        for(int i = 1; i < 37; i ++)
+        for(int i = 1; i < 19; i ++)
         {
-            rayAngles[i] = i * 10;
-            Debug.Log(i * 10);
+            rayAngles[i] = i * 20;
         }
 
+        if (!isLearning)
+            detectableObjects[1] = "Player1";
     }
 
     //AI specific functionality
@@ -161,12 +164,15 @@ public class CurriculumReinforcement : Agent {
         controller.kills = 0;
         controller.hittingWall = false;
 
-        //Reset the agents training this agent
-        if(trainingAgents.Length > 0 && trainingAgents[0].GetComponent<NMLAgent>())
+        //Reset the agents training this agent if using CL
+        if (trainingAgents[0] != null)
         {
-            for(int i = 0; i < trainingAgents.Length; i++)
+            if (trainingAgents.Length > 0 && trainingAgents[0].GetComponent<NMLAgent>())
             {
-                trainingAgents[i].GetComponent<NMLAgent>().Respawn();
+                for (int i = 0; i < trainingAgents.Length; i++)
+                {
+                    trainingAgents[i].GetComponent<NMLAgent>().Respawn();
+                }
             }
         }
     }

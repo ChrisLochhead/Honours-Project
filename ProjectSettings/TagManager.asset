@@ -15,6 +15,7 @@ TagManager:
   - MapItem
   - MapLoader
   - Enemy
+  - AdversaryPlayer
   layers:
   - Default
   - TransparentFX

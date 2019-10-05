@@ -91,19 +91,18 @@ public class EnemyAgentWeaponManager : MonoBehaviour
         if (weaponIndex > 0)
         {
             //If actually changing to a different weapon
-            if(currentWeapon == 0 && weaponIndex <= 0.2f || currentWeapon == 1 && weaponIndex <= 0.4f && weaponIndex > 0.20f || currentWeapon == 2 && weaponIndex <= 0.6f && weaponIndex > 0.4f ||
-                currentWeapon == 3 && weaponIndex <= 0.8f && weaponIndex >= 0.6f || currentWeapon == 4 && weaponIndex > 0.8f)
+            if(currentWeapon != weaponIndex)
             {
                 //Cancel attempt at reloading 
-                //isReloading = false;
-                //initialReload = true;
+                isReloading = false;
+                initialReload = true;
             }
             //Cycle through weapons
-            if (currentWeapon == 0 && weaponIndex <= 0.2f) SetWeapon(0);
-            if (currentWeapon == 1 && weaponIndex > 0.2f && weaponIndex <= 0.4f && controller.score > 100) SetWeapon(1);
-            if (currentWeapon == 2 && weaponIndex > 0.4f && weaponIndex <= 0.6f && controller.score > 200) SetWeapon(2);
-            if (currentWeapon == 3 && weaponIndex > 0.6f && weaponIndex <= 0.8f && controller.score > 400) SetWeapon(3);
-            if (currentWeapon == 4 && weaponIndex > 0.8f && controller.score > 750) SetWeapon(4);
+            if (weaponIndex == 0) SetWeapon(0);
+            if (weaponIndex == 1 && controller.score > 100) SetWeapon(1);
+            if (weaponIndex == 2 && controller.score > 200) SetWeapon(2);
+            if (weaponIndex == 3 && controller.score > 400) SetWeapon(3);
+            if (weaponIndex == 4 && controller.score > 750) SetWeapon(4);
 
         }
     }
@@ -160,19 +159,25 @@ public class EnemyAgentWeaponManager : MonoBehaviour
         rot *= Quaternion.Euler(-90, 0, 0);
         b.transform.rotation = rot;
 
+        //Modify values here for manual training
         //calculate trajectory and velocity
-        if (gameObject.GetComponent<CurriculumReinforcement>())
-            b.GetComponent<Rigidbody>().velocity = b.transform.forward * 100.0f;
+        if (gameObject.transform.parent.name == "Adversary Prefab 1" || gameObject.transform.parent.name == "NMLAgent Training Prefab")
+        {
+            b.GetComponent<Rigidbody>().velocity = b.transform.forward * 300.0f;
+
+        }
         else
-            b.GetComponent<Rigidbody>().velocity = b.transform.forward * 30.0f;
+            b.GetComponent<Rigidbody>().velocity = b.transform.forward * 300.0f;
 
         //add tag indicating whose bullet it is
         b.GetComponent<TrainingBullet>().shooter = gameObject;
 
         //give agent more damaging bullets than enemies
-        if(gameObject.GetComponent<CurriculumReinforcement>())
-        b.GetComponent<TrainingBullet>().damageAmount = 100;// damageAmounts[currentWeapon];
+        if (gameObject.transform.parent.name == "Adversary Prefab 1" || gameObject.transform.parent.name == "NMLAgent Training Prefab")
+        {
+            b.GetComponent<TrainingBullet>().damageAmount = 100;// damageAmounts[currentWeapon];
+        }
         else
-            b.GetComponent<TrainingBullet>().damageAmount = 10;// damageAmounts[currentWeapon];
+            b.GetComponent<TrainingBullet>().damageAmount = 50;// damageAmounts[currentWeapon];
     }
 }

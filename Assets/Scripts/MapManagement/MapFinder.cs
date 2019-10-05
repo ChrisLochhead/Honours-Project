@@ -95,7 +95,6 @@ public class MapFinder : NetworkBehaviour {
             }
             //Once the file is finished, add the map to the list
             maps.Add(map);
-            Debug.Log(map.GetComponent<Map>().GetMapItems().Count);
             //Close the reader
             reader.Close();
         }

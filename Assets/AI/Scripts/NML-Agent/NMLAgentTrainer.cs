@@ -29,6 +29,8 @@ public class NMLAgentTrainer : MonoBehaviour {
 
     public GameObject worldPosition;
 
+    Vector3 wanderPositon;
+
     void Start()
     {
 
@@ -118,6 +120,32 @@ public class NMLAgentTrainer : MonoBehaviour {
             canShoot = false;
     }
 
+    public void Idle()
+    {
+        if (wanderPositon == null || wanderPositon == gameObject.transform.position)
+        {
+            //find a new wander position
+            wanderPositon = new Vector3(Random.Range(-agentTrainer.GetComponent<CurriculumReinforcement>().resetParams["x-position"], agentTrainer.GetComponent<CurriculumReinforcement>().resetParams["x-position"]) + worldPosition.transform.position.x,
+            Random.Range(-agentTrainer.GetComponent<CurriculumReinforcement>().resetParams["y-position"], agentTrainer.GetComponent<CurriculumReinforcement>().resetParams["y-position"]) + worldPosition.transform.position.y, -10);
+        }
+
+        //Performs lightweight pathfinding suitable for training purposes without grid
+        //yet appoximate enough to simulate movement
+        if(wanderPositon != gameObject.transform.position)
+        {
+            Vector3 direction = (wanderPositon - transform.position);
+
+            //rotate towards the way the agent is facing
+            float rotation = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
+            gameObject.transform.rotation = Quaternion.Slerp(gameObject.transform.rotation, Quaternion.Euler(0, 0, -rotation), 0.1f);
+
+            //Prevent getting stuck on walls when idling
+            //move         
+            gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, wanderPositon, 0.3f);
+
+        }
+    }
+
     public void Respawn()
     {
         //Set the players position to a random space within the range offered by the academies parameters
@@ -154,12 +182,21 @@ public class NMLAgentTrainer : MonoBehaviour {
             //if the player didn't see an enemy last frame,
             //search again
             if (!actionMode)
+            {
                 SearchArea();
+               
+            }
 
             //If it still cant find an enemy, wander around
             //otherwise, go into action mode
             if (actionMode)
+            {
                 Attack();
+            }
+            else
+            {
+                Idle();
+            }
 
             //Zero off the physics to negate any collision forces while
             //retaining collision detection
