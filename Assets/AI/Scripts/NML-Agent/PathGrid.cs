@@ -75,7 +75,6 @@ public class PathGrid : MonoBehaviour {
         int NodeRow = Mathf.RoundToInt((gridXDimension - 1) * xPoint);
         int NodeColumn = Mathf.RoundToInt((gridYDimension - 1) * yPoint);
 
-        PathNode test = grid[NodeRow, NodeColumn];
         return grid[NodeRow, NodeColumn];
     }
 

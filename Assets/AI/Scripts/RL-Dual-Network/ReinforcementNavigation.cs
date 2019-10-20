@@ -5,7 +5,6 @@ using MLAgents;
 public class ReinforcementNavigation : Agent
 {
     public EnemyAgentController controller;
-    Vector2 cameraDimensions = new Vector2(39, 11);
 
     //array of visible players
     public List<GameObject> visiblePlayers = new List<GameObject>();

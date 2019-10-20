@@ -37,6 +37,9 @@ public class MapFinder : NetworkBehaviour {
     public void FindFiles()
     {
         //Get the path to the map folder
+        if(!Directory.Exists(Application.dataPath + "/Maps"))
+            Directory.CreateDirectory(Application.dataPath + "/Maps");
+
         path = new DirectoryInfo(Application.dataPath + "/Maps");
         //Get all .txt files to avoid the .meta files
         FileInfo[] info = path.GetFiles("*.txt");

@@ -6,7 +6,6 @@ public class NMLAgent : MonoBehaviour {
 
     //Stats
     public float health;
-    int ammo;
 
     //Camera
     public Camera personalCamera;
@@ -75,7 +74,6 @@ public class NMLAgent : MonoBehaviour {
         
         //Initialise stats
         health = 100;
-        ammo = 16;
 
         //Initialise pathing variables
         idleTimer = 1.0f;

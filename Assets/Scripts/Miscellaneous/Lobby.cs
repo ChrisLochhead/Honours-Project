@@ -73,7 +73,7 @@ public class Lobby : NetworkBehaviour
         GameObject gameInfo = GameObject.Find("gameInfo");
         if (gameInfo)
         {
-            Owner.CmdSetName(gameInfo.GetComponent<GameInfo>().name);
+            Owner.CmdSetName(gameInfo.GetComponent<GameInfo>().infoName);
             if (gameInfo.GetComponent<GameInfo>().killLimit != 0 && gameInfo.GetComponent<GameInfo>().timeLimit != 0)
             {
                 Owner.killLimit = 1;// gameInfo.GetComponent<GameInfo>().killLimit;

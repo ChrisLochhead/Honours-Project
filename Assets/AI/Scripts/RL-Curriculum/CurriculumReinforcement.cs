@@ -1,12 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using MLAgents;
 public class CurriculumReinforcement : Agent {
 
     //Training module
     public EnemyAgentController controller;
-    Vector2 cameraDimensions = new Vector2(39, 11);
 
     //AI health
     private float health;
@@ -28,9 +26,6 @@ public class CurriculumReinforcement : Agent {
 
     public GameObject [] trainingAgents;
 
-    [SerializeField]
-    bool checkCanShoot = false;
-
     public List<GameObject> visiblePlayers = new List<GameObject>();
     public Vector3 previousPosition;
 
@@ -46,7 +41,6 @@ public class CurriculumReinforcement : Agent {
     float rayDistance = 50.0f;
     float[] rayAngles = new float[19];
     string[] detectableObjects = { "Obstacle", "AdversaryPlayer" };
-    List<float> debugRays = new List<float>();
 
     //Modifiable agent values in the start menu
     public float killReward;
@@ -63,12 +57,21 @@ public class CurriculumReinforcement : Agent {
         collisionPenalty = sessManager.floatModelSettings[2];
 
         //Activate or deactivate graphics rendering
-        if (sessManager.floatModelSettings[4] == 0)
+        if (sessManager.floatModelSettings[3] == 0)
+        {
             personalCamera.gameObject.SetActive(false);
+
+            if(GameObject.Find("Main Camera"))
+            GameObject.Find("Main Camera").gameObject.SetActive(false);
+        }
         else
+        {
             personalCamera.gameObject.SetActive(true);
 
-
+            if (GameObject.Find("Main Camera"))
+                GameObject.Find("Main Camera").gameObject.SetActive(true);
+        }
+    
         //debug values
         //killReward = 1.0f;
         //deathPenalty = -1.0f;
@@ -89,7 +92,6 @@ public class CurriculumReinforcement : Agent {
     //AI specific functionality
     public override void CollectObservations()
     {
-        List<float> tmp = rayPerception.Perceive(rayDistance, rayAngles, detectableObjects, 0.0f, 0.0f);
         AddVectorObs(rayPerception.Perceive(rayDistance, rayAngles, detectableObjects, 0.0f, 0.0f));
     }
 

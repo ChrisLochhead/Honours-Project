@@ -31,7 +31,8 @@ public class MainMenu : NetworkBehaviour {
 
     private void Start()
     {
-        //Create a map finder and find all the available maps
+        //Create a map finder and find all the available 
+
         InitialiseMapFinder();
 
         //Set up networking
@@ -46,7 +47,7 @@ public class MainMenu : NetworkBehaviour {
     public void InitialiseMapFinder()
     {
         //Initialise prefab but dont add to network
-        GameObject tmp = (GameObject)Instantiate(mapFinderPrefab);
+        Instantiate(mapFinderPrefab);
     }
 
     public void DeleteMapFinder()
@@ -94,7 +95,7 @@ public class MainMenu : NetworkBehaviour {
             GameObject gameInfo = new GameObject();
             gameInfo.AddComponent<GameInfo>();
             gameInfo.name = "gameInfo";
-            gameInfo.GetComponent<GameInfo>().name = nameInputHostMultiplayer.text;
+            gameInfo.GetComponent<GameInfo>().infoName = nameInputHostMultiplayer.text;
 
             //Assign the kill and time limit based on value
             gameInfo.GetComponent<GameInfo>().killLimit = (int)getDropdownValue(true, killLimitDropdownMultiplayer.value);
@@ -119,7 +120,7 @@ public class MainMenu : NetworkBehaviour {
             GameObject gameInfo = new GameObject();
             gameInfo.AddComponent<GameInfo>();
             gameInfo.name = "gameInfo";
-            gameInfo.GetComponent<GameInfo>().name = nameInputJoinMultiplayer.text;
+            gameInfo.GetComponent<GameInfo>().infoName = nameInputJoinMultiplayer.text;
 
             //Join the match
             networkManager.matchMaker.ListMatches(0, 20, "", false, 0, 0, OnMatchList);
@@ -140,7 +141,7 @@ public class MainMenu : NetworkBehaviour {
             GameObject gameInfo = new GameObject();
             gameInfo.AddComponent<GameInfo>();
             gameInfo.name = "gameInfo";
-            gameInfo.GetComponent<GameInfo>().name = nameInputHostLAN.text;
+            gameInfo.GetComponent<GameInfo>().infoName = nameInputHostLAN.text;
 
             //Assign the kill and time limit based on value
             gameInfo.GetComponent<GameInfo>().killLimit = (int)getDropdownValue(true, killLimitDropdownLAN.value);
@@ -165,7 +166,7 @@ public class MainMenu : NetworkBehaviour {
             GameObject gameInfo = new GameObject();
             gameInfo.AddComponent<GameInfo>();
             gameInfo.name = "gameInfo";
-            gameInfo.GetComponent<GameInfo>().name = nameInputJoinLAN.text;
+            gameInfo.GetComponent<GameInfo>().infoName = nameInputJoinLAN.text;
 
             //Join local game as client
             networkManager.StartClient();

@@ -670,7 +670,7 @@ public class Client : NetworkBehaviour
             //Player has levelled up
             if (tmpRank != rank)
             {
-                health = health = clientHUD.rankHealthValues[rank];
+                health = clientHUD.rankHealthValues[rank];
                 totalHealth = clientHUD.rankHealthValues[rank];
                 CmdTakeDamage(0);
             }
@@ -714,7 +714,7 @@ public class Client : NetworkBehaviour
             //Player has levelled up, replenish back to full health
             if (tmpRank != rank)
             {
-                health = health = clientHUD.rankHealthValues[rank];
+                health = clientHUD.rankHealthValues[rank];
                 totalHealth = clientHUD.rankHealthValues[rank];
                 CmdTakeDamage(0);
             }

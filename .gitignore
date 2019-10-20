@@ -141,3 +141,7 @@ sysinfo.txt
 
 # Crashlytics generated file
 crashlytics-build.properties
+
+# Specific to this Project
+Assets/AI/models/*
+Assets/AI/summaries/*

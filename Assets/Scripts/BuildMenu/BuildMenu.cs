@@ -29,7 +29,7 @@ public class BuildMenu : MonoBehaviour {
     //Reference to the save menu error message text
     public TextMeshProUGUI errorMessage;
 
-    Camera camera;
+    Camera cam;
 
     //References to the load and save menus
     public GameObject loadMenu;
@@ -42,7 +42,7 @@ public class BuildMenu : MonoBehaviour {
     // Use this for initialization
     void Start () {
         //Initalise the camera and map loader
-        camera = Camera.main;
+        cam = Camera.main;
         buildMenuMapLoader.InitialiseMapFinder();
     }
 
@@ -263,7 +263,24 @@ public class BuildMenu : MonoBehaviour {
 
         //Load the screenshot and save it's filepath to the save file
         string filename = saveField.text;
-        StreamWriter sr = File.CreateText(Application.dataPath + "/Maps/" + filename + ".txt");
+        StreamWriter sr;
+        if (Application.isEditor)
+        {
+           sr = File.CreateText(Application.dataPath + "/Maps/" + filename + ".txt");
+        }
+        else
+        {
+            if (!File.Exists(Application.dataPath + "/Maps/" + filename + ".txt"))
+            {
+                if (!Directory.Exists(Application.dataPath + "/Maps"))
+                    Directory.CreateDirectory(Application.dataPath + "/Maps");
+
+                System.IO.File.WriteAllText(Application.dataPath + "/Maps/" + filename + ".txt", "");
+            }
+
+            sr = new StreamWriter(Application.dataPath + "/Maps/" + filename + ".txt", false);
+
+        }
         sr.WriteLine(filename);
         byte[] byteArray = buildMenuCamera.currentImage.EncodeToPNG();
         System.IO.File.WriteAllBytes(Application.dataPath + "/MapImages/" + filename + ".png", byteArray);
@@ -295,7 +312,7 @@ public class BuildMenu : MonoBehaviour {
         //Update the map files, remove the error message if it was previously triggered and re-enable camera movement
         buildMenuMapLoader.mapFinderPrefab.GetComponent<MapFinder>().FindFiles();
         errorMessage.gameObject.SetActive(false);
-        camera.GetComponent<CameraMovement>().SetMovement(true);
+        cam.GetComponent<CameraMovement>().SetMovement(true);
     }
 
     public void CancelSave()

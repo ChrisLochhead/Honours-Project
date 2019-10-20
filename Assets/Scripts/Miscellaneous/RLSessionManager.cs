@@ -1,10 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using UnityEngine;
 using TMPro;
-using TMPro.EditorUtilities;
-using UnityEngine.UI;
 using System.IO;
 using UnityEngine.SceneManagement;
 
@@ -18,6 +14,9 @@ public class RLSessionManager : MonoBehaviour {
     //number of epochs
     //number of layers
 
+    public TMP_Dropdown trainingMaps;
+    public int selectedMap;
+
     public TMP_InputField[] modelSettings;
     public string[] stringModelSettings;
     public float[] floatModelSettings;
@@ -26,13 +25,16 @@ public class RLSessionManager : MonoBehaviour {
     //death penalty
     //collision penalty
     //render graphics
-    public int testNumber = 0;
-    bool graphics = true;
+    public string testName = "default";
+
+    public string modelPath;
+    public string mlagentsPath;
+    public string anacondaPath;
 
     private void Start()
     {
         //get current test number (test numbers start at 1 for simplicity)
-        int testNumber = System.IO.Directory.GetDirectories(@"D:\repos\Honours Project\Code\Honours-Project\Assets\AI\models").Length + 1;
+        //int testNumber = System.IO.Directory.GetDirectories(@modelPath).Length + 1;
     }
 
     void Awake () {
@@ -93,8 +95,22 @@ public class RLSessionManager : MonoBehaviour {
                 "           strength: 0.01 \n" +
                 "           gamma: 0.99 \n" +
                 "           encoding_size: 256";
+        StreamWriter sr;
+        if (Application.isEditor)
+            sr = new StreamWriter(Application.dataPath + "/AI/exe_config.yaml", false);
+        else
+        {
+            if (!File.Exists(Application.dataPath + "/TrainerConfiguration/exe_config.yaml"))
+            {
+                if(!Directory.Exists(Application.dataPath + "/TrainerConfiguration"))
+                Directory.CreateDirectory(Application.dataPath + "/TrainerConfiguration");
 
-        StreamWriter sr = new StreamWriter(Application.dataPath + "/AI/exe_config.yaml", false);
+                System.IO.File.WriteAllText(Application.dataPath + "/TrainerConfiguration/exe_config.yaml", "");
+            }
+
+            sr = new StreamWriter(Application.dataPath + "/TrainerConfiguration/exe_config.yaml", false);
+        }
+
         sr.Write(serialisedData);
         sr.Close();
     }
@@ -108,6 +124,10 @@ public class RLSessionManager : MonoBehaviour {
         {
             stringModelSettings[i] = modelSettings[i].text; 
         }
+
+        testName = stringModelSettings[4];
+
+        selectedMap = trainingMaps.value;
         //name
         //kill reward
         //death penalty
@@ -132,12 +152,46 @@ public class RLSessionManager : MonoBehaviour {
 
         //Initialises anaconda
         Process process = Process.Start(processStartInfo);
-        process.StandardInput.WriteLine(@"cd /d D:/repos/Honours Project/Code/Honours-Project/Assets/AI");
-        process.StandardInput.WriteLine(@" D:\\Anaconda\\Scripts\\activate.bat D:\\Anaconda");
+        process.StandardInput.WriteLine(@"cd " + mlagentsPath);
+        process.StandardInput.WriteLine(@anacondaPath);
         process.StandardInput.WriteLine(@"activate tensorflow-env");
 
         //begins training session
-        process.StandardInput.WriteLine(@"mlagents-learn exe_config.yaml --run-id=" + testNumber + " --load --train");
+        if (Application.isEditor)
+        {
+
+            if (!File.Exists(Application.dataPath + "AI/models/" + testName + "-0"))
+                process.StandardInput.WriteLine(@"mlagents-learn exe_config.yaml --run-id=" + testName + "--train");
+            else
+                process.StandardInput.WriteLine(@"mlagents-learn exe_config.yaml --run-id=" + testName + " --load --train");
+
+            UnityEngine.Debug.Log("To train in editor, stop the compile without closing the anaconda window, navigate to the desired training room and click play.");
+        }
+        else
+        {
+            process.StandardInput.WriteLine(@"cd " + Directory.GetParent(Application.dataPath));
+
+            if (!File.Exists(Application.dataPath + "/models/" + testName + "-0"))
+            {
+                if (!Directory.Exists(Application.dataPath + "/models"))
+                    Directory.CreateDirectory(Application.dataPath + "/models");
+
+                if(selectedMap == 0)
+                    process.StandardInput.WriteLine(@"mlagents-learn training_env_Data/TrainerConfiguration/exe_config.yaml  --env=training_env_small --run-id=" + testName + " --train");
+                else
+                    process.StandardInput.WriteLine(@"mlagents-learn training_env_Data/TrainerConfiguration/exe_config.yaml  --env=training_env_large --run-id=" + testName + " --train");
+            }
+            else
+            {
+                if (selectedMap == 0)
+                {
+                    process.StandardInput.WriteLine(@"mlagents-learn training_env_Data/TrainerConfiguration/exe_config.yaml  --env=training_env_small --run-id=" + testName + " --load --train");
+                }else
+                {
+                    process.StandardInput.WriteLine(@"mlagents-learn training_env_Data/TrainerConfiguration/exe_config.yaml  --env=training_env_large --run-id=" + testName + " --load --train");
+                }
+            }
+        }
     }
 
     public void SetUpEnvironment()
@@ -147,10 +201,10 @@ public class RLSessionManager : MonoBehaviour {
         for(int i =0; i < 3; i++)
         floatModelSettings[i] = float.Parse(stringModelSettings[i]);
 
-        if (stringModelSettings[4] == "y" || stringModelSettings[4] == "Y")
-            floatModelSettings[4] = 1.0f;
+        if (stringModelSettings[3] == "y" || stringModelSettings[3] == "Y")
+            floatModelSettings[3] = 1.0f;
         else
-            floatModelSettings[4] = 0.0f;
+            floatModelSettings[3] = 0.0f;
 
     }
 	// Update is called once per frame

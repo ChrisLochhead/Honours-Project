@@ -6,7 +6,6 @@ public class NMLAgentTrainer : MonoBehaviour {
 
     //Stats
     public float health;
-    int ammo;
 
     //Camera
     public Camera personalCamera;
@@ -29,7 +28,7 @@ public class NMLAgentTrainer : MonoBehaviour {
 
     public GameObject worldPosition;
 
-    Vector3 wanderPositon;
+    Vector3 wanderPositon = Vector3.zero;
 
     void Start()
     {
@@ -41,7 +40,6 @@ public class NMLAgentTrainer : MonoBehaviour {
 
         //Initialise stats
         health = 100;
-        ammo = 16;
 
     }
 
@@ -122,7 +120,7 @@ public class NMLAgentTrainer : MonoBehaviour {
 
     public void Idle()
     {
-        if (wanderPositon == null || wanderPositon == gameObject.transform.position)
+        if (wanderPositon == Vector3.zero || wanderPositon == gameObject.transform.position)
         {
             //find a new wander position
             wanderPositon = new Vector3(Random.Range(-agentTrainer.GetComponent<CurriculumReinforcement>().resetParams["x-position"], agentTrainer.GetComponent<CurriculumReinforcement>().resetParams["x-position"]) + worldPosition.transform.position.x,
