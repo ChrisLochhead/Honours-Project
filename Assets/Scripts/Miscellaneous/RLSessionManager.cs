@@ -3,24 +3,24 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
 using TMPro;
+using TMPro.EditorUtilities;
 using UnityEngine.UI;
 using System.IO;
 using UnityEngine.SceneManagement;
 
 public class RLSessionManager : MonoBehaviour {
 
-    public InputField[] hyperParameterSettings;
+    public TMP_InputField[] hyperParameterSettings;
     //batch size (buffer size always 10*)
     //hidden units
-    //lambda
     //learning rate
     //max steps
-    //isNormalised
     //number of epochs
     //number of layers
-    //summary frequency
 
-    public InputField[] modelSettings;
+    public TMP_InputField[] modelSettings;
+    public string[] stringModelSettings;
+    public float[] floatModelSettings;
     //name
     //kill reward
     //death penalty
@@ -36,7 +36,7 @@ public class RLSessionManager : MonoBehaviour {
     }
 
     void Awake () {
-        DontDestroyOnLoad(this);
+        DontDestroyOnLoad(this.gameObject);
     }
 
     void throwError(string text)
@@ -94,19 +94,35 @@ public class RLSessionManager : MonoBehaviour {
                 "           gamma: 0.99 \n" +
                 "           encoding_size: 256";
 
-        StreamWriter sr = new StreamWriter(Application.dataPath + "/AI/exe_config.txt", false);
+        StreamWriter sr = new StreamWriter(Application.dataPath + "/AI/exe_config.yaml", false);
         sr.Write(serialisedData);
-
+        sr.Close();
     }
 
-    public void GetModelSettings()
+    public void SetModelSettings()
     {
+        //Perform error check first
 
+        //assign the values to internal variables
+        for(int i = 0; i < modelSettings.Length; i++)
+        {
+            stringModelSettings[i] = modelSettings[i].text; 
+        }
+        //name
+        //kill reward
+        //death penalty
+        //collision penalty
+        //render graphics
     }
 
     public void OpenAnacondaPrompt()
     {
-        SceneManager.LoadScene(4);
+        //Finalise the selected hyperparameters
+        WriteHyperParameters();
+        SetModelSettings();
+
+        //Setup the environment for training
+        SetUpEnvironment();
 
         //Sets up command prompt
         ProcessStartInfo processStartInfo = new ProcessStartInfo("cmd.exe");
@@ -123,7 +139,20 @@ public class RLSessionManager : MonoBehaviour {
         //begins training session
         process.StandardInput.WriteLine(@"mlagents-learn exe_config.yaml --run-id=" + testNumber + " --load --train");
     }
-	
+
+    public void SetUpEnvironment()
+    {
+        SceneManager.LoadScene(4);
+
+        for(int i =0; i < 3; i++)
+        floatModelSettings[i] = float.Parse(stringModelSettings[i]);
+
+        if (stringModelSettings[4] == "y" || stringModelSettings[4] == "Y")
+            floatModelSettings[4] = 1.0f;
+        else
+            floatModelSettings[4] = 0.0f;
+
+    }
 	// Update is called once per frame
 	void Update () {
 		

@@ -5,10 +5,6 @@ using MLAgents;
 public class CurriculumReinforcement : Agent {
 
     //Training module
-
-    /*
-    Camera is 78 wide by 22 X*Y
-    */
     public EnemyAgentController controller;
     Vector2 cameraDimensions = new Vector2(39, 11);
 
@@ -52,12 +48,36 @@ public class CurriculumReinforcement : Agent {
     string[] detectableObjects = { "Obstacle", "AdversaryPlayer" };
     List<float> debugRays = new List<float>();
 
+    //Modifiable agent values in the start menu
+    public float killReward;
+    public float deathPenalty;
+    public float collisionPenalty;
+
     private void Start()
     {
+        RLSessionManager sessManager = GameObject.Find("RLSessionManager").GetComponent<RLSessionManager>();
+
+        //Setup training stats from the session manager.
+        killReward = sessManager.floatModelSettings[0];
+        deathPenalty = sessManager.floatModelSettings[1];
+        collisionPenalty = sessManager.floatModelSettings[2];
+
+        //Activate or deactivate graphics rendering
+        if (sessManager.floatModelSettings[4] == 0)
+            personalCamera.gameObject.SetActive(false);
+        else
+            personalCamera.gameObject.SetActive(true);
+
+
+        //debug values
+        //killReward = 1.0f;
+        //deathPenalty = -1.0f;
+        //collisionPenalty = -0.1f;
+
         previousPosition = gameObject.transform.position;
         rayPerception = GetComponent<RayPerception3D>();
 
-        for(int i = 1; i < 19; i ++)
+        for (int i = 1; i < 19; i++)
         {
             rayAngles[i] = i * 20;
         }
@@ -106,7 +126,7 @@ public class CurriculumReinforcement : Agent {
         //Trigger if the controller has died
         if (!controller.isAlive)
         {
-            AddReward(-1f);
+            AddReward(deathPenalty);
             Done();
         }
     }
@@ -115,7 +135,7 @@ public class CurriculumReinforcement : Agent {
     {
         if (collision.gameObject.tag == "Obstacle")
         {
-            AddReward(-0.1f);
+            AddReward(collisionPenalty);
             Done();
         }
     }
@@ -123,7 +143,7 @@ public class CurriculumReinforcement : Agent {
     public void GainedKill()
     {
         Debug.Log("gained kill");
-        AddReward(1f);
+        AddReward(killReward);
     }
 
     public override void InitializeAgent()

@@ -193,7 +193,7 @@ GameObject:
   - component: {fileID: 17994535}
   - component: {fileID: 17994534}
   m_Layer: 5
-  m_Name: TextMeshPro - InputField
+  m_Name: Learning Rate - InputField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -964,11 +964,11 @@ MonoBehaviour:
     lineCount: 1
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 1
+  m_havePropertiesChanged: 0
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 1
+  m_isInputParsingRequired: 0
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -2165,7 +2165,7 @@ GameObject:
   - component: {fileID: 117786472}
   - component: {fileID: 117786471}
   m_Layer: 5
-  m_Name: TextMeshPro - InputField
+  m_Name: Death Penalty - InputField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3385,14 +3385,13 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 224406746}
-  - component: {fileID: 224406747}
   m_Layer: 5
   m_Name: Reinforcement Learning Menu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &224406746
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3416,25 +3415,6 @@ RectTransform:
   m_AnchoredPosition: {x: -26.99997, y: -0.7999878}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &224406747
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 224406745}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 207ea8e9288976c4bba173953f26f9e7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hyperParameterSettings:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  testNumber: 0
 --- !u!1 &230909311
 GameObject:
   m_ObjectHideFlags: 0
@@ -3949,7 +3929,7 @@ GameObject:
   - component: {fileID: 266880229}
   - component: {fileID: 266880228}
   m_Layer: 5
-  m_Name: TextMeshPro - InputField
+  m_Name: Max Steps - InputField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5477,11 +5457,11 @@ MonoBehaviour:
     lineCount: 1
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 1
+  m_havePropertiesChanged: 0
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 1
+  m_isInputParsingRequired: 0
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -6618,7 +6598,7 @@ GameObject:
   - component: {fileID: 428380900}
   - component: {fileID: 428380899}
   m_Layer: 5
-  m_Name: Learning Rate Title (1)
+  m_Name: Model Name Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7206,7 +7186,7 @@ GameObject:
   - component: {fileID: 464800406}
   - component: {fileID: 464800405}
   m_Layer: 5
-  m_Name: TextMeshPro - InputField
+  m_Name: Model Name - InputField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8227,6 +8207,66 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 28}
   m_Pivot: {x: 0.5, y: 1}
+--- !u!1 &531685633
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 531685635}
+  - component: {fileID: 531685634}
+  m_Layer: 5
+  m_Name: RLSessionManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &531685634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 531685633}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 207ea8e9288976c4bba173953f26f9e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hyperParameterSettings:
+  - {fileID: 711652733}
+  - {fileID: 1251310337}
+  - {fileID: 17994534}
+  - {fileID: 266880228}
+  - {fileID: 681054986}
+  - {fileID: 1097245599}
+  modelSettings:
+  - {fileID: 698553227}
+  - {fileID: 117786471}
+  - {fileID: 1533803935}
+  - {fileID: 2052319328}
+  stringModelSettings: []
+  floatModelSettings: []
+  testNumber: 0
+--- !u!224 &531685635
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 531685633}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.96124995, y: 1.0189203, z: 0.96124995}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 358.54626, y: 207.23102}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &535982230
 GameObject:
   m_ObjectHideFlags: 0
@@ -10077,7 +10117,7 @@ GameObject:
   - component: {fileID: 681054987}
   - component: {fileID: 681054986}
   m_Layer: 5
-  m_Name: TextMeshPro - InputField
+  m_Name: Epochs - InputField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10316,7 +10356,7 @@ GameObject:
   - component: {fileID: 698553228}
   - component: {fileID: 698553227}
   m_Layer: 5
-  m_Name: TextMeshPro - InputField
+  m_Name: Kill Reward - InputField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10673,11 +10713,11 @@ MonoBehaviour:
     lineCount: 1
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 1
+  m_havePropertiesChanged: 0
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 1
+  m_isInputParsingRequired: 0
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -11060,7 +11100,7 @@ GameObject:
   - component: {fileID: 711652734}
   - component: {fileID: 711652733}
   m_Layer: 5
-  m_Name: TextMeshPro - InputField
+  m_Name: Batch Size - InputField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13793,11 +13833,11 @@ MonoBehaviour:
     lineCount: 1
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 1
+  m_havePropertiesChanged: 0
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 1
+  m_isInputParsingRequired: 0
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -14961,7 +15001,7 @@ GameObject:
   - component: {fileID: 1097245600}
   - component: {fileID: 1097245599}
   m_Layer: 5
-  m_Name: TextMeshPro - InputField
+  m_Name: Number of Layers - InputField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16692,7 +16732,7 @@ GameObject:
   - component: {fileID: 1251310338}
   - component: {fileID: 1251310337}
   m_Layer: 5
-  m_Name: TextMeshPro - InputField
+  m_Name: Number of Units - InputField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17531,7 +17571,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 224406747}
+      - m_Target: {fileID: 531685634}
         m_MethodName: OpenAnacondaPrompt
         m_Mode: 1
         m_Arguments:
@@ -18856,7 +18896,7 @@ GameObject:
   - component: {fileID: 1449008784}
   - component: {fileID: 1449008783}
   m_Layer: 5
-  m_Name: Collision Penalty Title (1)
+  m_Name: Render Graphics Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -20392,11 +20432,11 @@ MonoBehaviour:
     lineCount: 1
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 1
+  m_havePropertiesChanged: 0
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 1
+  m_isInputParsingRequired: 0
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -20496,7 +20536,7 @@ GameObject:
   - component: {fileID: 1533803936}
   - component: {fileID: 1533803935}
   m_Layer: 5
-  m_Name: TextMeshPro - InputField
+  m_Name: Collision Penalty - InputField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -21889,7 +21929,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1592087139
 RectTransform:
   m_ObjectHideFlags: 0
@@ -22662,11 +22702,11 @@ MonoBehaviour:
     lineCount: 1
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 1
+  m_havePropertiesChanged: 0
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 1
+  m_isInputParsingRequired: 0
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
@@ -29726,7 +29766,7 @@ GameObject:
   - component: {fileID: 2052319329}
   - component: {fileID: 2052319328}
   m_Layer: 5
-  m_Name: TextMeshPro - InputField
+  m_Name: RenderGraphics - InputField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
