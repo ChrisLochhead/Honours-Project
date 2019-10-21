@@ -46,18 +46,19 @@ public class CurriculumReinforcement : Agent {
     public float killReward;
     public float deathPenalty;
     public float collisionPenalty;
+    public bool camerasActive;
 
     private void Start()
     {
-        RLSessionManager sessManager = GameObject.Find("RLSessionManager").GetComponent<RLSessionManager>();
 
         //Setup training stats from the session manager.
-        killReward = sessManager.floatModelSettings[0];
-        deathPenalty = sessManager.floatModelSettings[1];
-        collisionPenalty = sessManager.floatModelSettings[2];
+        killReward = 1.0f;
+        deathPenalty = -1.0f;
+        collisionPenalty = -0.01f;
+        camerasActive = true;
 
         //Activate or deactivate graphics rendering
-        if (sessManager.floatModelSettings[3] == 0)
+        if (camerasActive == false)
         {
             personalCamera.gameObject.SetActive(false);
 

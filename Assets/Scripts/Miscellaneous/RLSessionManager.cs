@@ -31,10 +31,21 @@ public class RLSessionManager : MonoBehaviour {
     public string mlagentsPath;
     public string anacondaPath;
 
+    public string path;
+
+    public TextMeshProUGUI trainingInfo;
+
+    Process process;
+
     private void Start()
     {
         //get current test number (test numbers start at 1 for simplicity)
         //int testNumber = System.IO.Directory.GetDirectories(@modelPath).Length + 1;
+
+        path = Path.Combine(Application.dataPath, @"..\..");
+        path = Directory.GetParent(Application.dataPath).FullName;
+        path = Directory.GetParent(path).FullName;
+
     }
 
     void Awake () {
@@ -99,17 +110,7 @@ public class RLSessionManager : MonoBehaviour {
         if (Application.isEditor)
             sr = new StreamWriter(Application.dataPath + "/AI/exe_config.yaml", false);
         else
-        {
-            if (!File.Exists(Application.dataPath + "/TrainerConfiguration/exe_config.yaml"))
-            {
-                if(!Directory.Exists(Application.dataPath + "/TrainerConfiguration"))
-                Directory.CreateDirectory(Application.dataPath + "/TrainerConfiguration");
-
-                System.IO.File.WriteAllText(Application.dataPath + "/TrainerConfiguration/exe_config.yaml", "");
-            }
-
-            sr = new StreamWriter(Application.dataPath + "/TrainerConfiguration/exe_config.yaml", false);
-        }
+            sr = new StreamWriter(path + "/TrainerConfiguration/exe_config.yaml", false);
 
         sr.Write(serialisedData);
         sr.Close();
@@ -119,14 +120,7 @@ public class RLSessionManager : MonoBehaviour {
     {
         //Perform error check first
 
-        //assign the values to internal variables
-        for(int i = 0; i < modelSettings.Length; i++)
-        {
-            stringModelSettings[i] = modelSettings[i].text; 
-        }
-
-        testName = stringModelSettings[4];
-
+        testName = stringModelSettings[0];
         selectedMap = trainingMaps.value;
         //name
         //kill reward
@@ -141,8 +135,7 @@ public class RLSessionManager : MonoBehaviour {
         WriteHyperParameters();
         SetModelSettings();
 
-        //Setup the environment for training
-        SetUpEnvironment();
+        trainingInfo.text = "Training...";
 
         //Sets up command prompt
         ProcessStartInfo processStartInfo = new ProcessStartInfo("cmd.exe");
@@ -151,7 +144,7 @@ public class RLSessionManager : MonoBehaviour {
         processStartInfo.UseShellExecute = false;
 
         //Initialises anaconda
-        Process process = Process.Start(processStartInfo);
+        process = Process.Start(processStartInfo);
         process.StandardInput.WriteLine(@"cd " + mlagentsPath);
         process.StandardInput.WriteLine(@anacondaPath);
         process.StandardInput.WriteLine(@"activate tensorflow-env");
@@ -169,46 +162,34 @@ public class RLSessionManager : MonoBehaviour {
         }
         else
         {
-            process.StandardInput.WriteLine(@"cd " + Directory.GetParent(Application.dataPath));
+            process.StandardInput.WriteLine(@"cd " + path);
 
-            if (!File.Exists(Application.dataPath + "/models/" + testName + "-0"))
+            if (!File.Exists(path + "/models/" + testName + "-0"))
             {
-                if (!Directory.Exists(Application.dataPath + "/models"))
-                    Directory.CreateDirectory(Application.dataPath + "/models");
-
                 if(selectedMap == 0)
-                    process.StandardInput.WriteLine(@"mlagents-learn training_env_Data/TrainerConfiguration/exe_config.yaml  --env=training_env_small --run-id=" + testName + " --train");
+                    process.StandardInput.WriteLine(@"mlagents-learn TrainerConfiguration/exe_config.yaml  --env=training_env_small/training_env_small --run-id=" + testName + " --train");
                 else
-                    process.StandardInput.WriteLine(@"mlagents-learn training_env_Data/TrainerConfiguration/exe_config.yaml  --env=training_env_large --run-id=" + testName + " --train");
+                    process.StandardInput.WriteLine(@"mlagents-learn TrainerConfiguration/exe_config.yaml  --env=training_env_large/training_env_large --run-id=" + testName + " --train");
             }
             else
             {
                 if (selectedMap == 0)
                 {
-                    process.StandardInput.WriteLine(@"mlagents-learn training_env_Data/TrainerConfiguration/exe_config.yaml  --env=training_env_small --run-id=" + testName + " --load --train");
+                    process.StandardInput.WriteLine(@"mlagents-learn TrainerConfiguration/exe_config.yaml  --env=training_env_small/training_env_small --run-id=" + testName + " --load --train");
                 }else
                 {
-                    process.StandardInput.WriteLine(@"mlagents-learn training_env_Data/TrainerConfiguration/exe_config.yaml  --env=training_env_large --run-id=" + testName + " --load --train");
+                    process.StandardInput.WriteLine(@"mlagents-learn TrainerConfiguration/exe_config.yaml  --env=training_env_large/training_env_large --run-id=" + testName + " --load --train");
                 }
             }
         }
     }
 
-    public void SetUpEnvironment()
+    private void Update()
     {
-        SceneManager.LoadScene(4);
-
-        for(int i =0; i < 3; i++)
-        floatModelSettings[i] = float.Parse(stringModelSettings[i]);
-
-        if (stringModelSettings[3] == "y" || stringModelSettings[3] == "Y")
-            floatModelSettings[3] = 1.0f;
-        else
-            floatModelSettings[3] = 0.0f;
-
+        if (process != null)
+        {
+            if (process.HasExited)
+                trainingInfo.text = "training completed sucessfully.";
+        }
     }
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }
