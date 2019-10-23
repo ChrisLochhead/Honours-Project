@@ -2,7 +2,7 @@
 using UnityEngine;
 using TMPro;
 using System.IO;
-using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class RLSessionManager : MonoBehaviour {
 
@@ -27,26 +27,28 @@ public class RLSessionManager : MonoBehaviour {
     //render graphics
     public string testName = "default";
 
-    public string modelPath;
-    public string mlagentsPath;
-    public string anacondaPath;
+    //public string modelPath;
+    //public string mlagentsPath;
+    //public string anacondaPath;
 
-    public string path;
+    //public string path;
+    public PathContainer paths;
 
     public TextMeshProUGUI trainingInfo;
 
     Process process;
 
-    private void Start()
-    {
-        //get current test number (test numbers start at 1 for simplicity)
-        //int testNumber = System.IO.Directory.GetDirectories(@modelPath).Length + 1;
+    //StreamReader filereader = null;
 
-        path = Path.Combine(Application.dataPath, @"..\..");
-        path = Directory.GetParent(Application.dataPath).FullName;
-        path = Directory.GetParent(path).FullName;
+    //public List<float> candidatescores;
 
-    }
+    //int highestIndex = 0;
+    //float highestIndexValue = 0.0f;
+
+    //int generation = 0;
+    //int candidateNo = 0;
+
+    //public int noOfCandidates = 0;
 
     void Awake () {
         DontDestroyOnLoad(this.gameObject);
@@ -110,7 +112,7 @@ public class RLSessionManager : MonoBehaviour {
         if (Application.isEditor)
             sr = new StreamWriter(Application.dataPath + "/AI/exe_config.yaml", false);
         else
-            sr = new StreamWriter(path + "/TrainerConfiguration/exe_config.yaml", false);
+            sr = new StreamWriter(paths.buildPath + "/TrainerConfiguration/exe_config.yaml", false);
 
         sr.Write(serialisedData);
         sr.Close();
@@ -128,8 +130,8 @@ public class RLSessionManager : MonoBehaviour {
         //collision penalty
         //render graphics
     }
-
-    public void OpenAnacondaPrompt()
+    
+    public void RunReinforcementLearning()
     {
         //Finalise the selected hyperparameters
         WriteHyperParameters();
@@ -145,8 +147,8 @@ public class RLSessionManager : MonoBehaviour {
 
         //Initialises anaconda
         process = Process.Start(processStartInfo);
-        process.StandardInput.WriteLine(@"cd " + mlagentsPath);
-        process.StandardInput.WriteLine(@anacondaPath);
+        process.StandardInput.WriteLine(@"cd " + paths.mlagentsPath);
+        process.StandardInput.WriteLine(@paths.anacondaPath);
         process.StandardInput.WriteLine(@"activate tensorflow-env");
 
         //begins training session
@@ -162,9 +164,9 @@ public class RLSessionManager : MonoBehaviour {
         }
         else
         {
-            process.StandardInput.WriteLine(@"cd " + path);
+            process.StandardInput.WriteLine(@"cd " + paths.buildPath);
 
-            if (!File.Exists(path + "/models/" + testName + "-0"))
+            if (!File.Exists(paths.buildPath + "/models/" + testName + "-0"))
             {
                 if(selectedMap == 0)
                     process.StandardInput.WriteLine(@"mlagents-learn TrainerConfiguration/exe_config.yaml  --env=training_env_small/training_env_small --run-id=" + testName + " --train");
@@ -189,7 +191,10 @@ public class RLSessionManager : MonoBehaviour {
         if (process != null)
         {
             if (process.HasExited)
+            {
                 trainingInfo.text = "training completed sucessfully.";
+                process = null;
+            }
         }
     }
 }
