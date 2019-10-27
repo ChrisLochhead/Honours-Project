@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Diagnostics;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEditor;
 
 public class ELSessionManager : MonoBehaviour {
 
@@ -50,86 +51,213 @@ public class ELSessionManager : MonoBehaviour {
     //render graphics
     public string testName = "default";
 
-    // Use this for initialization
-    void Start() {
+    private static void DirectoryCopy(string sourceDirName, string destDirName, string trainingName, bool copySubDirs = true)
+    {
+        // Get the subdirectories for the specified directory.
+        DirectoryInfo dir = new DirectoryInfo(sourceDirName);
 
+        if (!dir.Exists)
+        {
+            throw new DirectoryNotFoundException(
+                "Source directory does not exist or could not be found: "
+                + sourceDirName);
+        }
+
+        DirectoryInfo[] dirs = dir.GetDirectories();
+        // If the destination directory doesn't exist, create it.
+        if (!Directory.Exists(destDirName))
+        {
+            Directory.CreateDirectory(destDirName);
+        }
+
+        // Get the files in the directory and copy them to the new location.
+        FileInfo[] files = dir.GetFiles();
+        foreach (FileInfo file in files)
+        {
+            string[] prefix = Regex.Split(file.Name, "-");
+
+            if (prefix[0] != trainingName || trainingName == "")
+            {
+                string temppath = Path.Combine(destDirName, file.Name);
+                file.CopyTo(temppath, false);
+            }
+        }
+
+        // If copying subdirectories, copy them and their contents to new location.
+        if (copySubDirs)
+        {
+            foreach (DirectoryInfo subdir in dirs)
+            {
+                string temppath = Path.Combine(destDirName, subdir.Name);
+                DirectoryCopy(subdir.FullName, temppath, trainingName, copySubDirs);
+            }
+        }
     }
 
-    string FindCandidate()
+
+    string FindCandidate(int c, bool isFinal = false)
     {
-        //Get the path to all the model summaries
-        DirectoryInfo dirPath = new DirectoryInfo(Application.dataPath + "/AI/summaries/");
-        //Get all .csv files it can find
-        FileInfo[] info = dirPath.GetFiles("*.csv", SearchOption.AllDirectories);
+        if (isFinal)
+        {
+            FileUtil.CopyFileOrDirectory(paths.buildPath + "/models/gen-" + testName + "-generation-" + (generation-1) + "/candidate-" + highestIndex + "-0",
+            paths.buildPath + "/models/" + testName + "-FinalModel/");
 
-        //isolate the actual model name from the directory path
-        string[] x = Regex.Split(info[highestIndex].FullName, "ies/");
-        string[] y = Regex.Split(x[1], "-0_");
-        return y[0];
+            return "";
+        }
 
+        if (generation != 0)
+        {
+
+            DirectoryCopy(paths.buildPath + "/models/gen-" + testName + "-generation-" + (generation-1) + "/candidate-" + highestIndex + "-0/", paths.buildPath + "/models/" + testName + "-generation-" + generation + "-candidate-" + c + "-0", testName);
+
+        }
+        return testName + "-generation-" + (generation) + "-candidate-" + c;
     }
 
-    void EvaluateCandidates()
+    void FinishTraining()
     {
-        //If in the editor and not the executable
-        //This is because directory locations change in the .exe version
-        DirectoryInfo dirPath = new DirectoryInfo(paths.buildPath + "/summaries/");
+        DirectoryCopy(paths.buildPath + "/models/", paths.buildPath + "/" + testName + "-EvolutionModel", "");
+        DirectoryInfo d = new DirectoryInfo(paths.buildPath + "/models/");
 
+        foreach (DirectoryInfo directory in d.GetDirectories())
+        {
+            directory.Delete(true);
+        }
+
+    }
+    void EvaluateCandidates(int generationNo)
+    {
+        //Get paths of both where the summaries have been stored and where
+        //Also get a string for the new generations destination
+        DirectoryInfo summaryPath = new DirectoryInfo(paths.buildPath + "/summaries/");
+        DirectoryInfo modelPath = new DirectoryInfo(paths.buildPath + "/models/");
+        string generationPath = modelPath + "gen-" +testName + "-generation-" + (generation-1) + "/";
+  
+        //Rename new models to current generation
+        int candidateCounter = 0;
+        foreach (DirectoryInfo dir in modelPath.GetDirectories())
+        {
+            string[] gens = Regex.Split(dir.Name, "-");
+            if (gens[0] == "gen")
+                continue;
+
+            Directory.CreateDirectory(modelPath + testName + "-generation-" + (generation -1) + "-candidate-" + candidateCounter + "-0");
+            AssetDatabase.MoveAsset("Builds/models/" + dir.Name, "Builds/models/" + testName + "-generation-" + (generation - 1) + "-candidate-" + candidateCounter + "-0");
+            candidateCounter++;
+        }
+
+        //Create a path for this generation just completed
+        Directory.CreateDirectory(generationPath);
+
+        candidateCounter = 0;
+        //Then do the same for the model files
+        foreach (DirectoryInfo dir in modelPath.GetDirectories())
+        {
+            //check if an actual model or just a generation file
+            string[] gens = Regex.Split(dir.Name, "-");
+            if (gens[0] == "gen")
+                continue;
+
+            if (candidateCounter < numberOfCandidates)
+            {
+                string[] s = Regex.Split(dir.Name, "-c");
+                string[] genNo = Regex.Split(s[0], "n-");
+                int genNoInt = int.Parse(genNo[1]);
+
+                string genPath = modelPath + "gen-" + testName + "-generation-" + genNoInt + "/candidate-" + candidateCounter + "-0";
+
+                FileUtil.CopyFileOrDirectory(dir.FullName, genPath);
+                DeleteDirectory(dir.FullName);
+                candidateCounter++;
+            }
+           
+
+        }
+
+        candidateCounter = 0;
+
+        //Cycle through all the  summary files and delete them when done
+        foreach (string file in Directory.GetFiles(paths.buildPath + "/summaries/"))
+        {
+            string[] s = Regex.Split(file, "-0_");
+            string[] genNo = Regex.Split(s[0], "e-");
+            int genNoInt = int.Parse(genNo[1]);
+
+            string candidatePath = modelPath + "gen-" + testName + "-generation-" + (generation-1) + "/candidate-" + genNoInt + "-0";
+            File.Copy(file, Path.Combine(candidatePath, Path.GetFileName(file)));
+            File.Delete(file);
+        }
+
+        foreach (DirectoryInfo dir in summaryPath.GetDirectories())
+        {
+            foreach (FileInfo f in dir.GetFiles())
+            {
+                f.Delete();
+            }
+            dir.Delete(true);
+        }
+
+        //Create a reference to this generations info
+        DirectoryInfo genInfo = new DirectoryInfo(generationPath);
+        
         //Get all .csv files it can find
-        FileInfo[] info = dirPath.GetFiles("*.csv");
+        FileInfo[] info = genInfo.GetFiles("*.csv", SearchOption.AllDirectories);
 
+        //breaks here
         while (candidateNo < numberOfCandidates)
         {
             //Iterate through each file
             foreach (FileInfo f in info)
             {
-                //open the file and check its name to make sure
-                //you are only reading from the current generation
-                if (f.Name == testName + "-generation-" + (generation-1) + "-candidate-" + candidateNo + "-0_LearningBrain.csv")
+
+                filereader = f.OpenText();
+
+                //Initialise line counting and the candidates total score
+                string text = "";
+                int linecounter = 0;
+                float candidateTotal = 0.0f;
+
+                //Read through the file
+                while (text != null)
                 {
-                    filereader = f.OpenText();
-
-                    //Initialise line counting and the candidates total score
-                    string text = "";
-                    int linecounter = 0;
-                    float candidateTotal = 0.0f;
-
-                    //Read through the file
-                    while (text != null)
+                    text = filereader.ReadLine();
+                    //If the line is valid
+                    if (text != null)
                     {
-                        text = filereader.ReadLine();
-                        //If the line is valid
-                        if (text != null)
-                        {
-                            //Split the line into an array of strings, seperated by ","
-                            string[] lines = Regex.Split(text, ",");
+                        //Split the line into an array of strings, seperated by ","
+                        string[] lines = Regex.Split(text, ",");
 
-                            //If not the first line, transform string into numeric value if applicable,
-                            //otherwise add zero, then iterate the line counter
-                            //else ignore the first line which contains the titles
-                            if (linecounter != 0 && linecounter % 2 != 0)
+                        //If not the first line, transform string into numeric value if applicable,
+                        //otherwise add zero, then iterate the line counter
+                        //else ignore the first line which contains the titles
+                        if (linecounter != 0 && linecounter % 2 == 0)
+                        {
+                            float trainingValue = 0.0f;
+                            if (lines.Length == 6)
                             {
-                                float trainingValue = 0.0f;
-                                if (lines.Length == 6)
-                                {
-                                    float.TryParse(lines[5], out trainingValue);
-                                }
-                                candidateTotal += trainingValue;
-                                linecounter++;
+                                float.TryParse(lines[5], out trainingValue);
                             }
-                            else
-                                linecounter++;
+                            candidateTotal += trainingValue;
+                            linecounter++;
                         }
+                        else
+                            linecounter++;
                     }
-                    //calculate the average score then move onto the next candidate.
-                    float averageScore = candidateTotal / linecounter;
-                    candidatescores.Add(averageScore);
-                    candidateNo++;
                 }
+                //calculate the average score then move onto the next candidate.
+                float averageScore = candidateTotal / linecounter;
+                UnityEngine.Debug.Log("score = " + averageScore);
+                candidatescores.Add(averageScore);
+                candidateNo++;
+                filereader.Close();
             }
+
         }
         //once all candidates scores retrieved
         //select the one with the highest average
+        highestIndexValue = 0.0f;
+        highestIndex = 0;
+
         for (int i = 0; i < candidatescores.Count; i++)
         {
             if (candidatescores[i] > highestIndexValue)
@@ -139,8 +267,31 @@ public class ELSessionManager : MonoBehaviour {
             }
         }
 
+        candidatescores.Clear();
+        UnityEngine.Debug.Log("winner : " + highestIndex);
         //reset value for the next function call
         candidateNo = 0;
+
+        //Duplicate winning candidate into next generation
+    }
+
+    public static void DeleteDirectory(string target_dir)
+    {
+        string[] files = Directory.GetFiles(target_dir);
+        string[] dirs = Directory.GetDirectories(target_dir);
+
+        foreach (string file in files)
+        {
+            File.SetAttributes(file, FileAttributes.Normal);
+            File.Delete(file);
+        }
+
+        foreach (string dir in dirs)
+        {
+            DeleteDirectory(dir);
+        }
+
+        Directory.Delete(target_dir, false);
     }
 
     public void WriteHyperParameters()
@@ -229,7 +380,7 @@ public class ELSessionManager : MonoBehaviour {
         SetupAnaconda();
 
         //Cycle through every generation
-        for (int i = 0; i < numberOfGenerations; i++)
+        for (int i = 0; i < numberOfGenerations-1; i++)
         {
             //if acurrent base of candidates has been developed
             if (currentCandidateBeingTrained == 0 && generation == 0)//Otherwise dont evaluate candidates and start from scratch
@@ -243,25 +394,28 @@ public class ELSessionManager : MonoBehaviour {
             else
             {
                 process.WaitForExit();
-                UnityEngine.Debug.Log("hello i am zoidberg");
+
                 //Evaluate candidates and work on pre-trained model
-                EvaluateCandidates();
+                EvaluateCandidates(generation);
                 SetupAnaconda();
 
                 for (int j = 0; j < numberOfCandidates; j++)
                 {
-                    process.StandardInput.WriteLine(@"mlagents-learn TrainerConfiguration/exe_config.yaml --env=training_env_small/training_env_small --run-id=" + FindCandidate() + " --load --train");
+                    process.StandardInput.WriteLine(@"mlagents-learn TrainerConfiguration/exe_config.yaml --env=training_env_small/training_env_small --run-id=" + FindCandidate(j) + " --load --train");
                     currentCandidateBeingTrained++;
                 }
             }
 
-
-            //Iterate the generation and rewrite hyperparameters to increase maximum steps
             generation++;
+            //Iterate the generation and rewrite hyperparameters to increase maximum steps
             WriteHyperParameters();
 
         }
-
+        process.WaitForExit();
+        EvaluateCandidates(generation - 1);
+        FindCandidate(0, true);
+        FinishTraining();
+        
     }
 
     void SetModelSettings()
@@ -285,8 +439,11 @@ public class ELSessionManager : MonoBehaviour {
 
     public void InitiateEvolutionaryLearning()
     {
+
         SetModelSettings();
         RunEvolutionaryLearning(testName);
     }
+
+
 
 }
