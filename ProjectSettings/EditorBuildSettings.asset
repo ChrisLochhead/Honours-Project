@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Training-MultiArena.unity
     guid: a3816c10037bb12419bb6365c7eb1c19
+  - enabled: 1
+    path: Assets/Scenes/Training-Multi-Adversary.unity
+    guid: 4867d59bedad6274f90e776da820a0ef
   m_configObjects: {}

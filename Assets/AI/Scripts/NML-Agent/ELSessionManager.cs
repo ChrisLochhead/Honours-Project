@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
 using TMPro;
-using UnityEngine.SceneManagement;
 using UnityEditor;
 
 public class ELSessionManager : MonoBehaviour {
@@ -310,10 +309,6 @@ public class ELSessionManager : MonoBehaviour {
 
         }
 
-        //Correct any error with normalise setting
-        if (float.Parse(hyperParameterSettings[5].text) != 0 && float.Parse(hyperParameterSettings[5].text) != 1)
-            hyperParameterSettings[5].text = "0";
-
         //correct max steps according to generation
         int steps = generation * stepsPerGeneration;
 
@@ -335,7 +330,7 @@ public class ELSessionManager : MonoBehaviour {
                 "   memory_size: 256 \n" +
                 "   normalize: false \n" +
                 "   num_epoch: " + hyperParameterSettings[4].text + "\n" +
-                "   num_layers: " + hyperParameterSettings[5].text + "\n" +
+                "   num_layers: " + hyperParameterSettings[3].text + "\n" +
                 "   time_horizon: 64 \n" +
                 "   sequence_length: 64 \n" +
                 "   summary_freq: 1250 \n" +

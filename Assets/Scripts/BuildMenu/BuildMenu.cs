@@ -39,11 +39,14 @@ public class BuildMenu : MonoBehaviour {
     public BuildMenuMapLoader buildMenuMapLoader;
     public BuildMenuCamera buildMenuCamera;
 
+    PathContainer paths;
+
     // Use this for initialization
     void Start () {
         //Initalise the camera and map loader
         cam = Camera.main;
         buildMenuMapLoader.InitialiseMapFinder();
+        paths = GameObject.Find("SessionManager").GetComponent<PathContainer>();
     }
 
 	void Update () {
@@ -266,25 +269,25 @@ public class BuildMenu : MonoBehaviour {
         StreamWriter sr;
         if (Application.isEditor)
         {
-           sr = File.CreateText(Application.dataPath + "/Maps/" + filename + ".txt");
+           sr = File.CreateText(paths.buildPath + "/Maps/" + filename + ".txt");
         }
         else
         {
-            if (!File.Exists(Application.dataPath + "/Maps/" + filename + ".txt"))
+            if (!File.Exists(paths.buildPath + "/Maps/" + filename + ".txt"))
             {
-                if (!Directory.Exists(Application.dataPath + "/Maps"))
-                    Directory.CreateDirectory(Application.dataPath + "/Maps");
+                if (!Directory.Exists(paths.buildPath + "/Maps"))
+                    Directory.CreateDirectory(paths.buildPath + "/Maps");
 
-                System.IO.File.WriteAllText(Application.dataPath + "/Maps/" + filename + ".txt", "");
+                System.IO.File.WriteAllText(paths.buildPath + "/Maps/" + filename + ".txt", "");
             }
 
-            sr = new StreamWriter(Application.dataPath + "/Maps/" + filename + ".txt", false);
+            sr = new StreamWriter(paths.buildPath + "/Maps/" + filename + ".txt", false);
 
         }
         sr.WriteLine(filename);
         byte[] byteArray = buildMenuCamera.currentImage.EncodeToPNG();
-        System.IO.File.WriteAllBytes(Application.dataPath + "/MapImages/" + filename + ".png", byteArray);
-        sr.WriteLine(Application.dataPath + "/MapImages/" + filename + ".png");
+        System.IO.File.WriteAllBytes(paths.buildPath + "/MapImages/" + filename + ".png", byteArray);
+        sr.WriteLine(paths.buildPath + "/MapImages/" + filename + ".png");
 
         //Save in format all the other map items
         for (int i = 0; i < mapItems.Count; i++)

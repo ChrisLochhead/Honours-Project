@@ -28,19 +28,28 @@ public class MapFinder : NetworkBehaviour {
     //Reference for the currently selected map
     public GameObject selectedMap;
 
+    public PathContainer paths;
+
     void Start () {
         //Initialise existing maps
         FindFiles();
+        if(GameObject.Find("SessionManager"))
+        {
+            paths = GameObject.Find("SessionManager").GetComponent<PathContainer>();
+        }else
+        {
+            Debug.Log("Critical error");
+        }
 
     }
 
     public void FindFiles()
     {
         //Get the path to the map folder
-        if(!Directory.Exists(Application.dataPath + "/Maps"))
-            Directory.CreateDirectory(Application.dataPath + "/Maps");
+        //if(!Directory.Exists(Application.dataPath + "/Maps"))
+        //    Directory.CreateDirectory(Application.dataPath + "/Maps");
 
-        path = new DirectoryInfo(Application.dataPath + "/Maps");
+        path = new DirectoryInfo(paths.buildPath/*Application.dataPath*/ + "/Maps");
         //Get all .txt files to avoid the .meta files
         FileInfo[] info = path.GetFiles("*.txt");
 

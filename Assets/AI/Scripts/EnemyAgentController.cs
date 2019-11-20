@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class EnemyAgentController : MonoBehaviour {
     
@@ -17,9 +18,25 @@ public class EnemyAgentController : MonoBehaviour {
     public int kills;
     public int deaths;
 
+    public TextMeshProUGUI recordingKillCounter;
+    public TextMeshProUGUI recordingDeathCounter;
+
+    public bool isRecording = false;
+
     private void Start()
     {
         score = 0;
+
+        if (recordingKillCounter != null)
+            isRecording = true;
+    }
+
+    void exitDemo()
+    {
+        GameObject g = GameObject.Find("sessionManager");
+
+        if (g)
+            g.GetComponent<ImitationManager>().ExitDemonstration();
     }
 
     private void Update()
@@ -40,10 +57,10 @@ public class EnemyAgentController : MonoBehaviour {
         //Update the rotation
         //rotate left
         if(actions.y == 1)
-        transform.Rotate(new Vector3(0, 0, -8));
+        transform.Rotate(new Vector3(0, 0, -3));
         //rotate right
         if(actions.y == 2)
-        transform.Rotate(new Vector3(0, 0, 8));
+        transform.Rotate(new Vector3(0, 0, 3));
 
     }
 

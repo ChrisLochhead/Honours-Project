@@ -48,6 +48,9 @@ public class CurriculumReinforcement : Agent {
     public float collisionPenalty;
     public bool camerasActive;
 
+    int kills = 0;
+    int deaths = 0;
+
     private void Start()
     {
 
@@ -129,6 +132,11 @@ public class CurriculumReinforcement : Agent {
         //Trigger if the controller has died
         if (!controller.isAlive)
         {
+            deaths++;
+
+            if(controller.isRecording)
+                controller.recordingKillCounter.text = deaths.ToString();
+
             AddReward(deathPenalty);
             Done();
         }
@@ -146,6 +154,10 @@ public class CurriculumReinforcement : Agent {
     public void GainedKill()
     {
         Debug.Log("gained kill");
+        kills++;
+
+        if (controller.isRecording)
+            controller.recordingKillCounter.text = kills.ToString();
         AddReward(killReward);
     }
 

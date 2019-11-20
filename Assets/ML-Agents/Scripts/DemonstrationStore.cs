@@ -12,7 +12,7 @@ namespace MLAgents
     {
         public const int MetaDataBytes = 32; // Number of bytes allocated to metadata in demo file.
         private readonly IFileSystem fileSystem;
-        private const string DemoDirecory = "Assets/Demonstrations/";
+        private const string DemoDirecory = "Builds/Demonstrations/";
         private const string ExtensionType = ".demo";
 
         private string filePath;

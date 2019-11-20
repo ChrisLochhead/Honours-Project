@@ -76,7 +76,7 @@ public class NMLAgentTrainer : MonoBehaviour {
             //If they still can, shoot
             if (canShoot)
             {
-                weaponManager.Shoot(1);
+                //weaponManager.Shoot(1);
             }
         }
     }

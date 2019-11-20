@@ -18,7 +18,7 @@ namespace MLAgents
 
         private void Start()
         {
-            if (Application.isEditor && record)
+            if (record)
             {
                 InitializeDemoStore();
             }
@@ -26,7 +26,7 @@ namespace MLAgents
 
         private void Update()
         {
-            if (Application.isEditor && record && demoStore == null)
+            if (record && demoStore == null)
             {
                 InitializeDemoStore();
             }
