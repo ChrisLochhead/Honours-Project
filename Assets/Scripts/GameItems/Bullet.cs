@@ -21,9 +21,13 @@ public class Bullet : NetworkBehaviour {
 
     private void Update()
     {
-        if(Vector3.Distance(this.gameObject.transform.position, shooter.transform.position) > 40)
+        //Optional distance drop off for bullets (training-only)
+        if (shooter)
         {
-            Destroy(this.gameObject);
+            if (Vector3.Distance(this.gameObject.transform.position, shooter.transform.position) > 40)
+            {
+                Destroy(this.gameObject);
+            }
         }
     }
     private void OnCollisionEnter(Collision collision)

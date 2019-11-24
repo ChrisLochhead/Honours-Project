@@ -26,7 +26,6 @@ public class BuildMenuCamera : MonoBehaviour {
 
     private void Update()
     {
-        Debug.Log(bottomShutter.GetComponent<RectTransform>().sizeDelta);
         //If in the middle of a shutter
         if (shutterEffectActive)
         {

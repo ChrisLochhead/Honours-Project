@@ -220,14 +220,17 @@ public class BuildMenu : MonoBehaviour {
         int reds = 0;
         for (int i = 0; i < mapItems.Count; i++)
         {
-            if (FindType(mapItems[i]) == 7)
+            if (mapItems[i] != null)
             {
-                reds++;
-            }
-            else if (FindType(mapItems[i]) == 8)
-            {
-                blues++;
-            }
+                if (FindType(mapItems[i]) == 7)
+                {
+                    reds++;
+                }
+                else if (FindType(mapItems[i]) == 8)
+                {
+                    blues++;
+                }
+            }           
         }
 
         //If there isn't atleast one of each return false
@@ -292,7 +295,7 @@ public class BuildMenu : MonoBehaviour {
         //Save in format all the other map items
         for (int i = 0; i < mapItems.Count; i++)
         {
-            if (mapItems[i])
+            if (mapItems[i] != null)
             {
                 int t = FindType(mapItems[i]);
                 int rot = FindRot(mapItems[i]);
@@ -313,7 +316,7 @@ public class BuildMenu : MonoBehaviour {
         CancelSave();
 
         //Update the map files, remove the error message if it was previously triggered and re-enable camera movement
-        buildMenuMapLoader.mapFinderPrefab.GetComponent<MapFinder>().FindFiles();
+        GameObject.Find("MapFinder(Clone)").GetComponent<MapFinder>().FindFiles();
         errorMessage.gameObject.SetActive(false);
         cam.GetComponent<CameraMovement>().SetMovement(true);
     }

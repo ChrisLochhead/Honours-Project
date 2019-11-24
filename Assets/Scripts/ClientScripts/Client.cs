@@ -400,8 +400,10 @@ public class Client : NetworkBehaviour
         }
 
         //Remove rigidbody physics effects
-        GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
-        Debug.Log("velocity : " + GetComponent<Rigidbody>().velocity);
+        if (GetComponent<Rigidbody>())
+        {
+            GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
+        }
     }
 
     private void OnDisable()
@@ -468,6 +470,9 @@ public class Client : NetworkBehaviour
 
     public void LeaveGame()
     {
+        //Reset team designation
+        team = 3;
+
         //If in a multiplayer game
         if (networkManager.matchMaker != null)
         {

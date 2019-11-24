@@ -31,15 +31,8 @@ public class MapFinder : NetworkBehaviour {
     public PathContainer paths;
 
     void Start () {
-        //Initialise existing maps
+
         FindFiles();
-        if(GameObject.Find("SessionManager"))
-        {
-            paths = GameObject.Find("SessionManager").GetComponent<PathContainer>();
-        }else
-        {
-            Debug.Log("Critical error");
-        }
 
     }
 
@@ -48,7 +41,19 @@ public class MapFinder : NetworkBehaviour {
         //Get the path to the map folder
         //if(!Directory.Exists(Application.dataPath + "/Maps"))
         //    Directory.CreateDirectory(Application.dataPath + "/Maps");
-
+        //Initialise existing maps
+        if (path == null)
+        {
+            if (GameObject.Find("SessionManager"))
+            {
+                Debug.Log("calling start functionb");
+                paths = GameObject.Find("SessionManager").GetComponent<PathContainer>();
+            }
+            else
+            {
+                Debug.Log("Critical error");
+            }
+        }
         path = new DirectoryInfo(paths.buildPath/*Application.dataPath*/ + "/Maps");
         //Get all .txt files to avoid the .meta files
         FileInfo[] info = path.GetFiles("*.txt");
@@ -124,11 +129,9 @@ public class MapFinder : NetworkBehaviour {
         mapLoaderDropdowns = GameObject.FindGameObjectsWithTag("MapLoader");
         if (mapLoaderDropdowns.Length > 0 && currentNoOfDropdowns != mapLoaderDropdowns.Length)
         {
-            Debug.Log("stage 2");
             foreach (GameObject d in mapLoaderDropdowns)
             {
                 Dropdown tmp = d.GetComponent<Dropdown>();
-                Debug.Log("stage 3");
                 //Clear the list
                 tmp.options.Clear();
 

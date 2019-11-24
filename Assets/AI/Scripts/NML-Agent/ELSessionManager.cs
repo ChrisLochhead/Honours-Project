@@ -6,7 +6,8 @@ using System.Diagnostics;
 using TMPro;
 using UnityEditor;
 
-public class ELSessionManager : MonoBehaviour {
+public class ELSessionManager : MonoBehaviour
+{
 
     Process process;
 
@@ -98,8 +99,10 @@ public class ELSessionManager : MonoBehaviour {
     {
         if (isFinal)
         {
-            FileUtil.CopyFileOrDirectory(paths.buildPath + "/models/gen-" + testName + "-generation-" + (generation-1) + "/candidate-" + highestIndex + "-0",
-            paths.buildPath + "/models/" + testName + "-FinalModel/");
+            DirectoryCopy(paths.buildPath + "/models/gen-" + testName + "-generation-" + (generation - 1) + "/candidate-" + highestIndex + "-0",
+            paths.buildPath + "/models/" + testName + "-FinalModel/", "");
+            //FileUtil.CopyFileOrDirectory(paths.buildPath + "/models/gen-" + testName + "-generation-" + (generation - 1) + "/candidate-" + highestIndex + "-0",
+            //paths.buildPath + "/models/" + testName + "-FinalModel/");
 
             return "";
         }
@@ -107,7 +110,7 @@ public class ELSessionManager : MonoBehaviour {
         if (generation != 0)
         {
 
-            DirectoryCopy(paths.buildPath + "/models/gen-" + testName + "-generation-" + (generation-1) + "/candidate-" + highestIndex + "-0/", paths.buildPath + "/models/" + testName + "-generation-" + generation + "-candidate-" + c + "-0", testName);
+            DirectoryCopy(paths.buildPath + "/models/gen-" + testName + "-generation-" + (generation - 1) + "/candidate-" + highestIndex + "-0/", paths.buildPath + "/models/" + testName + "-generation-" + generation + "-candidate-" + c + "-0", testName);
 
         }
         return testName + "-generation-" + (generation) + "-candidate-" + c;
@@ -124,15 +127,16 @@ public class ELSessionManager : MonoBehaviour {
         }
 
     }
+
     void EvaluateCandidates(int generationNo)
     {
         //Get paths of both where the summaries have been stored and where
         //Also get a string for the new generations destination
         DirectoryInfo summaryPath = new DirectoryInfo(paths.buildPath + "/summaries/");
         DirectoryInfo modelPath = new DirectoryInfo(paths.buildPath + "/models/");
-        string generationPath = modelPath + "gen-" +testName + "-generation-" + (generation-1) + "/";
-  
-        //Rename new models to current generation
+        string generationPath = modelPath + "gen-" + testName + "-generation-" + (generation - 1) + "/";
+
+        //Count the candidate files to double check
         int candidateCounter = 0;
         foreach (DirectoryInfo dir in modelPath.GetDirectories())
         {
@@ -140,8 +144,6 @@ public class ELSessionManager : MonoBehaviour {
             if (gens[0] == "gen")
                 continue;
 
-            Directory.CreateDirectory(modelPath + testName + "-generation-" + (generation -1) + "-candidate-" + candidateCounter + "-0");
-            AssetDatabase.MoveAsset("Builds/models/" + dir.Name, "Builds/models/" + testName + "-generation-" + (generation - 1) + "-candidate-" + candidateCounter + "-0");
             candidateCounter++;
         }
 
@@ -165,12 +167,10 @@ public class ELSessionManager : MonoBehaviour {
 
                 string genPath = modelPath + "gen-" + testName + "-generation-" + genNoInt + "/candidate-" + candidateCounter + "-0";
 
-                FileUtil.CopyFileOrDirectory(dir.FullName, genPath);
+                DirectoryCopy(dir.FullName, genPath, "");
                 DeleteDirectory(dir.FullName);
                 candidateCounter++;
             }
-           
-
         }
 
         candidateCounter = 0;
@@ -182,7 +182,7 @@ public class ELSessionManager : MonoBehaviour {
             string[] genNo = Regex.Split(s[0], "e-");
             int genNoInt = int.Parse(genNo[1]);
 
-            string candidatePath = modelPath + "gen-" + testName + "-generation-" + (generation-1) + "/candidate-" + genNoInt + "-0";
+            string candidatePath = modelPath + "gen-" + testName + "-generation-" + (generation - 1) + "/candidate-" + genNoInt + "-0";
             File.Copy(file, Path.Combine(candidatePath, Path.GetFileName(file)));
             File.Delete(file);
         }
@@ -198,7 +198,7 @@ public class ELSessionManager : MonoBehaviour {
 
         //Create a reference to this generations info
         DirectoryInfo genInfo = new DirectoryInfo(generationPath);
-        
+
         //Get all .csv files it can find
         FileInfo[] info = genInfo.GetFiles("*.csv", SearchOption.AllDirectories);
 
@@ -314,7 +314,7 @@ public class ELSessionManager : MonoBehaviour {
 
         if (generation == 0)
             steps = stepsPerGeneration;
-           
+
         //Write it to a string for the .yaml file
         string serialisedData =
                 "default: \n" +
@@ -348,7 +348,7 @@ public class ELSessionManager : MonoBehaviour {
         //if (Application.isEditor)
         //    sr = new StreamWriter(paths.editorPath + "/AI/exe_config.yaml", false);
         //else
-            sr = new StreamWriter(paths.buildPath + "/TrainerConfiguration/exe_config.yaml", false);
+        sr = new StreamWriter(paths.buildPath + "/TrainerConfiguration/exe_config.yaml", false);
 
         sr.Write(serialisedData);
         sr.Close();
@@ -375,7 +375,7 @@ public class ELSessionManager : MonoBehaviour {
         SetupAnaconda();
 
         //Cycle through every generation
-        for (int i = 0; i < numberOfGenerations-1; i++)
+        for (int i = 0; i < numberOfGenerations - 1; i++)
         {
             //if acurrent base of candidates has been developed
             if (currentCandidateBeingTrained == 0 && generation == 0)//Otherwise dont evaluate candidates and start from scratch
@@ -410,7 +410,7 @@ public class ELSessionManager : MonoBehaviour {
         EvaluateCandidates(generation - 1);
         FindCandidate(0, true);
         FinishTraining();
-        
+
     }
 
     void SetModelSettings()
