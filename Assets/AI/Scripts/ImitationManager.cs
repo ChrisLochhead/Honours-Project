@@ -91,10 +91,10 @@ public class ImitationManager : MonoBehaviour {
                 "   use_recurrent: false \n" +
                 "   vis_encode_type: simple \n" +
                 "   reward_signals: \n" +
-                "       gail: "+
-                "           strength: 1.0 " +
-                "           gamma: 0.99" +
-                "           demo_path: Demonstrations/" + demoInputs.options[demoInputs.value].text;
+                "       gail: \n"+
+                "           strength: 1.0 \n" +
+                "           gamma: 0.99 \n" +
+                "           demo_path: Demonstrations/" + demoInputs.options[demoInputs.value].text + "\n";
 
         StreamWriter sr;
         sr = new StreamWriter(paths.buildPath + "/TrainerConfiguration/gail_config.yaml", false);
@@ -120,17 +120,109 @@ public class ImitationManager : MonoBehaviour {
         process.StandardInput.WriteLine(@"cd " + paths.buildPath);
     }
 
-    void ImitationLearning()
+    public void ImitationLearning()
     {
         SetupAnaconda();
         WriteHyperParameters();
 
-        process.StandardInput.WriteLine(@"mlagents-learn TrainerConfiguration/gail_config.yaml 
-        --env=training_env_small/training_env_small --run-id=" + modelName.text  + " --train");
+        process.StandardInput.WriteLine(@"mlagents-learn TrainerConfiguration/gail_config.yaml --env=training_env_small/training_env_small --run-id=" + modelName.text  + " --train");
+
+    }
+    private static void DirectoryCopy(string sourceDirName, string destDirName, string trainingName, bool copySubDirs = true)
+    {
+        // Get the subdirectories for the specified directory.
+        DirectoryInfo dir = new DirectoryInfo(sourceDirName);
+
+        if (!dir.Exists)
+        {
+            throw new DirectoryNotFoundException(
+                "Source directory does not exist or could not be found: "
+                + sourceDirName);
+        }
+
+        DirectoryInfo[] dirs = dir.GetDirectories();
+        // If the destination directory doesn't exist, create it.
+        if (!Directory.Exists(destDirName))
+        {
+            Directory.CreateDirectory(destDirName);
+        }
+
+        // Get the files in the directory and copy them to the new location.
+        FileInfo[] files = dir.GetFiles();
+        foreach (FileInfo file in files)
+        {
+            string[] prefix = Regex.Split(file.Name, "-");
+
+            if (prefix[0] != trainingName || trainingName == "")
+            {
+                string temppath = Path.Combine(destDirName, file.Name);
+                file.CopyTo(temppath, false);
+            }
+        }
+
+        // If copying subdirectories, copy them and their contents to new location.
+        if (copySubDirs)
+        {
+            foreach (DirectoryInfo subdir in dirs)
+            {
+                string temppath = Path.Combine(destDirName, subdir.Name);
+                DirectoryCopy(subdir.FullName, temppath, trainingName, copySubDirs);
+            }
+        }
+    }
+
+    void MoveModelFiles()
+    {
+        //Copy files from summary and models into new folder for this model
+        DirectoryCopy(paths.buildPath + "/summaries/" + modelName.text + "-0_LearningBrain", paths.buildPath + "/Imitation-Learning-Models/" + modelName.text, "");
+        DirectoryCopy(paths.buildPath + "/models/" + modelName.text + "-0", paths.buildPath + "/Imitation-Learning-Models/" + modelName.text, "");
+
+        //Erase all files in summaries
+        foreach (string file in Directory.GetFiles(paths.buildPath + "/summaries/"))
+        {
+            string candidatePath = paths.buildPath + "/Imitation-Learning-Models/" + modelName.text;
+            File.Copy(file, Path.Combine(candidatePath, Path.GetFileName(file)));
+            File.Delete(file);
+        }
+        //Erase all directories inside summaries
+        foreach (string dir in Directory.GetDirectories(paths.buildPath + "/summaries/"))
+        {
+            foreach (string file in Directory.GetFiles(dir))
+            {
+                File.Delete(file);
+            }
+            Directory.Delete(dir);
+        }
+
+        //Delete everything in models directory
+        foreach (string dir in Directory.GetDirectories(paths.buildPath + "/models/"))
+        {
+            foreach (string dirSub in Directory.GetDirectories(dir))
+            {
+                foreach (string file in Directory.GetFiles(dirSub))
+                {
+                    File.Delete(file);
+                }
+                Directory.Delete(dirSub);
+            }
+            foreach (string file in Directory.GetFiles(dir))
+            {
+                File.Delete(file);
+            }
+            Directory.Delete(dir);
+        }
     }
 
     private void Update()
     {
-
+        if (process != null)
+        {
+            if (process.HasExited)
+            {
+                //trainingInfo.text = "training completed sucessfully.";
+                MoveModelFiles();
+                process = null;
+            }
+        }
     }
 }

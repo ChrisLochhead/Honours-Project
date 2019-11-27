@@ -2,7 +2,7 @@
 using UnityEngine;
 using TMPro;
 using System.IO;
-using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 public class RLSessionManager : MonoBehaviour {
 
@@ -18,7 +18,7 @@ public class RLSessionManager : MonoBehaviour {
     public int selectedMap;
 
     public TMP_InputField[] modelSettings;
-    public string[] stringModelSettings;
+    //public string[] stringModelSettings;
     public float[] floatModelSettings;
     //name
     //kill reward
@@ -122,7 +122,7 @@ public class RLSessionManager : MonoBehaviour {
     {
         //Perform error check first
 
-        testName = stringModelSettings[0];
+        testName = modelSettings[0].text;
         selectedMap = trainingMaps.value;
         //name
         //kill reward
@@ -130,7 +130,91 @@ public class RLSessionManager : MonoBehaviour {
         //collision penalty
         //render graphics
     }
-    
+
+    private static void DirectoryCopy(string sourceDirName, string destDirName, string trainingName, bool copySubDirs = true)
+    {
+        // Get the subdirectories for the specified directory.
+        DirectoryInfo dir = new DirectoryInfo(sourceDirName);
+
+        if (!dir.Exists)
+        {
+            throw new DirectoryNotFoundException(
+                "Source directory does not exist or could not be found: "
+                + sourceDirName);
+        }
+
+        DirectoryInfo[] dirs = dir.GetDirectories();
+        // If the destination directory doesn't exist, create it.
+        if (!Directory.Exists(destDirName))
+        {
+            Directory.CreateDirectory(destDirName);
+        }
+
+        // Get the files in the directory and copy them to the new location.
+        FileInfo[] files = dir.GetFiles();
+        foreach (FileInfo file in files)
+        {
+            string[] prefix = Regex.Split(file.Name, "-");
+
+            if (prefix[0] != trainingName || trainingName == "")
+            {
+                string temppath = Path.Combine(destDirName, file.Name);
+                file.CopyTo(temppath, false);
+            }
+        }
+
+        // If copying subdirectories, copy them and their contents to new location.
+        if (copySubDirs)
+        {
+            foreach (DirectoryInfo subdir in dirs)
+            {
+                string temppath = Path.Combine(destDirName, subdir.Name);
+                DirectoryCopy(subdir.FullName, temppath, trainingName, copySubDirs);
+            }
+        }
+    }
+
+    void MoveModelFiles()
+    {
+        //Copy files from summary and models into new folder for this model
+        DirectoryCopy(paths.buildPath + "/summaries/" + testName + "-0_LearningBrain", paths.buildPath + "/Reinforcement-Learning-Models/" + testName, "");
+        DirectoryCopy(paths.buildPath + "/models/" + testName + "-0", paths.buildPath + "/Reinforcement-Learning-Models/" + testName, "");
+
+        //Erase all files in summaries
+        foreach (string file in Directory.GetFiles(paths.buildPath + "/summaries/"))
+        {
+            string candidatePath = paths.buildPath + "/Reinforcement-Learning-Models/" + testName;
+            File.Copy(file, Path.Combine(candidatePath, Path.GetFileName(file)));
+            File.Delete(file);
+        }
+        //Erase all directories inside summaries
+        foreach (string dir in Directory.GetDirectories(paths.buildPath + "/summaries/"))
+        {
+            foreach (string file in Directory.GetFiles(dir))
+            {
+                File.Delete(file);
+            }
+            Directory.Delete(dir);
+        }
+  
+        //Delete everything in models directory
+        foreach (string dir in Directory.GetDirectories(paths.buildPath + "/models/"))
+        {
+            foreach (string dirSub in Directory.GetDirectories(dir))
+            {
+                foreach (string file in Directory.GetFiles(dirSub))
+                {
+                    File.Delete(file);
+                }
+                Directory.Delete(dirSub);
+            }
+            foreach (string file in Directory.GetFiles(dir))
+            {
+                File.Delete(file);
+            }
+            Directory.Delete(dir);
+        }
+    }
     public void RunReinforcementLearning()
     {
         //Finalise the selected hyperparameters
@@ -152,36 +236,24 @@ public class RLSessionManager : MonoBehaviour {
         process.StandardInput.WriteLine(@"activate tensorflow-env");
 
         //begins training session
-        if (Application.isEditor)
+        process.StandardInput.WriteLine(@"cd " + paths.buildPath);
+
+        if (!File.Exists(paths.buildPath + "/models/" + testName + "-0"))
         {
-
-            if (!File.Exists(Application.dataPath + "AI/models/" + testName + "-0"))
-                process.StandardInput.WriteLine(@"mlagents-learn exe_config.yaml --run-id=" + testName + "--train");
+            if (selectedMap == 0)
+                process.StandardInput.WriteLine(@"mlagents-learn TrainerConfiguration/exe_config.yaml  --env=training_env_small/training_env_small --run-id=" + testName + " --train");
             else
-                process.StandardInput.WriteLine(@"mlagents-learn exe_config.yaml --run-id=" + testName + " --load --train");
-
-            UnityEngine.Debug.Log("To train in editor, stop the compile without closing the anaconda window, navigate to the desired training room and click play.");
+                process.StandardInput.WriteLine(@"mlagents-learn TrainerConfiguration/exe_config.yaml  --env=training_env_large/training_env_large --run-id=" + testName + " --train");
         }
         else
         {
-            process.StandardInput.WriteLine(@"cd " + paths.buildPath);
-
-            if (!File.Exists(paths.buildPath + "/models/" + testName + "-0"))
+            if (selectedMap == 0)
             {
-                if(selectedMap == 0)
-                    process.StandardInput.WriteLine(@"mlagents-learn TrainerConfiguration/exe_config.yaml  --env=training_env_small/training_env_small --run-id=" + testName + " --train");
-                else
-                    process.StandardInput.WriteLine(@"mlagents-learn TrainerConfiguration/exe_config.yaml  --env=training_env_large/training_env_large --run-id=" + testName + " --train");
+                process.StandardInput.WriteLine(@"mlagents-learn TrainerConfiguration/exe_config.yaml  --env=training_env_small/training_env_small --run-id=" + testName + " --load --train");
             }
             else
             {
-                if (selectedMap == 0)
-                {
-                    process.StandardInput.WriteLine(@"mlagents-learn TrainerConfiguration/exe_config.yaml  --env=training_env_small/training_env_small --run-id=" + testName + " --load --train");
-                }else
-                {
-                    process.StandardInput.WriteLine(@"mlagents-learn TrainerConfiguration/exe_config.yaml  --env=training_env_large/training_env_large --run-id=" + testName + " --load --train");
-                }
+                process.StandardInput.WriteLine(@"mlagents-learn TrainerConfiguration/exe_config.yaml  --env=training_env_large/training_env_large --run-id=" + testName + " --load --train");
             }
         }
     }
@@ -193,6 +265,7 @@ public class RLSessionManager : MonoBehaviour {
             if (process.HasExited)
             {
                 trainingInfo.text = "training completed sucessfully.";
+                MoveModelFiles();
                 process = null;
             }
         }

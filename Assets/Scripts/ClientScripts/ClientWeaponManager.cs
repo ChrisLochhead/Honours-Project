@@ -196,7 +196,7 @@ public class ClientWeaponManager : NetworkBehaviour {
         b.transform.rotation = rot;
 
         //calculate trajectory
-        b.GetComponent<Rigidbody>().velocity = b.transform.forward * 6.0f;
+        b.GetComponent<Rigidbody>().velocity = b.transform.forward * 36.0f;
 
         //add tag indicating whose bullet it is
         b.GetComponent<Bullet>().shooter = Owner.player;

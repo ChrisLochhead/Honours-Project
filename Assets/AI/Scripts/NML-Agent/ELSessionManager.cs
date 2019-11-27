@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
 using TMPro;
-using UnityEditor;
 
 public class ELSessionManager : MonoBehaviour
 {
@@ -101,9 +100,6 @@ public class ELSessionManager : MonoBehaviour
         {
             DirectoryCopy(paths.buildPath + "/models/gen-" + testName + "-generation-" + (generation - 1) + "/candidate-" + highestIndex + "-0",
             paths.buildPath + "/models/" + testName + "-FinalModel/", "");
-            //FileUtil.CopyFileOrDirectory(paths.buildPath + "/models/gen-" + testName + "-generation-" + (generation - 1) + "/candidate-" + highestIndex + "-0",
-            //paths.buildPath + "/models/" + testName + "-FinalModel/");
-
             return "";
         }
 
