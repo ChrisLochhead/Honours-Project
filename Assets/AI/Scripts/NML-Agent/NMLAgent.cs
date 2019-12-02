@@ -297,12 +297,12 @@ public class NMLAgent : MonoBehaviour {
     public void Respawn()
     {
         //Set the players position to a random space within the range offered by the academies parameters
-        gameObject.transform.position = new Vector3(Random.Range(-target.GetComponent<CurriculumReinforcement>().resetParams["x-position"], target.GetComponent<CurriculumReinforcement>().resetParams["x-position"]) + spawnCentre.x,
-            Random.Range(-target.GetComponent<CurriculumReinforcement>().resetParams["y-position"], target.GetComponent<CurriculumReinforcement>().resetParams["y-position"]) + spawnCentre.y, -10);
+        gameObject.transform.position = new Vector3(Random.Range(-target.GetComponent<AIController>().resetParams["x-position"], target.GetComponent<AIController>().resetParams["x-position"]) + spawnCentre.x,
+            Random.Range(-target.GetComponent<AIController>().resetParams["y-position"], target.GetComponent<AIController>().resetParams["y-position"]) + spawnCentre.y, -10);
         
         //Reset controller variables
-        health = target.GetComponent<CurriculumReinforcement>().resetParams["health"];
-        weaponManager.currentWeapon = (int)target.GetComponent<CurriculumReinforcement>().resetParams["weapon"];
+        health = target.GetComponent<AIController>().resetParams["health"];
+        weaponManager.currentWeapon = (int)target.GetComponent<AIController>().resetParams["weapon"];
 
         //Reset the ammo in all weapons
         for (int i = 0; i < weaponManager.clipSize.Length; i++)

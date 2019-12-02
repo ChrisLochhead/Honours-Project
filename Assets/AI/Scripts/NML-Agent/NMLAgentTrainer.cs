@@ -123,8 +123,8 @@ public class NMLAgentTrainer : MonoBehaviour {
         if (wanderPositon == Vector3.zero || wanderPositon == gameObject.transform.position)
         {
             //find a new wander position
-            wanderPositon = new Vector3(Random.Range(-agentTrainer.GetComponent<CurriculumReinforcement>().resetParams["x-position"], agentTrainer.GetComponent<CurriculumReinforcement>().resetParams["x-position"]) + worldPosition.transform.position.x,
-            Random.Range(-agentTrainer.GetComponent<CurriculumReinforcement>().resetParams["y-position"], agentTrainer.GetComponent<CurriculumReinforcement>().resetParams["y-position"]) + worldPosition.transform.position.y, -10);
+            wanderPositon = new Vector3(Random.Range(-agentTrainer.GetComponent<AIController>().resetParams["x-position"], agentTrainer.GetComponent<AIController>().resetParams["x-position"]) + worldPosition.transform.position.x,
+            Random.Range(-agentTrainer.GetComponent<AIController>().resetParams["y-position"], agentTrainer.GetComponent<AIController>().resetParams["y-position"]) + worldPosition.transform.position.y, -10);
         }
 
         //Performs lightweight pathfinding suitable for training purposes without grid
@@ -147,12 +147,12 @@ public class NMLAgentTrainer : MonoBehaviour {
     public void Respawn()
     {
         //Set the players position to a random space within the range offered by the academies parameters
-        gameObject.transform.position = new Vector3(Random.Range(-agentTrainer.GetComponent<CurriculumReinforcement>().resetParams["x-position"], agentTrainer.GetComponent<CurriculumReinforcement>().resetParams["x-position"]) + worldPosition.transform.position.x,
-            Random.Range(-agentTrainer.GetComponent<CurriculumReinforcement>().resetParams["y-position"], agentTrainer.GetComponent<CurriculumReinforcement>().resetParams["y-position"]) + worldPosition.transform.position.y, -10);
+        gameObject.transform.position = new Vector3(Random.Range(-agentTrainer.GetComponent<AIController>().resetParams["x-position"], agentTrainer.GetComponent<AIController>().resetParams["x-position"]) + worldPosition.transform.position.x,
+            Random.Range(-agentTrainer.GetComponent<AIController>().resetParams["y-position"], agentTrainer.GetComponent<AIController>().resetParams["y-position"]) + worldPosition.transform.position.y, -10);
 
         //Reset controller variables
-        health = agentTrainer.GetComponent<CurriculumReinforcement>().resetParams["health"];
-        weaponManager.currentWeapon = (int)agentTrainer.GetComponent<CurriculumReinforcement>().resetParams["weapon"];
+        health = agentTrainer.GetComponent<AIController>().resetParams["health"];
+        weaponManager.currentWeapon = (int)agentTrainer.GetComponent<AIController>().resetParams["weapon"];
 
         //Reset the ammo in all weapons
         for (int i = 0; i < weaponManager.clipSize.Length; i++)

@@ -32,6 +32,19 @@ public class MapFinder : NetworkBehaviour {
 
     void Start () {
 
+        if (path == null)
+        {
+            if (GameObject.Find("SessionManager"))
+            {
+                paths = GameObject.Find("SessionManager").GetComponent<PathContainer>();
+            }
+            else
+            {
+                Debug.Log("Critical error");
+            }
+        }
+
+        if (paths.pathsValid)
         FindFiles();
 
     }
@@ -46,7 +59,6 @@ public class MapFinder : NetworkBehaviour {
         {
             if (GameObject.Find("SessionManager"))
             {
-                Debug.Log("calling start functionb");
                 paths = GameObject.Find("SessionManager").GetComponent<PathContainer>();
             }
             else
@@ -54,7 +66,7 @@ public class MapFinder : NetworkBehaviour {
                 Debug.Log("Critical error");
             }
         }
-        path = new DirectoryInfo(paths.buildPath/*Application.dataPath*/ + "/Maps");
+        path = new DirectoryInfo(paths.buildPath + "/Maps");
         //Get all .txt files to avoid the .meta files
         FileInfo[] info = path.GetFiles("*.txt");
 

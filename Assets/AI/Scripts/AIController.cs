@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using MLAgents;
-public class CurriculumReinforcement : Agent {
+public class AIController : Agent {
 
     //Training module
     public EnemyAgentController controller;

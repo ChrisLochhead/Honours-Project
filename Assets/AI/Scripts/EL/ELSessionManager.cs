@@ -8,113 +8,65 @@ using TMPro;
 public class ELSessionManager : MonoBehaviour
 {
 
+    //File reading 
     Process process;
-
+    FileUtilities fileutils;
     StreamReader filereader = null;
 
-    public List<float> candidatescores;
-
+    //Records highest performing candidate 
+    //and accompanying score
     int highestIndex = 0;
     float highestIndexValue = 0.0f;
 
+    //Candidate and generation info
     [SerializeField]
     int generation = 0;
 
-    int stepsPerGeneration = 50000;
     int numberOfGenerations = 3;
     int numberOfCandidates = 0;
     int candidateNo = 0;
+    int currentCandidateBeingTrained = 0;
+    public List<float> candidatescores;
 
-
-
+    //Reference to paths
     public PathContainer paths;
 
+    //Reference to hyperparameter settings
     public TMP_InputField[] hyperParameterSettings;
-    //batch size (buffer size always 10*)
-    //hidden units
-    //learning rate
-    //max steps
-    //number of epochs
-    //number of layers
 
+    //Map selection 
     public TMP_Dropdown trainingMaps;
     public int selectedMap;
 
+    //Model settings such as name
     public TMP_InputField[] modelSettings;
 
-    int currentCandidateBeingTrained = 0;
-    //name
-    //kill reward
-    //death penalty
-    //collision penalty
-    //render graphics
     public string testName = "default";
-
-    private static void DirectoryCopy(string sourceDirName, string destDirName, string trainingName, bool copySubDirs = true)
-    {
-        // Get the subdirectories for the specified directory.
-        DirectoryInfo dir = new DirectoryInfo(sourceDirName);
-
-        if (!dir.Exists)
-        {
-            throw new DirectoryNotFoundException(
-                "Source directory does not exist or could not be found: "
-                + sourceDirName);
-        }
-
-        DirectoryInfo[] dirs = dir.GetDirectories();
-        // If the destination directory doesn't exist, create it.
-        if (!Directory.Exists(destDirName))
-        {
-            Directory.CreateDirectory(destDirName);
-        }
-
-        // Get the files in the directory and copy them to the new location.
-        FileInfo[] files = dir.GetFiles();
-        foreach (FileInfo file in files)
-        {
-            string[] prefix = Regex.Split(file.Name, "-");
-
-            if (prefix[0] != trainingName || trainingName == "")
-            {
-                string temppath = Path.Combine(destDirName, file.Name);
-                file.CopyTo(temppath, false);
-            }
-        }
-
-        // If copying subdirectories, copy them and their contents to new location.
-        if (copySubDirs)
-        {
-            foreach (DirectoryInfo subdir in dirs)
-            {
-                string temppath = Path.Combine(destDirName, subdir.Name);
-                DirectoryCopy(subdir.FullName, temppath, trainingName, copySubDirs);
-            }
-        }
-    }
-
 
     string FindCandidate(int c, bool isFinal = false)
     {
+        //If on the final generation
         if (isFinal)
         {
-            DirectoryCopy(paths.buildPath + "/models/gen-" + testName + "-generation-" + (generation - 1) + "/candidate-" + highestIndex + "-0",
+            //Copy everything to new directory
+            fileutils.DirectoryCopy(paths.buildPath + "/models/gen-" + testName + "-generation-" + (generation - 1) + "/candidate-" + highestIndex + "-0",
             paths.buildPath + "/models/" + testName + "-FinalModel/", "");
             return "";
         }
 
+        //if not on the first or the last generation
         if (generation != 0)
-        {
-
-            DirectoryCopy(paths.buildPath + "/models/gen-" + testName + "-generation-" + (generation - 1) + "/candidate-" + highestIndex + "-0/", paths.buildPath + "/models/" + testName + "-generation-" + generation + "-candidate-" + c + "-0", testName);
-
+        {           
+            fileutils.DirectoryCopy(paths.buildPath + "/models/gen-" + testName + "-generation-" + (generation - 1) + "/candidate-" + highestIndex + "-0/", paths.buildPath + "/models/" + testName + "-generation-" + generation + "-candidate-" + c + "-0", testName);
         }
+
         return testName + "-generation-" + (generation) + "-candidate-" + c;
     }
 
     void FinishTraining()
     {
-        DirectoryCopy(paths.buildPath + "/models/", paths.buildPath + "/" + testName + "-EvolutionModel", "");
+        //Copy the finished model and delete the original 
+        fileutils.DirectoryCopy(paths.buildPath + "/models/", paths.buildPath + "/" + testName + "-EvolutionModel", "");
         DirectoryInfo d = new DirectoryInfo(paths.buildPath + "/models/");
 
         foreach (DirectoryInfo directory in d.GetDirectories())
@@ -163,7 +115,7 @@ public class ELSessionManager : MonoBehaviour
 
                 string genPath = modelPath + "gen-" + testName + "-generation-" + genNoInt + "/candidate-" + candidateCounter + "-0";
 
-                DirectoryCopy(dir.FullName, genPath, "");
+                fileutils.DirectoryCopy(dir.FullName, genPath, "");
                 DeleteDirectory(dir.FullName);
                 candidateCounter++;
             }
@@ -263,7 +215,6 @@ public class ELSessionManager : MonoBehaviour
         }
 
         candidatescores.Clear();
-        UnityEngine.Debug.Log("winner : " + highestIndex);
         //reset value for the next function call
         candidateNo = 0;
 
@@ -289,86 +240,9 @@ public class ELSessionManager : MonoBehaviour
         Directory.Delete(target_dir, false);
     }
 
-    public void WriteHyperParameters()
-    {
-        //Error check the hyperparameters
-        for (int i = 0; i < hyperParameterSettings.Length; i++)
-        {
-            //check no fields are empty
-            if (hyperParameterSettings[i].text == "")
-                UnityEngine.Debug.Log("empty field detected");
-
-            //Check no fields are non numeric
-            float n = 0;
-            if (float.TryParse(hyperParameterSettings[i].text, out n) == false)
-                UnityEngine.Debug.Log("non-numeric field detected");
-
-        }
-
-        //correct max steps according to generation
-        int steps = generation * stepsPerGeneration;
-
-        if (generation == 0)
-            steps = stepsPerGeneration;
-
-        //Write it to a string for the .yaml file
-        string serialisedData =
-                "default: \n" +
-                "   trainer: ppo \n" +
-                "   batch_size: " + hyperParameterSettings[0].text + "\n" +
-                "   beta: 1.0e-2 \n" +
-                "   buffer_size: " + float.Parse(hyperParameterSettings[0].text) * 10 + "\n" +
-                "   epsilon: 0.15 \n" +
-                "   hidden_units: " + hyperParameterSettings[1].text + "\n" +
-                "   lambd: 0.92 \n" +
-                "   learning_rate: " + hyperParameterSettings[2].text + "\n" +
-                "   max_steps: " + steps + "\n" +
-                "   memory_size: 256 \n" +
-                "   normalize: false \n" +
-                "   num_epoch: " + hyperParameterSettings[4].text + "\n" +
-                "   num_layers: " + hyperParameterSettings[3].text + "\n" +
-                "   time_horizon: 64 \n" +
-                "   sequence_length: 64 \n" +
-                "   summary_freq: 1250 \n" +
-                "   use_recurrent: false \n" +
-                "   vis_encode_type: simple \n" +
-                "   reward_signals: \n" +
-                "       extrinsic: \n" +
-                "           strength: 1.0 \n" +
-                "           gamma: 0.99 \n" +
-                "       curiosity: \n" +
-                "           strength: 0.01 \n" +
-                "           gamma: 0.99 \n" +
-                "           encoding_size: 256";
-        StreamWriter sr;
-        //if (Application.isEditor)
-        //    sr = new StreamWriter(paths.editorPath + "/AI/exe_config.yaml", false);
-        //else
-        sr = new StreamWriter(paths.buildPath + "/TrainerConfiguration/exe_config.yaml", false);
-
-        sr.Write(serialisedData);
-        sr.Close();
-    }
-    void SetupAnaconda()
-    {
-        //Sets up command prompt
-        ProcessStartInfo processStartInfo = new ProcessStartInfo("cmd.exe");
-        processStartInfo.RedirectStandardInput = true;
-        processStartInfo.RedirectStandardOutput = false;
-        processStartInfo.UseShellExecute = false;
-
-        //Initialises anaconda
-        process = Process.Start(processStartInfo);
-        process.StandardInput.WriteLine(@"cd " + paths.mlagentsPath);
-        process.StandardInput.WriteLine(@paths.anacondaPath);
-        process.StandardInput.WriteLine(@"activate tensorflow-env");
-
-        //Change to build directory path
-        process.StandardInput.WriteLine(@"cd " + paths.buildPath);
-    }
     public void RunEvolutionaryLearning(string model)
     {
-        SetupAnaconda();
+        fileutils.SetupAnaconda(process);
 
         //Cycle through every generation
         for (int i = 0; i < numberOfGenerations - 1; i++)
@@ -388,7 +262,7 @@ public class ELSessionManager : MonoBehaviour
 
                 //Evaluate candidates and work on pre-trained model
                 EvaluateCandidates(generation);
-                SetupAnaconda();
+                fileutils.SetupAnaconda(process);
 
                 for (int j = 0; j < numberOfCandidates; j++)
                 {
@@ -399,7 +273,7 @@ public class ELSessionManager : MonoBehaviour
 
             generation++;
             //Iterate the generation and rewrite hyperparameters to increase maximum steps
-            WriteHyperParameters();
+            fileutils.WriteHyperParameters(hyperParameterSettings);
 
         }
         process.WaitForExit();
@@ -421,20 +295,16 @@ public class ELSessionManager : MonoBehaviour
 
         result = 0;
         int.TryParse(modelSettings[2].text, out result);
-        stepsPerGeneration = result;
 
         testName = modelSettings[3].text;
 
-        WriteHyperParameters();
+        fileutils.WriteHyperParameters(hyperParameterSettings);
     }
 
     public void InitiateEvolutionaryLearning()
     {
-
+        //Initialise model settings and begin training
         SetModelSettings();
         RunEvolutionaryLearning(testName);
     }
-
-
-
 }

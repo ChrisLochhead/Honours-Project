@@ -14,7 +14,7 @@ public class TrainingBullet : MonoBehaviour
         //ignore collisions from other bullets
         Physics.IgnoreLayerCollision(10, 10);
 
-        if (Vector3.Distance(this.gameObject.transform.position, shooter.transform.position) > 30 && shooter.GetComponent<CurriculumReinforcement>())
+        if (Vector3.Distance(this.gameObject.transform.position, shooter.transform.position) > 30 && shooter.GetComponent<AIController>())
         {
             Destroy(this.gameObject);
         }
@@ -38,8 +38,8 @@ public class TrainingBullet : MonoBehaviour
 
         //Training function for AI agents, commented out during study
         //Check if it has hit an enemyplayer (DRL or NMLA), this function is specific to DRL training
-        if (collision.transform.GetComponent<EnemyAgentController>() || collision.transform.GetComponent<NMLAgentTrainer>() && shooter.gameObject.GetComponent<CurriculumReinforcement>() ||
-            shooter.transform.GetComponent<NMLAgentTrainer>() && collision.gameObject.GetComponent<CurriculumReinforcement>())
+        if (collision.transform.GetComponent<EnemyAgentController>() || collision.transform.GetComponent<NMLAgentTrainer>() && shooter.gameObject.GetComponent<AIController>() ||
+            shooter.transform.GetComponent<NMLAgentTrainer>() && collision.gameObject.GetComponent<AIController>())
         {
             CheckEnemyCollision(collision);
             Destroy(this.gameObject);
@@ -67,20 +67,20 @@ public class TrainingBullet : MonoBehaviour
 
         //Bullet code for AI training (small arena)
         //For player hitting enemy
-        if (collision.transform.GetComponent<NMLAgentTrainer>() && shooter.transform.GetComponent<CurriculumReinforcement>())
+        if (collision.transform.GetComponent<NMLAgentTrainer>() && shooter.transform.GetComponent<AIController>())
         {
             //Apply damage
             collision.transform.GetComponent<NMLAgentTrainer>().health -= damageAmount;
             if (collision.transform.GetComponent<NMLAgentTrainer>().health <= 0)
             {
                 collision.transform.GetComponent<NMLAgentTrainer>().isAlive = false;
-                shooter.GetComponent<CurriculumReinforcement>().GainedKill();
+                shooter.GetComponent<AIController>().GainedKill();
             }
 
         }
 
         //For enemy hitting player
-        if (shooter.transform.GetComponent<NMLAgentTrainer>() && collision.transform.GetComponent<CurriculumReinforcement>())
+        if (shooter.transform.GetComponent<NMLAgentTrainer>() && collision.transform.GetComponent<AIController>())
         {
             //Apply damage
             collision.transform.GetComponent<EnemyAgentController>().health -= damageAmount;
