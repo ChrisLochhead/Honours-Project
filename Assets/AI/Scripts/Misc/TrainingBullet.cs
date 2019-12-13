@@ -39,7 +39,7 @@ public class TrainingBullet : MonoBehaviour
         //Training function for AI agents, commented out during study
         //Check if it has hit an enemyplayer (DRL or NMLA), this function is specific to DRL training
         if (collision.transform.GetComponent<EnemyAgentController>() || collision.transform.GetComponent<NMLAgentTrainer>() && shooter.gameObject.GetComponent<AIController>() ||
-            shooter.transform.GetComponent<NMLAgentTrainer>() && collision.gameObject.GetComponent<AIController>())
+            shooter.transform.GetComponent<NMLAgentTrainer>() && collision.gameObject.GetComponent<AIController>() || collision.transform.parent.GetComponent<Client>() || shooter.transform.parent.GetComponent<Client>() && collision.transform.GetComponent<AIController>())
         {
             CheckEnemyCollision(collision);
             Destroy(this.gameObject);
@@ -63,7 +63,6 @@ public class TrainingBullet : MonoBehaviour
 
     void CheckEnemyCollision(Collision collision)
     {
-        //Bullet code for AI training (big arena)
 
         //Bullet code for AI training (small arena)
         //For player hitting enemy
@@ -90,6 +89,40 @@ public class TrainingBullet : MonoBehaviour
             }
 
         }
+
+        //For study collision detection: enemy to player
+        if(collision.transform.parent.GetComponent<Client>())
+        {
+            Client c = collision.transform.parent.GetComponent<Client>();
+            c.health -= damageAmount;
+            if (c.health <= 0)
+                c.isDead = true;
+        }
+
+        //For study collision detection: enemy to player
+        if (collision.transform.GetComponent<EnemyAgentController>() && shooter.transform.parent.GetComponent<Client>())
+        {
+            EnemyAgentController c = collision.transform.GetComponent<EnemyAgentController>();
+
+            c.health -= 100;// damageAmount;
+            if (c.health <= 0)
+            {
+                c.isAlive = false;
+            }
+        }
+
+        //For study collision detection: enemy to player
+        if (collision.transform.parent.GetComponent<Client>() && shooter.transform.parent.GetComponent<Client>())
+        {
+            Client c = collision.transform.parent.GetComponent<Client>();
+
+            c.health -= 100;// damageAmount;
+            if (c.health <= 0)
+            {
+                c.isDead = true;
+            }
+        }
+
 
         Destroy(this.gameObject);
     }

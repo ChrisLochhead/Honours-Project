@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using MLAgents;
+using TMPro;
+using UnityEngine.SceneManagement;
+
 public class AIController : Agent {
 
     //Training module
@@ -51,6 +54,10 @@ public class AIController : Agent {
     int kills = 0;
     int deaths = 0;
 
+    //For IL demo training only
+    public TextMeshProUGUI killtext;
+    public TextMeshProUGUI deathtext;
+
     private void Start()
     {
 
@@ -58,7 +65,27 @@ public class AIController : Agent {
         killReward = 1.0f;
         deathPenalty = -1.0f;
         collisionPenalty = -0.01f;
-        camerasActive = true;
+        //camerasActive = false;
+
+        GameObject gameInfo = GameObject.Find("gameInfo");
+        if(gameInfo)
+        {
+            //DemonstrationRecorder demo = new DemonstrationRecorder();
+            //demo.demonstrationName = gameInfo.GetComponent<GameInfo>().demoName;
+            //demo.record = true;
+            
+            gameObject.AddComponent<DemonstrationRecorder>();
+            gameObject.GetComponent<DemonstrationRecorder>().demonstrationName = gameInfo.GetComponent<GameInfo>().demoName;
+            gameObject.GetComponent<DemonstrationRecorder>().record = true;
+
+            // if (gameObject.GetComponent<DemonstrationRecorder>())
+            // {
+            //     gameObject.GetComponent<DemonstrationRecorder>().demonstrationName = gameInfo.GetComponent<GameInfo>().demoName;
+            //     gameObject.GetComponent<DemonstrationRecorder>().nameSet = true;
+            // }
+        }
+
+       
 
         //Activate or deactivate graphics rendering
         if (camerasActive == false)
@@ -99,8 +126,22 @@ public class AIController : Agent {
         AddVectorObs(rayPerception.Perceive(rayDistance, rayAngles, detectableObjects, 0.0f, 0.0f));
     }
 
+    public void ExitDemo()
+    {
+        if(GetComponent<DemonstrationRecorder>())
+        {
+            GetComponent<DemonstrationRecorder>().ArtificalExit();
+            SceneManager.LoadScene(0);
+        }
+    }
     public override void AgentAction(float[] vectorAction, string textAction)
     {
+        if(killtext && deathtext)
+        {
+            killtext.text = "Kills: " + kills;
+            deathtext.text = "Deaths: " + deaths;
+        }
+
         //Debug.Log(controller.isAlive);
         //Debug.Log(vectorAction[0] + " :: "+  vectorAction[1] + " :: " + vectorAction[2] + " :: " + vectorAction[3] + " :: " + vectorAction[4]);
         /*Generates 5 actions in 6 actions
@@ -178,9 +219,24 @@ public class AIController : Agent {
     private void ResetAgentModel()
     {
         //Set the players position to a random space within the range offered by the academies parameters
-        gameObject.transform.position = new Vector3(Random.Range(-resetParams["x-position"], resetParams["x-position"]) + worldPosition.transform.position.x, Random.Range(-resetParams["y-position"], resetParams["y-position"]) + worldPosition.transform.position.y, -10);
+        bool emptySpaceFound = false;
+        while (!emptySpaceFound)
+        {
+            bool tooClose = false;
+            gameObject.transform.position = new Vector3(Random.Range(-resetParams["x-position"], resetParams["x-position"]) + worldPosition.transform.position.x, Random.Range(-resetParams["y-position"], resetParams["y-position"]) + worldPosition.transform.position.y, -10);
 
-        //Reset controller variables
+            foreach (GameObject g in GameObject.FindGameObjectsWithTag("Obstacle"))
+            {
+                float dist = Vector2.Distance(gameObject.transform.position, g.transform.position);
+                if (dist < 15) { tooClose = true; break; }
+
+            }
+
+            if (!tooClose)
+                emptySpaceFound = true;
+        }
+
+        ////Reset controller variables
         controller.health = resetParams["health"];
         weaponManager.currentWeapon = (int)resetParams["weapon"];
 
@@ -191,7 +247,7 @@ public class AIController : Agent {
 
         controller.rank = (int)resetParams["rank"];
 
-        //Reset Agents direction and rotation
+        ////Reset Agents direction and rotation
         controller.transform.up = new Vector3(Random.Range(-resetParams["x-direction"], resetParams["x-direction"]), Random.Range(-resetParams["y-direction"], resetParams["y-direction"]), 0);
         float rotation = Mathf.Atan2(controller.transform.up.x, controller.transform.up.y) * Mathf.Rad2Deg;
         gameObject.transform.rotation = Quaternion.Euler(0, 0, -rotation);

@@ -20,6 +20,13 @@ public class MainMenu : NetworkBehaviour {
     public Dropdown killLimitDropdownLAN;
     public Dropdown timeLimitDropdownLAN;
 
+    public TMP_InputField nameInputHostStudy;
+    public TMP_InputField nameInputJoinStudy;
+    public Dropdown killLimitDropdownStudy;
+    public Dropdown timeLimitDropdownStudy;
+
+    public TMP_InputField demoNameInput;
+
     //Reference to the network manager
     private NetworkManager networkManager;
 
@@ -38,7 +45,63 @@ public class MainMenu : NetworkBehaviour {
         //Set up networking
         networkManager = NetworkManager.singleton;
     }
+    
+    public void StudyButton()
+    {
+        networkManager.matchMaker = null;
 
+        //Disable any error message if applicable
+        errorMessage.gameObject.SetActive(false);
+
+        //Store info for the next scene
+        GameObject gameInfo = new GameObject();
+        gameInfo.AddComponent<GameInfo>();
+        gameInfo.name = "gameInfo";
+        gameInfo.GetComponent<GameInfo>().infoName = nameInputHostStudy.text;
+        gameInfo.GetComponent<GameInfo>().isStudy = true;
+
+        //Assign the kill and time limit based on value
+        gameInfo.GetComponent<GameInfo>().killLimit = (int)getDropdownValue(true, killLimitDropdownStudy.value);
+        gameInfo.GetComponent<GameInfo>().timeLimit = getDropdownValue(false, timeLimitDropdownStudy.value);
+
+        //Start a local game
+        networkManager.StartHost();
+
+    }
+
+    public void JoinStudyButton()
+    {
+
+        //If the name isn't empty
+        if (nameInputJoinStudy.text != "")
+        {
+            //Disable any applicable error message
+            errorMessage.gameObject.SetActive(false);
+
+            //Store info for the next scene
+            GameObject gameInfo = new GameObject();
+            gameInfo.AddComponent<GameInfo>();
+            gameInfo.name = "gameInfo";
+            gameInfo.GetComponent<GameInfo>().infoName = nameInputJoinStudy.text;
+
+            //Join local game as client
+            networkManager.StartClient();
+        }
+        else
+            errorMessage.gameObject.SetActive(true);
+    }
+
+    public void InitialiseDemo()
+    {
+        //Store info for the next scene
+        GameObject gameInfo = new GameObject();
+        gameInfo.AddComponent<GameInfo>();
+        gameInfo.name = "gameInfo";
+        gameInfo.GetComponent<GameInfo>().infoName = nameInputJoinStudy.text;
+        gameInfo.GetComponent<GameInfo>().demoName = demoNameInput.text;
+
+        SceneManager.LoadScene(3);
+    }
     public void DisableErrorMessage()
     {
         errorMessage.gameObject.SetActive(false);

@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using System.Diagnostics;
 using TMPro;
 
-public class ELSessionManager : MonoBehaviour
+public class ELManager : MonoBehaviour
 {
 
     //File reading 

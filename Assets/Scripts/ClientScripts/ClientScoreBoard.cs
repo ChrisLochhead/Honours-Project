@@ -164,27 +164,30 @@ public class ClientScoreBoard : NetworkBehaviour {
         foreach (GameObject g in players)
         {
             //For all team one players, add their name to the team one side, then update their kills and deaths
-            if (g.GetComponent<Client>().team == 0)
+            if (g.GetComponent<Client>())
             {
-                team1Names[team1Count].gameObject.SetActive(true);
-                team1Names[team1Count].text = g.GetComponent<Client>().playerName;
-                TextMeshProUGUI[] childText = team1Names[team1Count].GetComponentsInChildren<TextMeshProUGUI>();
-                childText[1].text = g.GetComponent<Client>().kills.ToString();
-                childText[2].text = g.GetComponent<Client>().deaths.ToString();
+                if (g.GetComponent<Client>().team == 0)
+                {
+                    team1Names[team1Count].gameObject.SetActive(true);
+                    team1Names[team1Count].text = g.GetComponent<Client>().playerName;
+                    TextMeshProUGUI[] childText = team1Names[team1Count].GetComponentsInChildren<TextMeshProUGUI>();
+                    childText[1].text = g.GetComponent<Client>().kills.ToString();
+                    childText[2].text = g.GetComponent<Client>().deaths.ToString();
 
-                team1Count++;
-                team1ScoreNo += g.GetComponent<Client>().kills;
-            }
-            else //And do the same for team 2
-            {
-                team2Names[team2Count].gameObject.SetActive(true);
-                team2Names[team2Count].text = g.GetComponent<Client>().playerName;
-                TextMeshProUGUI[] childText = team2Names[team2Count].GetComponentsInChildren<TextMeshProUGUI>();
-                childText[1].text = g.GetComponent<Client>().kills.ToString();
-                childText[2].text = g.GetComponent<Client>().deaths.ToString();
+                    team1Count++;
+                    team1ScoreNo += g.GetComponent<Client>().kills;
+                }
+                else //And do the same for team 2
+                {
+                    team2Names[team2Count].gameObject.SetActive(true);
+                    team2Names[team2Count].text = g.GetComponent<Client>().playerName;
+                    TextMeshProUGUI[] childText = team2Names[team2Count].GetComponentsInChildren<TextMeshProUGUI>();
+                    childText[1].text = g.GetComponent<Client>().kills.ToString();
+                    childText[2].text = g.GetComponent<Client>().deaths.ToString();
 
-                team2Count++;
-                team2ScoreNo += g.GetComponent<Client>().kills;
+                    team2Count++;
+                    team2ScoreNo += g.GetComponent<Client>().kills;
+                }
             }
         }
     }

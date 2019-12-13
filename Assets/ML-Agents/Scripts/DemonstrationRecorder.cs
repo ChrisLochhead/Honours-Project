@@ -9,7 +9,7 @@ namespace MLAgents
     [RequireComponent(typeof(Agent))]
     public class DemonstrationRecorder : MonoBehaviour
     {
-        public bool record;
+        public bool record = true;
         public string demonstrationName;
         private Agent recordingAgent;
         private string filePath;
@@ -69,6 +69,14 @@ namespace MLAgents
         public void WriteExperience(AgentInfo info)
         {
             demoStore.Record(info);
+        }
+
+        public void ArtificalExit()
+        {
+            if (Application.isEditor && record && demoStore != null)
+            {
+                demoStore.Close();
+            }
         }
 
         /// <summary>

@@ -43,6 +43,8 @@ public class ImitationManager : MonoBehaviour {
     public void getDemos()
     {
         //Find all demonstrations and add them to the dropdown menu
+        demoInputs.ClearOptions();
+
         DirectoryInfo dir = new DirectoryInfo(paths.buildPath + "/Demonstrations/");
 
         foreach(FileInfo file in dir.GetFiles())

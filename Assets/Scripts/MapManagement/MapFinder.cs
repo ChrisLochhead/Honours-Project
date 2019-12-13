@@ -51,9 +51,6 @@ public class MapFinder : NetworkBehaviour {
 
     public void FindFiles()
     {
-        //Get the path to the map folder
-        //if(!Directory.Exists(Application.dataPath + "/Maps"))
-        //    Directory.CreateDirectory(Application.dataPath + "/Maps");
         //Initialise existing maps
         if (path == null)
         {

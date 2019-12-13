@@ -35,6 +35,7 @@ public class GameMap : NetworkBehaviour {
         mapInfo = GameObject.Find("MapFinder(Clone)").GetComponent<MapFinder>().selectedMap.GetComponent<Map>().GetMapItems();
         if(isServer)
         InitMap();
+
 	}
 
     void InitMap()

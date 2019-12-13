@@ -131,9 +131,26 @@ public class Client : NetworkBehaviour
     [SyncVar]
     public float timeLimit;
 
+    //Functionality for the study portion of the project
+    public bool isStudy = false;
+
+    public bool isOpponent = false;
+
     // Use this for initialization
     void Start()
     {
+
+        //Check if in a study session
+        if (GameObject.Find("gameInfo"))
+        {
+            if (GameObject.Find("gameInfo").GetComponent<GameInfo>().isStudy)
+                isStudy = true;
+        }else
+        {
+            if (GameObject.FindGameObjectWithTag("Client").GetComponent<Client>().isStudy)
+                isStudy = true;
+        }
+
         //Assign the network manager
         networkManager = NetworkManager.singleton;
 
@@ -172,12 +189,24 @@ public class Client : NetworkBehaviour
         int temp1 = 0;
         int temp2 = 0;
 
+        int c = 0;
+
         foreach (GameObject g in GameObject.FindGameObjectsWithTag("Client"))
         {
+            //assign as opponent if in study and 
+            //someone is already in the game
+            if (c > 0)
+            {
+                isStudy = true;
+                isOpponent = true;
+            }
+
             if (g.GetComponent<Client>().team == 0)
                 temp1++;
             else if (g.GetComponent<Client>().team == 1)
                 temp2++;
+
+            c++;
         }
 
         if (temp1 == temp2)
@@ -186,6 +215,11 @@ public class Client : NetworkBehaviour
             CmdSetTeam(1);
         else
             CmdSetTeam(0);
+
+        if(isStudy && temp1 == temp2)
+            CmdSetTeam(0);
+        else if(isStudy && temp1 != temp2)
+            CmdSetTeam(1);
     }
 
     [Command]

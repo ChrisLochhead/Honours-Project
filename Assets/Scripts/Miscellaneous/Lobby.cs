@@ -8,7 +8,7 @@ public class Lobby : NetworkBehaviour
 {
     //Player numbers
     private int currentNumberOfPlayers = 0;
-    private int MinNumOfPlayers = 2;
+    public int MinNumOfPlayers = 2;
 
     //Player names
     public GameObject[] playerTags;
@@ -49,13 +49,21 @@ public class Lobby : NetworkBehaviour
         //Clear all the unused lobby spaces
         for (int i = currentNumberOfPlayers; i < playerTags.Length; i++)
         {
-            playerTags[i].GetComponentInChildren<TextMeshProUGUI>().text = "";
+            if(Owner.isStudy)
+                playerTags[i].GetComponentInChildren<TextMeshProUGUI>().text = "AI Agent";
+            else
+                playerTags[i].GetComponentInChildren<TextMeshProUGUI>().text = "";
         }
     }
 
 
     private void Init()
     {
+
+        if(Owner.isStudy)
+        {
+            MinNumOfPlayers = 1;
+        }
 
         //Get the preview image path
         Map m = GameObject.Find("MapFinder(Clone)").GetComponent<MapFinder>().maps[GameObject.Find("MapFinder(Clone)").GetComponent<MapFinder>().mapNumber].GetComponent<Map>();

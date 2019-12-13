@@ -14,13 +14,16 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Build.unity
     guid: b30f6a657ca21124fbecc0d18046922c
-  - enabled: 1
-    path: Assets/Scenes/Training-BigArena.unity
+  - enabled: 0
+    path: Assets/Scenes/Training-DRL-8.unity
     guid: 56ddc795e34919345a75a83c78d8ed9c
-  - enabled: 1
-    path: Assets/Scenes/Training-MultiArena.unity
+  - enabled: 0
+    path: Assets/Scenes/Testing-Learning.unity
     guid: a3816c10037bb12419bb6365c7eb1c19
-  - enabled: 1
-    path: Assets/Scenes/Training-Multi-Adversary.unity
+  - enabled: 0
+    path: Assets/Scenes/Training-IL-16.unity
     guid: 4867d59bedad6274f90e776da820a0ef
+  - enabled: 1
+    path: Assets/Scenes/IL-Demo-Scene.unity
+    guid: 78e1865cd006cfc4c83c814028a9efc3
   m_configObjects: {}

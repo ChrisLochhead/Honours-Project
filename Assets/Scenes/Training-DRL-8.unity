@@ -121,7 +121,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 68142672}
-  - component: {fileID: 68142671}
+  - component: {fileID: 68142670}
   m_Layer: 0
   m_Name: Academy
   m_TagString: Untagged
@@ -129,7 +129,7 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &68142671
+--- !u!114 &68142670
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -137,21 +137,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 68142669}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a3d1f4beae796cb4babd79ff557ec2c6, type: 3}
+  m_Script: {fileID: 11500000, guid: 3d162fbb8030dc9488fe9a51dbb87ba4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   broadcastHub:
-    broadcastingBrains:
-    - {fileID: 11400000, guid: e30ca0686c9d2804a8d299a526b48c7d, type: 2}
-    _brainsToControl:
-    - {fileID: 11400000, guid: e30ca0686c9d2804a8d299a526b48c7d, type: 2}
+    broadcastingBrains: []
+    _brainsToControl: []
   maxSteps: 0
   trainingConfiguration:
     width: 80
     height: 80
     qualityLevel: 1
     timeScale: 100
-    targetFrameRate: 40
+    targetFrameRate: -1
   inferenceConfiguration:
     width: 1280
     height: 720
@@ -159,21 +157,7 @@ MonoBehaviour:
     timeScale: 1
     targetFrameRate: 60
   resetParameters:
-    resetParameters:
-    - key: x-position
-      value: 155
-    - key: y-position
-      value: 105
-    - key: health
-      value: 100
-    - key: weapon
-      value: 0
-    - key: rank
-      value: 0
-    - key: x-direction
-      value: 1
-    - key: y-direction
-      value: 1
+    resetParameters: []
 --- !u!4 &68142672
 Transform:
   m_ObjectHideFlags: 0

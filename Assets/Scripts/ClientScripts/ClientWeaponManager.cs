@@ -11,6 +11,7 @@ public class ClientWeaponManager : NetworkBehaviour {
 
     public GameObject[] muzzleFlashes;
     public GameObject bullet;
+    public GameObject studyBullet;
 
     //weapon clips
     public int[] clipSize = { 16, 10, 30, 50, 1 };
@@ -46,7 +47,11 @@ public class ClientWeaponManager : NetworkBehaviour {
 
 	
     public void InitialiseWeapons()
-    { 
+    {
+        //check if a study
+        if (Owner.isStudy)
+            bullet = studyBullet;
+
         //Initialise current weapon
         currentWeapon = 0;
 
@@ -198,11 +203,20 @@ public class ClientWeaponManager : NetworkBehaviour {
         //calculate trajectory
         b.GetComponent<Rigidbody>().velocity = b.transform.forward * 36.0f;
 
-        //add tag indicating whose bullet it is
-        b.GetComponent<Bullet>().shooter = Owner.player;
-        b.GetComponent<Bullet>().isHost = Owner.isLocal;
-        b.GetComponent<Bullet>().damageAmount = damageAmounts[currentWeapon];
-
+        if (Owner.isStudy)
+        {
+            //add tag indicating whose bullet it is
+            b.GetComponent<TrainingBullet>().shooter = Owner.player;
+            //b.GetComponent<TrainingBullet>().isHost = Owner.isLocal;
+            b.GetComponent<TrainingBullet>().damageAmount = damageAmounts[currentWeapon];
+        }
+        else
+        {
+            //add tag indicating whose bullet it is
+            b.GetComponent<Bullet>().shooter = Owner.player;
+            b.GetComponent<Bullet>().isHost = Owner.isLocal;
+            b.GetComponent<Bullet>().damageAmount = damageAmounts[currentWeapon];
+        }
         NetworkServer.Spawn(b);
 
         MuzzleFlash(true);

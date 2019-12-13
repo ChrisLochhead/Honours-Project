@@ -146,9 +146,25 @@ public class NMLAgentTrainer : MonoBehaviour {
 
     public void Respawn()
     {
+
         //Set the players position to a random space within the range offered by the academies parameters
-        gameObject.transform.position = new Vector3(Random.Range(-agentTrainer.GetComponent<AIController>().resetParams["x-position"], agentTrainer.GetComponent<AIController>().resetParams["x-position"]) + worldPosition.transform.position.x,
-            Random.Range(-agentTrainer.GetComponent<AIController>().resetParams["y-position"], agentTrainer.GetComponent<AIController>().resetParams["y-position"]) + worldPosition.transform.position.y, -10);
+        bool emptySpaceFound = false;
+        while (!emptySpaceFound)
+        {
+            bool tooClose = false;
+            gameObject.transform.position = new Vector3(Random.Range(-agentTrainer.GetComponent<AIController>().resetParams["x-position"], agentTrainer.GetComponent<AIController>().resetParams["x-position"]) + worldPosition.transform.position.x,
+                  Random.Range(-agentTrainer.GetComponent<AIController>().resetParams["y-position"], agentTrainer.GetComponent<AIController>().resetParams["y-position"]) + worldPosition.transform.position.y, -10);
+
+            foreach (GameObject g in GameObject.FindGameObjectsWithTag("Obstacle"))
+            {
+                float dist = Vector2.Distance(gameObject.transform.position, g.transform.position);
+                if (dist < 15) { tooClose = true; break; }
+
+            }
+
+            if (!tooClose)
+                emptySpaceFound = true;
+        }
 
         //Reset controller variables
         health = agentTrainer.GetComponent<AIController>().resetParams["health"];

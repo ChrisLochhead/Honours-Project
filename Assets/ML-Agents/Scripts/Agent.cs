@@ -1047,6 +1047,12 @@ namespace MLAgents
         /// Used by the brain to make the agent perform a step.
         void AgentStep()
         {
+            if(!recorder)
+                if(GetComponent<DemonstrationRecorder>())
+                {
+                    recorder = GetComponent<DemonstrationRecorder>();
+                }
+
             if (terminate)
             {
                 terminate = false;

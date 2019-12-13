@@ -8,6 +8,8 @@ public class GameInfo : MonoBehaviour {
     public string infoName;
     public float timeLimit = 0;
     public int killLimit = 0;
+    public bool isStudy = false;
+    public string demoName = "";
 
     private void Awake()
     {

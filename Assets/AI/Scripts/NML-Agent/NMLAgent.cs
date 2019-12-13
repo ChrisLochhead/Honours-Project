@@ -14,6 +14,8 @@ public class NMLAgent : MonoBehaviour {
     //otherwise, it will wander around and look for enemies
     bool actionMode;
 
+    [SerializeField]
+    bool isStudy = false;
     //For pathfinding functionality
     //finds the path
     public PathFinder pathFinder;
@@ -62,8 +64,22 @@ public class NMLAgent : MonoBehaviour {
     public bool justRespawned;
 
     public Vector2 spawnCentre;
+    GameObject[] spawnPoints;
 
 	void Start () {
+
+        //Check if in a study session
+        if (GameObject.Find("Player Prefab test (2)(Clone)").GetComponent<Client>().isStudy)
+        {
+            isStudy = true;
+            spawnPoints = GameObject.FindGameObjectsWithTag("SpawnPoint1");
+            agentTrainer = GameObject.Find("Player Prefab test (2)(Clone)");
+            target = agentTrainer;
+            pathGrid = GameObject.Find("PathGrid").GetComponent<PathGrid>();
+        }else
+        {
+            Destroy(GameObject.Find("PathGrid").GetComponent<PathGrid>());
+        }
 
         //Initialise all booleans not set
         //in inspector to false as default
@@ -88,14 +104,25 @@ public class NMLAgent : MonoBehaviour {
     {
         //Check if player is within the agents camera, 
         //uncomment this for game code, change agenttrainer in this function to g.
-        //foreach (GameObject g in GameObject.FindGameObjectsWithTag("Player1"))
-        //{
-        //    if (g == this.gameObject)
-        //        continue;
-        if (agentTrainer.GetComponent<EnemyAgentController>().isAlive)
+        bool enemyAlive;
+
+        if (isStudy)
+        {
+            enemyAlive = agentTrainer.GetComponent<Client>().isDead;
+            if (enemyAlive)
+                enemyAlive = false;
+            else
+                enemyAlive = true;
+        }
+        else
+        {
+            enemyAlive = agentTrainer.GetComponent<EnemyAgentController>().isAlive;
+        }
+
+        if (enemyAlive)
         {
             //Discern if the agents enemy is within the agents field of view
-            Vector3 screenPoint = personalCamera.WorldToViewportPoint(agentTrainer.transform.position);
+            Vector3 screenPoint = personalCamera.WorldToViewportPoint(agentTrainer.transform.Find("Player1").position);
             bool onScreen = screenPoint.x > 0 && screenPoint.x < 1 && screenPoint.y > 0 && screenPoint.y < 1;
             
             //Assign the correct action status accordingly
@@ -112,28 +139,31 @@ public class NMLAgent : MonoBehaviour {
         {
             actionMode = false;
         }
-       // }
     }
 
     void Idle()
     {
         if(idleTimer == 1.0f)
         {
+            pathSize = 0;
             //Assign random target location
-            idleTarget = new Vector3(gameObject.transform.position.x + Random.Range(-150, 150) , gameObject.transform.position.y + Random.Range(-150, 150), -10);
-
-            //Keep looking for random target until it is a viable position
-            while(pathGrid.GetNodeEmpty(idleTarget) == false)
+            while (pathSize < 3)
             {
                 idleTarget = new Vector3(gameObject.transform.position.x + Random.Range(-150, 150), gameObject.transform.position.y + Random.Range(-150, 150), -10);
-            }
 
-            //Find a path to the target location
-            pathPosition = 0;
-            pathFinder.FindPath(pathGrid, gameObject.transform.position, idleTarget);
-            pathCompleted = false;
-            pathSize = pathGrid.path.Count;
-            idleTimer -= Time.deltaTime;           
+                //Keep looking for random target until it is a viable position
+                while (pathGrid.GetNodeEmpty(idleTarget) == false)
+                {
+                    idleTarget = new Vector3(gameObject.transform.position.x + Random.Range(-150, 150), gameObject.transform.position.y + Random.Range(-150, 150), -10);
+                }
+
+                //Find a path to the target location
+                pathPosition = 0;
+                pathFinder.FindPath(pathGrid, gameObject.transform.position, idleTarget);
+                pathCompleted = false;
+                pathSize = pathGrid.path.Count;
+            }
+            idleTimer -= Time.deltaTime;
         }
         else
         {
@@ -142,6 +172,7 @@ public class NMLAgent : MonoBehaviour {
             {
                 //Reset the pathing variables
                 pathSize = 0;
+                Debug.Log("pathdone");
                 idleTimer -= Time.deltaTime;
 
                 //After idling is over, reset the timer to trigger a new path to be found
@@ -155,7 +186,7 @@ public class NMLAgent : MonoBehaviour {
 
             //Once the path is completed, set it to complete
             if (pathPosition == pathSize - 2)
-            {
+            {               
                 pathCompleted = true;
                 return;
             }
@@ -179,7 +210,7 @@ public class NMLAgent : MonoBehaviour {
 
                 //Prevent getting stuck on walls when idling
                 //move         
-                //gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, pathGrid.path[pathPosition].worldPos, 0.3f);
+                gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, pathGrid.path[pathPosition].worldPos, 0.3f);
 
                 //Reset path if stuck (position hasn't changed
                 if (gameObject.transform.position == previousPosition)
@@ -204,11 +235,12 @@ public class NMLAgent : MonoBehaviour {
 
         //If the player hasn't moved since the last frame
         //or the agent has died since the last path was found
-        if (targetPosition != target.transform.position || justRespawned)
+        //Debug.Log(gameObject.transform.Find("Player1").position);// + " " + target.transform.Find("Player1").position,);
+        if (targetPosition != target.transform.Find("Player1").position || justRespawned)
         {
-            //Find a path to the targets new location
+            //Find a path to the targets new location            
             pathPosition = 0;
-            pathFinder.FindPath(pathGrid, gameObject.transform.position, target.transform.position);
+            pathFinder.FindPath(pathGrid, gameObject.transform.position, target.transform.Find("Player1").position);
             pathSize = pathGrid.path.Count;
             justRespawned = false;
         }
@@ -216,6 +248,7 @@ public class NMLAgent : MonoBehaviour {
         //If the AI is currently unable to get a shot
         if (!canShoot)
         {
+           // Debug.Log("calling cant shoot" + " pathpos : " + pathPosition + " : pathsize : " + pathSize + " pos " + gameObject.transform.Find("Player1").position + " target : " + target.transform.Find("Player1").position);
             //start moving towards the player
             if (pathPosition <= pathSize - 2)
             {
@@ -233,13 +266,15 @@ public class NMLAgent : MonoBehaviour {
                 float rotation = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
                 gameObject.transform.rotation = Quaternion.Slerp(gameObject.transform.rotation, Quaternion.Euler(0, 0, -rotation), 0.1f);
 
+                //Move
+                gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, pathGrid.path[pathPosition].worldPos, 0.3f);
+                Debug.Log("moving");
                 //if the AI happens to be facing the right direction, shoot
                 Vector3 shootAngle = (pathGrid.path[pathSize - 2].worldPos - transform.position);
                 if (Vector3.Angle(gameObject.transform.up, shootAngle) < 2)
                 {
-                   weaponManager.Shoot(1);
+                    weaponManager.Shoot(1);
                 }
-                //gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, pathGrid.path[pathPosition].worldPos, 0.3f);
             }
 
         }
@@ -260,7 +295,16 @@ public class NMLAgent : MonoBehaviour {
     void CheckCanShoot()
     {
         //Check agent is still alive
-        if (!agentTrainer.GetComponent<EnemyAgentController>().isAlive)
+        bool StudyShoot;
+        if(!isStudy)
+        {
+            StudyShoot = !agentTrainer.GetComponent<EnemyAgentController>().isAlive;
+        }else
+        {
+            StudyShoot = agentTrainer.GetComponent<Client>().isDead;
+        }
+
+        if (StudyShoot)
         {
             actionMode = false;
             canShoot = false;
@@ -270,24 +314,30 @@ public class NMLAgent : MonoBehaviour {
         //check if there is an obstruction between the enemy and the player
         RaycastHit hit;
 
-        if (Physics.Linecast(transform.position, target.transform.position, out hit))
+        Vector3 targetPos;
+        if (isStudy)
+            targetPos = target.transform.Find("Player1").transform.position;
+        else
+            targetPos = target.transform.position;
+
+        if (Physics.Linecast(transform.position, targetPos, out hit))
         {
             //If there is no obstruction
             if (hit.transform.tag == "Player1")
             {
                 //Rotate towards them and shoot immediately
                 //Calculate the direction to face
-                Vector3 direction = target.transform.position - gameObject.transform.position;
+                Vector3 direction = targetPos - gameObject.transform.position;
                 //Calculate the required rotation
                 float rotation = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
                 //Slerp at 0.1 to mimic smooth rotation from mouse
                 gameObject.transform.rotation = Quaternion.Slerp(gameObject.transform.rotation, Quaternion.Euler(0, 0, -rotation), 0.1f);
 
                 //If the agent is close enough, allow it to shoot
-                //if (Vector3.Distance(gameObject.transform.position, target.transform.position) < 55)
+                if (Vector3.Distance(gameObject.transform.position, targetPos) < 55)
                     canShoot = true;
-                //else
-                //    canShoot = false;
+                else
+                    canShoot = false;
             }
         }
         else 
@@ -296,13 +346,23 @@ public class NMLAgent : MonoBehaviour {
 
     public void Respawn()
     {
-        //Set the players position to a random space within the range offered by the academies parameters
-        gameObject.transform.position = new Vector3(Random.Range(-target.GetComponent<AIController>().resetParams["x-position"], target.GetComponent<AIController>().resetParams["x-position"]) + spawnCentre.x,
-            Random.Range(-target.GetComponent<AIController>().resetParams["y-position"], target.GetComponent<AIController>().resetParams["y-position"]) + spawnCentre.y, -10);
-        
-        //Reset controller variables
-        health = target.GetComponent<AIController>().resetParams["health"];
-        weaponManager.currentWeapon = (int)target.GetComponent<AIController>().resetParams["weapon"];
+        if (isStudy)
+        {
+            int SpawnIndex = Random.Range(0, spawnPoints.Length);
+            gameObject.transform.position = new Vector3(spawnPoints[SpawnIndex].transform.position.x, spawnPoints[SpawnIndex].transform.position.y, -10);
+            health = 100;
+            weaponManager.currentWeapon = 0;
+        }
+        else
+        {
+            //Set the players position to a random space within the range offered by the academies parameters
+            gameObject.transform.position = new Vector3(Random.Range(-target.GetComponent<AIController>().resetParams["x-position"], target.GetComponent<AIController>().resetParams["x-position"]) + spawnCentre.x,
+                Random.Range(-target.GetComponent<AIController>().resetParams["y-position"], target.GetComponent<AIController>().resetParams["y-position"]) + spawnCentre.y, -10);
+            //Reset controller variables
+            health = target.GetComponent<AIController>().resetParams["health"];
+            weaponManager.currentWeapon = (int)target.GetComponent<AIController>().resetParams["weapon"];
+
+        }
 
         //Reset the ammo in all weapons
         for (int i = 0; i < weaponManager.clipSize.Length; i++)
@@ -355,7 +415,7 @@ public class NMLAgent : MonoBehaviour {
 
             //assign the target (training only)
             if (target)
-                targetPosition = target.transform.position;
+                targetPosition = target.transform.Find("Player1").position;
 
             //Zero off the physics to negate any collision forces while
             //retaining collision detection
