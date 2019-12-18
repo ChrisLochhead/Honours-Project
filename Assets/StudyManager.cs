@@ -32,6 +32,7 @@ public class StudyManager : MonoBehaviour
         //List describes adversaries subject will face, hard coded for purposes of this
         //investigation, each number represents which type of enemy
         // 0 for NMLAI, 1 for DRL, 2 for CL, 3 for IL, 4 for EL and 5 for a real player
+
         Enemies = new List<int>() { 2, 1, 3, 4, 5};
         RespawnTimer();
     }
@@ -71,6 +72,14 @@ public class StudyManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //deactivate self if not in study mode
+        foreach (GameObject g in GameObject.FindGameObjectsWithTag("Client"))
+        {
+            if (!g.GetComponent<Client>().isStudy)
+            {
+                Destroy(this.gameObject);
+            }
+        }
 
         if (respawnTimer <= 0.0f && !CurrentEnemy && currentEnemyIndex <= Enemies.Count)
         {

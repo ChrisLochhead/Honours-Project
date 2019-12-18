@@ -14,7 +14,7 @@ public class TrainingBullet : MonoBehaviour
         //ignore collisions from other bullets
         Physics.IgnoreLayerCollision(10, 10);
 
-        if (Vector3.Distance(this.gameObject.transform.position, shooter.transform.position) > 30 && shooter.GetComponent<AIController>())
+        if (Vector3.Distance(this.gameObject.transform.position, shooter.transform.position) > 80 && shooter.GetComponent<AIController>())
         {
             Destroy(this.gameObject);
         }

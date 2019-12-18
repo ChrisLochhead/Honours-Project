@@ -37,7 +37,10 @@ public class ImitationManager : MonoBehaviour {
 
     public void fillDropDowns()
     {
-        fileutils.FillDropDowns(mapInputs);
+        for(int i = 0; i < mapInputs.Length; i++) 
+        mapInputs[i].ClearOptions();
+       
+        fileutils.FillDropDowns(mapInputs, "Imitation");
     }
 
     public void getDemos()
@@ -61,7 +64,7 @@ public class ImitationManager : MonoBehaviour {
 
     public void DemoTraining()
     {
-        SceneManager.LoadScene(5);
+        SceneManager.LoadScene(4);
     }
 
     void SetModelSettings()

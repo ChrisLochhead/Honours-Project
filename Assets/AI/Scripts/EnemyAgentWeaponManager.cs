@@ -173,11 +173,11 @@ public class EnemyAgentWeaponManager : MonoBehaviour
         b.GetComponent<TrainingBullet>().shooter = gameObject;
 
         //give agent more damaging bullets than enemies
-        if (gameObject.transform.parent.name == "Adversary Prefab 1" || gameObject.transform.parent.name == "NMLAgent Training Prefab")
+        if (gameObject.transform.parent.name == "NMLAgent Training Prefab")
         {
-            b.GetComponent<TrainingBullet>().damageAmount = 100;// damageAmounts[currentWeapon];
+            b.GetComponent<TrainingBullet>().damageAmount = damageAmounts[currentWeapon];
         }
         else
-            b.GetComponent<TrainingBullet>().damageAmount = 50;// damageAmounts[currentWeapon];
+            b.GetComponent<TrainingBullet>().damageAmount = 50;
     }
 }

@@ -27,7 +27,7 @@ public class CurriculumLearningManager : MonoBehaviour
 
     public void FillDropDowns()
     {
-        fileutils.FillDropDowns(curriculumSessions);
+        fileutils.FillDropDowns(curriculumSessions, "Curriculum");
     }
 
     void Awake()

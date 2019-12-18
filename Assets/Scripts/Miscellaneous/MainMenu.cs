@@ -100,7 +100,7 @@ public class MainMenu : NetworkBehaviour {
         gameInfo.GetComponent<GameInfo>().infoName = nameInputJoinStudy.text;
         gameInfo.GetComponent<GameInfo>().demoName = demoNameInput.text;
 
-        SceneManager.LoadScene(3);
+        SceneManager.LoadScene(6);
     }
     public void DisableErrorMessage()
     {

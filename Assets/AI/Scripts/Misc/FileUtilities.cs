@@ -9,6 +9,8 @@ public class FileUtilities : MonoBehaviour {
 
     public PathContainer paths;
 
+    string BrainName = "";
+
     public List<string> environments;
     // Use this for initialization
     void Start() {
@@ -16,6 +18,25 @@ public class FileUtilities : MonoBehaviour {
         GetEnvironments();
     }
 
+    public void DeleteDirectoryFiles(string directoryName)
+    {
+        //Erase all files in summaries
+        foreach (string file in Directory.GetFiles(directoryName))
+        {
+            File.Delete(file);
+        }
+        //Erase all directories inside summaries
+        foreach (string dir in Directory.GetDirectories(directoryName))
+        {
+            foreach (string file in Directory.GetFiles(dir))
+            {
+                File.Delete(file);
+            }
+            Directory.Delete(dir);
+        }
+        Directory.Delete(directoryName);
+
+    }
     public void DirectoryCopy(string sourceDirName, string destDirName, string trainingName, bool copySubDirs = true)
     {
         // Get the subdirectories for the specified directory.
@@ -62,8 +83,13 @@ public class FileUtilities : MonoBehaviour {
     public void MoveModelFiles(string testName, string type)
     {
         //Copy files from summary and models into new folder for this model
-        DirectoryCopy(paths.buildPath + "/summaries/" + testName + "-0_LearningBrain", paths.buildPath + "/" + type + "-Learning-Models/" + testName, "");
-        DirectoryCopy(paths.buildPath + "/models/" + testName + "-0", paths.buildPath + "/" + type + "-Learning-Models/" + testName, "");
+        if (type == "Imitation") BrainName = "IL-Brain";
+        else if (type == "Curriculum") BrainName = "CL-Brain";
+        else if (type == "Reinforcement") BrainName = "DRL-Brain";
+
+
+        DirectoryCopy(paths.buildPath + "/summaries/" + testName + "-0_" + BrainName, paths.buildPath + "/" + type + "-Learning-Models/" + testName, "");
+            DirectoryCopy(paths.buildPath + "/models/" + testName + "-0", paths.buildPath + "/" + type + "-Learning-Models/" + testName, "");
 
         //Erase all files in summaries
         foreach (string file in Directory.GetFiles(paths.buildPath + "/summaries/"))
@@ -196,7 +222,7 @@ public class FileUtilities : MonoBehaviour {
         return process;
     }
 
-    public void FillDropDowns(TMP_Dropdown[] maps)
+    public void FillDropDowns(TMP_Dropdown[] maps, string type)
     {
         //Fill everything with all environments data
         for (int i = 0; i < maps.Length; i++)
@@ -206,13 +232,42 @@ public class FileUtilities : MonoBehaviour {
                 if (j == 0)
                     maps[i].options.Add(new TMP_Dropdown.OptionData() { text = "select an environment." });
 
-                maps[i].options.Add(new TMP_Dropdown.OptionData() { text = environments[j] });
+                if(type == "Curriculum")
+                {
+                    string [] w = Regex.Split(environments[j], "-");
+                    if(w[0] == "training_env_CL")
+                        maps[i].options.Add(new TMP_Dropdown.OptionData() { text = environments[j] });
+                }
+                else if (type == "Reinforcement")
+                {
+                    string[] w = Regex.Split(environments[j], "-");
+                    if (w[0] == "training_env_DRL")
+                        maps[i].options.Add(new TMP_Dropdown.OptionData() { text = environments[j] });
+                }
+                else if (type == "Evolution")
+                {
+                    string[] w = Regex.Split(environments[j], "-");
+                    if (w[0] == "training_env_EL")
+                        maps[i].options.Add(new TMP_Dropdown.OptionData() { text = environments[j] });
+                }
+                else if (type == "Imitation")
+                {
+                    string[] w = Regex.Split(environments[j], "-");
+                    if (w[0] == "training_env_IL")
+                        maps[i].options.Add(new TMP_Dropdown.OptionData() { text = environments[j] });
+                }
+
             }
+            //needs to reset after clearing for some reason
+            maps[i].value = 1;
+            maps[i].value = 0;
         }
     }
 
     public void GetEnvironments()
     {
+        environments.Clear();
+
         DirectoryInfo dir = new DirectoryInfo(paths.buildPath);
         foreach(DirectoryInfo env in dir.GetDirectories())
         {

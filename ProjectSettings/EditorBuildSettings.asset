@@ -14,16 +14,46 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Build.unity
     guid: b30f6a657ca21124fbecc0d18046922c
-  - enabled: 0
-    path: Assets/Scenes/Training-DRL-8.unity
-    guid: 56ddc795e34919345a75a83c78d8ed9c
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Testing-Learning.unity
     guid: a3816c10037bb12419bb6365c7eb1c19
-  - enabled: 0
-    path: Assets/Scenes/Training-IL-16.unity
-    guid: 4867d59bedad6274f90e776da820a0ef
   - enabled: 1
     path: Assets/Scenes/IL-Demo-Scene.unity
     guid: 78e1865cd006cfc4c83c814028a9efc3
+  - enabled: 0
+    path: Assets/Scenes/Training Scenes/CL-NMLAI/Training-NMLAI-16-CL-MEDIUM.unity
+    guid: 717b70cf9ff57664aaa5a50cf1091d89
+  - enabled: 0
+    path: Assets/Scenes/Training Scenes/CL-NMLAI/Training-NMLAI-16-CL-HARD.unity
+    guid: e3c3e021082f8fb4ebe6f2ea22ba2741
+  - enabled: 0
+    path: Assets/Scenes/Training Scenes/CL-NMLAI/Training-NMLAI-16-CL-EASY.unity
+    guid: 4d8ad0d2597e31648b84bd0d4d2d1e26
+  - enabled: 0
+    path: Assets/Scenes/Training Scenes/CL-IL/Training-IL-16-Easy.unity
+    guid: 90a70513ca168d94c91669a3ce84bb95
+  - enabled: 0
+    path: Assets/Scenes/Training Scenes/CL-IL/Training-IL-16-Medium.unity
+    guid: c3d709d5750f983479b3a24c18959f8a
+  - enabled: 0
+    path: Assets/Scenes/Training Scenes/CL-IL/Training-IL-16-Hard.unity
+    guid: 5729b5b228c46a34393b7b81968cc8a3
+  - enabled: 0
+    path: Assets/Scenes/Training Scenes/DRL-IL/Training-DRL-IL-16.unity
+    guid: cc1741a8acb75194b976194d92225551
+  - enabled: 1
+    path: Assets/Scenes/Training Scenes/DRL-NMLAI/Training-NMLAI-16-DRL.unity
+    guid: 8e33a987bb446d14284c30771ef870ec
+  - enabled: 0
+    path: Assets/Scenes/Training Scenes/IL-NMLAI/Training-NMLAI-16-IL.unity
+    guid: 4867d59bedad6274f90e776da820a0ef
+  - enabled: 0
+    path: Assets/Scenes/Training Scenes/EL-NMLAI/Training-NMLAI-16-EL.unity
+    guid: fd9b1f28fded7eb4889736c0caf0fce1
+  - enabled: 0
+    path: Assets/Scenes/Training Scenes/EL-IL/Training-EL-IL-16.unity
+    guid: fdb017e2daa86f847aff9380d02c3a33
+  - enabled: 0
+    path: Assets/Scenes/Training Scenes/IL-IL/Training-IL-IL-16.unity
+    guid: 9376012344b263946a8c54ec33054edd
   m_configObjects: {}

@@ -10,7 +10,7 @@ public class ELManager : MonoBehaviour
 
     //File reading 
     Process process;
-    FileUtilities fileutils;
+    public FileUtilities fileutils;
     StreamReader filereader = null;
 
     //Records highest performing candidate 
@@ -35,13 +35,20 @@ public class ELManager : MonoBehaviour
     public TMP_InputField[] hyperParameterSettings;
 
     //Map selection 
-    public TMP_Dropdown trainingMaps;
-    public int selectedMap;
+    public TMP_Dropdown[] trainingMaps;
 
     //Model settings such as name
     public TMP_InputField[] modelSettings;
 
     public string testName = "default";
+
+    public void FillDropDowns()
+    {
+        for (int i = 0; i < trainingMaps.Length; i++)
+            trainingMaps[i].ClearOptions();
+
+        fileutils.FillDropDowns(trainingMaps, "Evolution");
+    }
 
     string FindCandidate(int c, bool isFinal = false)
     {
