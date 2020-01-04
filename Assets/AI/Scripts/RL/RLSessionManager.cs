@@ -3,6 +3,7 @@ using UnityEngine;
 using TMPro;
 using System.IO;
 using System.Text.RegularExpressions;
+using UnityEngine.UI;
 
 public class RLSessionManager : MonoBehaviour {
 
@@ -11,6 +12,8 @@ public class RLSessionManager : MonoBehaviour {
     public TMP_Dropdown [] trainingMaps;
 
     public TMP_InputField[] modelSettings;
+
+    public Toggle debugMode;
 
     public string testName = "default";
 
@@ -40,7 +43,24 @@ public class RLSessionManager : MonoBehaviour {
     public void RunReinforcementLearning()
     {
         //Finalise the selected hyperparameters
-        fileutils.WriteHyperParameters(hyperParameterSettings);
+        int startStep = 0;
+
+        if (File.Exists(paths.buildPath + "/Reinforcement-Learning-Models/" + testName + "/DRL-Brainsteps.txt"))
+        {
+            FileInfo f = new FileInfo(paths.buildPath + "/Reinforcement-Learning-Models/" + testName + "/DRL-Brainsteps.txt");
+            StreamReader sr = f.OpenText();
+            startStep = int.Parse(sr.ReadLine());
+            sr.Close();
+        }
+        else if (File.Exists(paths.buildPath + "/models/DRL-Brainsteps.txt"))
+        {
+            FileInfo f = new FileInfo(paths.buildPath + "/models/DRL-Brainsteps.txt");
+            StreamReader sr = f.OpenText();
+            startStep = int.Parse(sr.ReadLine());
+            sr.Close();
+        }
+
+        fileutils.WriteHyperParameters(hyperParameterSettings, 0, false, null, startStep);
         SetModelSettings();
 
         trainingInfo.text = "Training...";
@@ -52,6 +72,8 @@ public class RLSessionManager : MonoBehaviour {
         if (!File.Exists(paths.buildPath + "/Reinforcement-Learning-Models/" + testName + "/DRL-Brain.nn"))
         {
             process.StandardInput.WriteLine(@"mlagents-learn TrainerConfiguration/exe_config.yaml  --env=" + mapName + "/" + mapName + " --run-id=" + testName + " --train");
+            if(!debugMode.isOn)
+                process.StandardInput.WriteLine("exit");
         }
         else
         {
@@ -68,8 +90,19 @@ public class RLSessionManager : MonoBehaviour {
                 }
             }
             process.StandardInput.WriteLine(@"mlagents-learn TrainerConfiguration/exe_config.yaml  --env=" + mapName + "/" + mapName + " --run-id=" + testName + " --load --train");
+            if (!debugMode.isOn)
+                process.StandardInput.WriteLine("exit");
         }
-        
+
+        //Update the starting step value
+        int newStartingStep = int.Parse(hyperParameterSettings[3].text) + startStep;
+        FileStream fs = File.Create(paths.buildPath + "/models/DRL-Brainsteps.txt");
+
+        fs.Close();
+        StreamWriter sw = new StreamWriter(paths.buildPath + "/models/DRL-Brainsteps.txt");
+        sw.Write(newStartingStep);
+        sw.Close();
+
     }
 
     private void Update()

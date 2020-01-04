@@ -24,7 +24,6 @@ GameObject:
   - component: {fileID: 54378346754816784}
   - component: {fileID: 65708706055197860}
   - component: {fileID: 114997164131210838}
-  - component: {fileID: 114017634090961078}
   m_Layer: 10
   m_Name: DebugBullet
   m_TagString: Bullet
@@ -114,38 +113,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.02, y: 0.019999996, z: 0.019999994}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &114017634090961078
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1676356583381108}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 67
-    i1: 180
-    i2: 240
-    i3: 40
-    i4: 114
-    i5: 253
-    i6: 64
-    i7: 212
-    i8: 203
-    i9: 195
-    i10: 25
-    i11: 134
-    i12: 64
-    i13: 19
-    i14: 240
-    i15: 173
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 0
 --- !u!114 &114997164131210838
 MonoBehaviour:
   m_ObjectHideFlags: 1

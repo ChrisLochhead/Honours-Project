@@ -82,15 +82,26 @@ public class FileUtilities : MonoBehaviour {
 
     public void MoveModelFiles(string testName, string type)
     {
+        string stepType = "";
         //Copy files from summary and models into new folder for this model
-        if (type == "Imitation") BrainName = "IL-Brain";
-        else if (type == "Curriculum") BrainName = "CL-Brain";
-        else if (type == "Reinforcement") BrainName = "DRL-Brain";
+        if (type == "Imitation") { BrainName = "IL-Brain"; stepType = "IL"; }
+        else if (type == "Curriculum") { BrainName = "CL-Brain"; stepType = "CL"; }
+        else if (type == "Reinforcement") { BrainName = "DRL-Brain"; stepType = "DRL"; }
 
 
         DirectoryCopy(paths.buildPath + "/summaries/" + testName + "-0_" + BrainName, paths.buildPath + "/" + type + "-Learning-Models/" + testName, "");
-            DirectoryCopy(paths.buildPath + "/models/" + testName + "-0", paths.buildPath + "/" + type + "-Learning-Models/" + testName, "");
+        DirectoryCopy(paths.buildPath + "/models/" + testName + "-0", paths.buildPath + "/" + type + "-Learning-Models/" + testName, "");
 
+        //Also copy over the step counter file
+        if (!File.Exists(paths.buildPath + "/" + type + "-Learning-Models/" + testName + "/" + stepType + "-Brainsteps.txt"))
+        {
+            FileStream fs = File.Create(paths.buildPath + "/" + type + "-Learning-Models/" + testName + "/" + stepType + "-Brainsteps.txt");
+            fs.Close();
+        }
+
+        File.Copy(paths.buildPath + "/models/" + stepType + "-Brainsteps.txt", paths.buildPath + "/" + type + "-Learning-Models/" + testName + "/" + stepType + "-Brainsteps.txt", true);
+        File.Delete(paths.buildPath + "/models/" + stepType + "-Brainsteps.txt");
+        
         //Erase all files in summaries
         foreach (string file in Directory.GetFiles(paths.buildPath + "/summaries/"))
         {
@@ -132,7 +143,7 @@ public class FileUtilities : MonoBehaviour {
         UnityEngine.Debug.Log(text);
     }
 
-    public void WriteHyperParameters(TMP_InputField[] hyperParameterSettings, int sessionNumber = 0, bool isImitation = false, TMP_Dropdown demoInputs = null)
+    public void WriteHyperParameters(TMP_InputField[] hyperParameterSettings, int sessionNumber = 0, bool isImitation = false, TMP_Dropdown demoInputs = null, int startingStep = 0)
     {
         //Error check the hyperparameters
         for (int i = 0; i < hyperParameterSettings.Length; i++)
@@ -148,11 +159,6 @@ public class FileUtilities : MonoBehaviour {
 
         }
 
-        //Correct any error with normalise setting
-        if (float.Parse(hyperParameterSettings[5].text) != 0 && float.Parse(hyperParameterSettings[5].text) != 1)
-            hyperParameterSettings[5].text = "0";
-
-        UnityEngine.Debug.Log((float.Parse(hyperParameterSettings[3].text) * (sessionNumber + 1)));
         //Write it to a string for the .yaml file
         string serialisedData =
                 "default: \n" +
@@ -164,14 +170,14 @@ public class FileUtilities : MonoBehaviour {
                 "   hidden_units: " + hyperParameterSettings[1].text + "\n" +
                 "   lambd: 0.92 \n" +
                 "   learning_rate: " + hyperParameterSettings[2].text + "\n" +
-                "   max_steps: " + (float.Parse(hyperParameterSettings[3].text) * (sessionNumber + 1)) + "\n" +
+                "   max_steps: " + (float.Parse(hyperParameterSettings[3].text) + startingStep) + "\n" +
                 "   memory_size: 256 \n" +
                 "   normalize: false \n" +
                 "   num_epoch: " + hyperParameterSettings[4].text + "\n" +
                 "   num_layers: " + hyperParameterSettings[5].text + "\n" +
                 "   time_horizon: 64 \n" +
                 "   sequence_length: 64 \n" +
-                "   summary_freq: 1250 \n" +
+                "   summary_freq: 5000 \n" +
                 "   use_recurrent: false \n" +
                 "   vis_encode_type: simple \n";
         if(!isImitation)

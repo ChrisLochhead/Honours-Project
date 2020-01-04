@@ -36,14 +36,24 @@ public class MainMenu : NetworkBehaviour {
     //Name entry error message
     public TextMeshProUGUI errorMessage;
 
+    AudioSource audioSource;
+    public AudioClip buttonClick;
+
     private void Start()
     {
-        //Create a map finder and find all the available 
+        //Get the attached AudioSource
+        audioSource = GetComponent<AudioSource>();
 
+        //Create a map finder and find all the available 
         InitialiseMapFinder();
 
         //Set up networking
         networkManager = NetworkManager.singleton;
+    }
+
+    public void PlayClickAudio()
+    {
+        audioSource.PlayOneShot(buttonClick, 0.3f);
     }
     
     public void StudyButton()

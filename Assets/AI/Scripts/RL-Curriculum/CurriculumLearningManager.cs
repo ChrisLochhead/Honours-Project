@@ -1,7 +1,9 @@
 ﻿using System.Diagnostics;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using System.IO;
+using System.Text.RegularExpressions;
 
 public class CurriculumLearningManager : MonoBehaviour
 {
@@ -11,6 +13,8 @@ public class CurriculumLearningManager : MonoBehaviour
     public TMP_InputField[] hyperParameterSettings;
 
     public TMP_Dropdown[] curriculumSessions;
+
+    public Toggle debugMode;
 
     int sessionNumber = 0;
     public TMP_InputField numberOfSessions;
@@ -72,12 +76,38 @@ public class CurriculumLearningManager : MonoBehaviour
                 return;
             }
         }
-
+        int startingStep = 0;
         //write hyperparameters to current maximum steps
         while (sessionNumber < int.Parse(numberOfSessions.text))
         {
-            //Write the hyperparameters to the .yaml file and run learning
-            fileutils.WriteHyperParameters(hyperParameterSettings, sessionNumber);
+            //If this is an existing file
+            if (File.Exists(paths.buildPath + "/Curriculum-Learning-Models/" + testName + "/CL-Brainsteps.txt"))
+            {
+                FileInfo f = new FileInfo(paths.buildPath + "/Curriculum-Learning-Models/" + testName + "/CL-Brainsteps.txt");
+                StreamReader sr = f.OpenText();
+                startingStep = int.Parse(sr.ReadLine());
+                sr.Close();
+            }else if(File.Exists(paths.buildPath + "/models/CL-Brainsteps.txt"))
+            {
+                FileInfo f = new FileInfo(paths.buildPath + "/models/CL-Brainsteps.txt");
+                StreamReader sr = f.OpenText();
+                startingStep = int.Parse(sr.ReadLine());
+                sr.Close();
+            }
+
+            //Write the hyperparameters to the .yaml file
+            fileutils.WriteHyperParameters(hyperParameterSettings, sessionNumber, false, null, startingStep);
+
+            //Update the starting step value
+            int newStartingStep = int.Parse(hyperParameterSettings[3].text) + startingStep;
+            FileStream fs = File.Create(paths.buildPath + "/models/CL-Brainsteps.txt");
+            
+            fs.Close();
+            StreamWriter sw = new StreamWriter(paths.buildPath + "/models/CL-Brainsteps.txt");
+            sw.Write(newStartingStep);
+            sw.Close();
+
+            //Run learning
             RunReinforcementLearning();
 
             while (!process.HasExited)
@@ -97,9 +127,24 @@ public class CurriculumLearningManager : MonoBehaviour
         string mapName = curriculumSessions[sessionNumber].options[curriculumSessions[sessionNumber].value].text;
 
         //Allows for multiple sessions of one model
-        if (File.Exists(paths.buildPath + "/Curriculum-Learning-Models/" + testName))
+        UnityEngine.Debug.Log(paths.buildPath + "/Curriculum-Learning-Models/" + testName + "/CL-Brain.nn");
+        if (File.Exists(paths.buildPath + "/Curriculum-Learning-Models/" + testName + "/CL-Brain.nn"))
         {
-            process.StandardInput.WriteLine(@"mlagents-learn TrainerConfiguration/exe_config.yaml  --env=" + mapName + "/" + mapName + " --run-id= Curriculum-Learning-Models/" + testName + " -- load --train");
+            fileutils.DirectoryCopy(paths.buildPath + "/Curriculum-Learning-Models/" + testName, paths.buildPath + "/models/" + testName + "-0", "");
+            fileutils.DeleteDirectoryFiles(paths.buildPath + "/Curriculum-Learning-Models/" + testName);
+
+            foreach (string f in Directory.GetFiles(paths.buildPath + "/models/" + testName + "-0"))
+            {
+                FileInfo fInfo = new FileInfo(f);
+                string[] nameContents = Regex.Split(fInfo.Name, "-B");
+                if (nameContents[0] != "CL")
+                {
+                    File.Copy(fInfo.FullName, paths.buildPath + "/summaries/" + fInfo.Name);
+                    File.Delete(fInfo.FullName);
+                }
+            }
+
+            process.StandardInput.WriteLine(@"mlagents-learn TrainerConfiguration/exe_config.yaml  --env=" + mapName + "/" + mapName + " --run-id=" + testName + " --load --train");
         }
         else if (sessionNumber == 0)
         {
@@ -109,6 +154,8 @@ public class CurriculumLearningManager : MonoBehaviour
         {
             process.StandardInput.WriteLine(@"mlagents-learn TrainerConfiguration/exe_config.yaml  --env=" + mapName + "/" + mapName + " --run-id=" + testName + " --load --train");
         }
+        if (!debugMode.isOn)
+            process.StandardInput.WriteLine("exit");
     }
 
     private void Update()
@@ -120,6 +167,7 @@ public class CurriculumLearningManager : MonoBehaviour
                 trainingInfo.text = "training completed sucessfully.";
                 fileutils.MoveModelFiles(testName, "Curriculum");
                 process = null;
+                sessionNumber = 0;
             }
         }
     }

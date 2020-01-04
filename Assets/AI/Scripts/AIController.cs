@@ -41,7 +41,7 @@ public class AIController : Agent {
     public bool isLearning;
 
     RayPerception3D rayPerception;
-    float rayDistance = 50.0f;
+    float rayDistance = 80.0f;
     float[] rayAngles = new float[19];
     string[] detectableObjects = { "Obstacle", "AdversaryPlayer" };
 
@@ -154,7 +154,7 @@ public class AIController : Agent {
         if (brain.brainParameters.vectorActionSpaceType == SpaceType.discrete)
         {
             //Move agent using first two actions as movement and rotation amounts
-            controller.Move(new Vector2(Mathf.RoundToInt(Mathf.Clamp01(vectorAction[0])), vectorAction[1]));
+            controller.Move(new Vector2(vectorAction[0], vectorAction[1]));
 
             //Decides whether agent should shoot (clamped to 0 or 1 for dont shoot and shoot)
             controller.Shoot(vectorAction[2]);
