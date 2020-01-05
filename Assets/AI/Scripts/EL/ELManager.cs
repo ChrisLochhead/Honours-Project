@@ -46,6 +46,7 @@ public class ELManager : MonoBehaviour
     public string testName = "default";
 
     int startingStep = 0;
+    int initialStartingStep = 0;
 
     bool isLoaded = false;
 
@@ -85,7 +86,7 @@ public class ELManager : MonoBehaviour
     {
         //Copy the finished model and delete the original 
         //Update the starting step and generation values
-        int newStartingStep = int.Parse(hyperParameterSettings[3].text) * numberOfGenerations + startingStep;
+        int newStartingStep = int.Parse(hyperParameterSettings[3].text) * numberOfGenerations + initialStartingStep;
         string fileinfo = newStartingStep + "," + numberOfGenerations;
         FileStream fs = File.Create(paths.buildPath + "/models/EL-GenerationAndSteps.txt");
 
@@ -312,6 +313,7 @@ public class ELManager : MonoBehaviour
 
             //Get starting step
             startingStep = int.Parse(generationText[0]);
+            initialStartingStep = startingStep;
 
             //Create 3 new model folders for evaluation
             DirectoryInfo modelDir = new DirectoryInfo(paths.buildPath + "/models/");
@@ -321,32 +323,6 @@ public class ELManager : MonoBehaviour
             {
                 if (d.Name == testName + "-FinalModel")
                 {
-                    //Copy the folder containing existing training checkpoints over
-                    foreach(DirectoryInfo dSub in d.GetDirectories())
-                    {
-                       // for (int i = 0; i < numberOfCandidates; i++)
-                       //     fileutils.DirectoryCopy(dSub.FullName, paths.buildPath + "/models/" + testName + "-generation-" + generation + "-candidate-" + i + "/EL-Brain", "");
-                    }
-
-                    foreach (FileInfo f in d.GetFiles())
-                    {
-                        //Copy the brain to a new generation of candidates
-                        if (f.Name == "EL-Brain.nn")
-                        {
-                          //  for (int i = 0; i < numberOfCandidates; i++)
-                          //      File.Copy(f.FullName, paths.buildPath + "/models/" + testName + "-generation-" + generation + "-candidate-" + i + "/" + f.Name);
-                        } else
-                        {
-                            //For summary files
-                            for (int i = 0; i < numberOfCandidates; i++)
-                            {
-                                //Create a directory to house the info
-                             //   Directory.CreateDirectory(paths.buildPath + "/summaries/" + testName + "-generation-" + generation + "-candidate-" + i);
-                             //   File.Copy(f.FullName, paths.buildPath + "/summaries/" + testName + "-generation-" + generation + "-candidate-" + i + "/" + f.Name);
-                            }
-                        }
-                    }
-
                     //Then delete everything in the final model file
                     foreach (FileInfo f in d.GetFiles())
                     {
@@ -379,11 +355,10 @@ public class ELManager : MonoBehaviour
             }
             else
             {
-                //if (isLoaded)
-                //{
-                //    process.StandardInput.WriteLine("exit");
-                //}else
-                process.WaitForExit();
+                if (isLoaded)                
+                    process.StandardInput.WriteLine("exit");
+                else
+                    process.WaitForExit();
 
                 //Evaluate candidates and work on pre-trained model
                 //here is where it breaks
@@ -394,28 +369,35 @@ public class ELManager : MonoBehaviour
 
                 process = fileutils.SetupAnaconda(process);
 
+
+                startingStep += int.Parse(hyperParameterSettings[3].text);
+                fileutils.WriteHyperParameters(hyperParameterSettings, 0, false, null, startingStep);
+
                 for (int j = 0; j < numberOfCandidates; j++)
                 {
                     process.StandardInput.WriteLine(@"mlagents-learn TrainerConfiguration/exe_config.yaml --env=" + mapName + "/" + mapName + " --run-id=" + FindCandidate(j) + " --load --train");
                     currentCandidateBeingTrained++;
                 }
 
-                startingStep += int.Parse(hyperParameterSettings[3].text);
             }
 
             generation++;
             //Iterate the generation and rewrite hyperparameters to increase maximum steps
             fileutils.WriteHyperParameters(hyperParameterSettings, 0, false, null, startingStep);
+
+            if (!debugMode.isOn)
+                process.StandardInput.WriteLine("exit");
         }
 
-        process.WaitForExit();
+        //if (!debugMode.isOn)
+        //    process.StandardInput.WriteLine("exit");
+        //else
+            process.WaitForExit();
+
         //Get the final winner
         EvaluateCandidates(generation);
         FindCandidate(highestIndex, true);
         FinishTraining();
-
-        if (!debugMode.isOn)
-            process.StandardInput.WriteLine("exit");
     }
 
     void SetModelSettings()

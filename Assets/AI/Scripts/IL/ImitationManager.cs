@@ -2,7 +2,9 @@
 using UnityEngine;
 using TMPro;
 using System.IO;
+using System.Text.RegularExpressions;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class ImitationManager : MonoBehaviour {
 
@@ -26,6 +28,9 @@ public class ImitationManager : MonoBehaviour {
 
     //Anaconda program
     Process process;
+
+    //For debug mode
+    public Toggle isDebug;
 
     void Start () {
         if (paths.pathsValid)
@@ -55,6 +60,10 @@ public class ImitationManager : MonoBehaviour {
             demoInputs.options.Add(new TMP_Dropdown.OptionData() { text = file.Name });
         }
 
+        //needs to reset after clearing for some reason
+        demoInputs.value = 1;
+        demoInputs.value = 0;
+
     }
 
     public void ExitDemonstration()
@@ -79,16 +88,63 @@ public class ImitationManager : MonoBehaviour {
         //Start anaconda, write hyperparameters and start training
         process = fileutils.SetupAnaconda(process);
 
-        fileutils.WriteHyperParameters(hyperParameterSettings, 0 ,true, demoInputs);
+        //Finalise the selected hyperparameters
+        int startStep = 0;
 
-        if (!File.Exists(paths.buildPath + "/Imitation-Learning-Models/" + testName))
+        if (File.Exists(paths.buildPath + "/Imitation-Learning-Models/" + testName + "/IL-Brainsteps.txt"))
+        {
+            FileInfo f = new FileInfo(paths.buildPath + "/Imitation-Learning-Models/" + testName + "/IL-Brainsteps.txt");
+            StreamReader sr = f.OpenText();
+            startStep = int.Parse(sr.ReadLine());
+            sr.Close();
+        }
+        else if (File.Exists(paths.buildPath + "/models/IL-Brainsteps.txt"))
+        {
+            FileInfo f = new FileInfo(paths.buildPath + "/models/IL-Brainsteps.txt");
+            StreamReader sr = f.OpenText();
+            startStep = int.Parse(sr.ReadLine());
+            sr.Close();
+        }
+
+        UnityEngine.Debug.Log(startStep);
+        fileutils.WriteHyperParameters(hyperParameterSettings, 0 ,true, demoInputs, startStep);
+
+        if (!Directory.Exists(paths.buildPath + "/Imitation-Learning-Models/" + testName))
         {
             process.StandardInput.WriteLine(@"mlagents-learn TrainerConfiguration/gail_config.yaml --env=" + map + "/" + map + " --run-id=" + modelName.text + " --train");
+            if (!isDebug.isOn)
+                process.StandardInput.WriteLine("exit");
         }
         else
         {
-            process.StandardInput.WriteLine(@"mlagents-learn TrainerConfiguration/gail_config.yaml --env=" + map + "/" + map + " --run-id=Imitation-Learning-Models/" + modelName.text + " --load --train");
+            //Move files back into models folder
+            fileutils.DirectoryCopy(paths.buildPath + "/Imitation-Learning-Models/" + testName, paths.buildPath + "/models/" + testName + "-0", "");
+            fileutils.DeleteDirectoryFiles(paths.buildPath + "/Imitation-Learning-Models/" + testName);
+
+            foreach (string f in Directory.GetFiles(paths.buildPath + "/models/" + testName + "-0"))
+            {
+                FileInfo fInfo = new FileInfo(f);
+                string[] nameContents = Regex.Split(fInfo.Name, "-B");
+                if (nameContents[0] != "IL")
+                {
+                    File.Copy(fInfo.FullName, paths.buildPath + "/summaries/" + fInfo.Name);
+                    File.Delete(fInfo.FullName);
+                }
+            }
+
+            process.StandardInput.WriteLine(@"mlagents-learn TrainerConfiguration/gail_config.yaml --env=" + map + "/" + map  + " --run-id=" + modelName.text + " --load --train");
+            if (!isDebug.isOn)
+                process.StandardInput.WriteLine("exit");
         }
+
+        //Update the starting step value
+        int newStartingStep = int.Parse(hyperParameterSettings[3].text) + startStep;
+        FileStream fs = File.Create(paths.buildPath + "/models/IL-Brainsteps.txt");
+
+        fs.Close();
+        StreamWriter sw = new StreamWriter(paths.buildPath + "/models/IL-Brainsteps.txt");
+        sw.Write(newStartingStep);
+        sw.Close();
     }
 
     private void Update()
