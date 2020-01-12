@@ -738,6 +738,56 @@ Prefab:
       propertyPath: agentParameters.maxStep
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114695215867685342, guid: 27447c754ed51274eb76989b8974771e,
+        type: 2}
+      propertyPath: damageAmounts.Array.data[0]
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 114231815613507098, guid: 27447c754ed51274eb76989b8974771e,
+        type: 2}
+      propertyPath: damageAmounts.Array.data[0]
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 114231815613507098, guid: 27447c754ed51274eb76989b8974771e,
+        type: 2}
+      propertyPath: maxAmmo.Array.data[0]
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 114231815613507098, guid: 27447c754ed51274eb76989b8974771e,
+        type: 2}
+      propertyPath: currentMaxAmmo.Array.data[0]
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 114695215867685342, guid: 27447c754ed51274eb76989b8974771e,
+        type: 2}
+      propertyPath: maxAmmo.Array.data[0]
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 114695215867685342, guid: 27447c754ed51274eb76989b8974771e,
+        type: 2}
+      propertyPath: currentMaxAmmo.Array.data[0]
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 114695215867685342, guid: 27447c754ed51274eb76989b8974771e,
+        type: 2}
+      propertyPath: currentFireRates.Array.data[0]
+      value: 1.55
+      objectReference: {fileID: 0}
+    - target: {fileID: 114695215867685342, guid: 27447c754ed51274eb76989b8974771e,
+        type: 2}
+      propertyPath: fireRates.Array.data[0]
+      value: 1.55
+      objectReference: {fileID: 0}
+    - target: {fileID: 114231815613507098, guid: 27447c754ed51274eb76989b8974771e,
+        type: 2}
+      propertyPath: fireRates.Array.data[0]
+      value: 1.55
+      objectReference: {fileID: 0}
+    - target: {fileID: 114231815613507098, guid: 27447c754ed51274eb76989b8974771e,
+        type: 2}
+      propertyPath: currentFireRates.Array.data[0]
+      value: 1.55
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 27447c754ed51274eb76989b8974771e, type: 2}
   m_IsPrefabParent: 0

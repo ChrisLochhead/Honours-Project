@@ -22,5 +22,5 @@ MonoBehaviour:
     - Shoot
     - Reload
     vectorActionSpaceType: 0
-  model: {fileID: 11400000, guid: 405e4dbafde5b614b85ec88c72b7bb15, type: 3}
+  model: {fileID: 11400000, guid: 57a63833452c6474090bc0f20741f3cb, type: 3}
   inferenceDevice: 0

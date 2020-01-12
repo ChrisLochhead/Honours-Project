@@ -2166,6 +2166,9 @@ MonoBehaviour:
   deathPenalty: 0
   collisionPenalty: 0
   camerasActive: 0
+  killtext: {fileID: 0}
+  deathtext: {fileID: 0}
+  isStudy: 1
 --- !u!114 &114638235610214528
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2184,7 +2187,7 @@ MonoBehaviour:
   - {fileID: 1942821746310694}
   - {fileID: 1862430224176172}
   - {fileID: 1557657197553436}
-  bullet: {fileID: 1438065414097192, guid: 37462c48092b399418e92a5211b4caa2, type: 2}
+  bullet: {fileID: 1852059740708134, guid: be2a0ec30314ccb47a2c08a685c945d9, type: 2}
   clipSize: 100000000a0000001e0000003200000001000000
   currentAmmo: 100000000a0000001e0000003200000001000000
   damageAmounts: 0c0000000f000000080000000600000028000000

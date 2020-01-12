@@ -159,5 +159,7 @@ public class MapFinder : NetworkBehaviour {
             selectedMap = maps[mapLoaderDropdowns[0].GetComponent<Dropdown>().value];
             mapNumber = mapLoaderDropdowns[0].GetComponent<Dropdown>().value;
         }
+
+        selectedMap = maps[mapNumber];
     }
 }

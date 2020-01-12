@@ -161,7 +161,21 @@ MonoBehaviour:
     timeScale: 1
     targetFrameRate: 60
   resetParameters:
-    resetParameters: []
+    resetParameters:
+    - key: x-position
+      value: 100
+    - key: y-position
+      value: 100
+    - key: health
+      value: 100
+    - key: weapon
+      value: 0
+    - key: rank
+      value: 0
+    - key: x-direction
+      value: 180
+    - key: y-direction
+      value: 180
 --- !u!4 &97177275
 Transform:
   m_ObjectHideFlags: 0
@@ -296,6 +310,7 @@ GameObject:
   m_Component:
   - component: {fileID: 577633715}
   - component: {fileID: 577633716}
+  - component: {fileID: 577633717}
   m_Layer: 0
   m_Name: StudyManager
   m_TagString: Untagged
@@ -337,6 +352,40 @@ MonoBehaviour:
   - {fileID: 1741972201396744, guid: 0b3b64038c3052340b002e1c558b795b, type: 2}
   - {fileID: 1183305918042018, guid: cecc5b36b719e0f4b99b27a86720e207, type: 2}
   - {fileID: 1108341617336374, guid: 28bca8675cf71174d9538391785c9155, type: 2}
+  currentEnemyIndex: 0
+  gameInitialised: 0
+--- !u!114 &577633717
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 577633714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 0
+    i1: 0
+    i2: 0
+    i3: 0
+    i4: 0
+    i5: 0
+    i6: 0
+    i7: 0
+    i8: 0
+    i9: 0
+    i10: 0
+    i11: 0
+    i12: 0
+    i13: 0
+    i14: 0
+    i15: 0
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!1 &1040102043
 GameObject:
   m_ObjectHideFlags: 0

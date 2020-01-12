@@ -14,8 +14,13 @@ public class Client : NetworkBehaviour
     //Lobby camera
     public Camera lobbyCam;
 
+    //Audio Listener
+    public AudioListener audioListener;
+
     //Reference to the actual player object
     public GameObject player;
+    public SkinnedMeshRenderer playerModel;
+
 
     //Check if player is the host or not for bullet functionality
     public bool isLocal;
@@ -95,6 +100,7 @@ public class Client : NetworkBehaviour
 
     //Floating healthbar 
     public ClientHealthBar clientHealthBar;
+    public GameObject healthBarObject;
 
     //Weapon controller
     public ClientWeaponManager clientWeaponManager;
@@ -132,6 +138,7 @@ public class Client : NetworkBehaviour
     public float timeLimit;
 
     //Functionality for the study portion of the project
+    [SyncVar]
     public bool isStudy = false;
 
     public bool isOpponent = false;
@@ -179,10 +186,6 @@ public class Client : NetworkBehaviour
         else
         {
             isLocal = true;
-
-            //Hide UI elements that player shouldn't see
-            //floatingHealthBar.GetComponent<CanvasRenderer>().SetAlpha(0);
-            //floatingRankIcon.GetComponent<CanvasRenderer>().SetAlpha(0);
         }
 
         //Find team numbers
@@ -190,12 +193,16 @@ public class Client : NetworkBehaviour
         int temp2 = 0;
 
         int c = 0;
+        bool foundStudyClient = false;
 
         foreach (GameObject g in GameObject.FindGameObjectsWithTag("Client"))
         {
+            //Check if in a study
+            if (!foundStudyClient && g.GetComponent<Client>().isStudy)
+                foundStudyClient = true;
             //assign as opponent if in study and 
             //someone is already in the game
-            if (c > 0)
+            if (c > 0 && foundStudyClient)
             {
                 isStudy = true;
                 isOpponent = true;
@@ -210,10 +217,10 @@ public class Client : NetworkBehaviour
         }
 
         if (temp1 == temp2)
-            CmdSetTeam(Random.Range(0, 2));
+            CmdSetTeam(0);
         else if (temp1 > temp2)
             CmdSetTeam(1);
-        else
+        else if(temp2 > temp1)
             CmdSetTeam(0);
 
         if(isStudy && temp1 == temp2)
@@ -383,7 +390,10 @@ public class Client : NetworkBehaviour
         //Check for life
         if (isDead)
         {
-            Death();
+            if (!isServer)
+                CmdDeath();
+            else
+                RpcDeath();
         }
 
         if (hasLost == true || hasWon == true)
@@ -453,54 +463,47 @@ public class Client : NetworkBehaviour
 
     public void OnRespawnClicked()
     {
-        CmdRespawn();
+        Respawn();
+        if (!isServer)
+            CmdRespawn();
+        else
+            RpcRespawn();
+
         clientHealthBar.CmdRespawn();
     }
 
     [Command]
     public void CmdRespawn()
     {
-        Respawn();
         RpcRespawn();
     }
 
     [ClientRpc]
     public void RpcRespawn()
     {
-        if (!isServer)
+
+        //Spawn in random position
+        int rand = Random.Range(0, spawnPoints.Length);
+        Debug.Log(rand);
+        player.transform.position = spawnPoints[rand].transform.position;
+        playerCam.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, playerCam.transform.position.z);
+
+        //Reset health and ranks
+        health = 100;
+        clientHealthBar.healthPercentage = 1;
+        rank = 0;
+        score = 0;
+
+        //Show character model
+        playerModel.enabled = true;
+        healthBarObject.SetActive(true);
+
+        foreach (SkinnedMeshRenderer s in GetComponentsInChildren<SkinnedMeshRenderer>())
         {
-
-            //Spawn in random position
-            int rand = Random.Range(0, spawnPoints.Length);
-            Debug.Log(rand);
-            player.transform.position = spawnPoints[rand].transform.position;
-            playerCam.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, playerCam.transform.position.z);
-
-            //Reset health and ranks
-            health = 100;
-            clientHealthBar.healthPercentage = 1;
-            rank = 0;
-            score = 0;
-
-            //Make visible after in position 
-            SkinnedMeshRenderer[] r = player.GetComponentsInChildren<SkinnedMeshRenderer>();
-
-            foreach (SkinnedMeshRenderer smr in r)
-            {
-                smr.enabled = true;
-            }
-
-            //Let the game loop re-commence
-            isDead = false;
-
-            //Stand the player back up
-            player.transform.rotation *= Quaternion.Euler(-90, 0, 0);
-
-            //Hide respawn button
-            respawnScreen.SetActive(false);
-            reset = false;
+            s.enabled = true;
         }
     }
+    
 
     public void LeaveGame()
     {
@@ -526,46 +529,76 @@ public class Client : NetworkBehaviour
 
     public void Respawn()
     {
-        if (isServer)
+
+        //Spawn in random position
+        int rand = Random.Range(0, spawnPoints.Length);
+        player.transform.position = spawnPoints[rand].transform.position;
+        playerCam.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, playerCam.transform.position.z);
+
+        //Reset health and ranks
+        health = 100;
+        clientHealthBar.healthPercentage = 1;
+        rank = 0;
+        score = 0;
+
+        //Make visible after in position 
+        playerModel.enabled = true;
+        healthBarObject.SetActive(true);
+
+        foreach (SkinnedMeshRenderer s in GetComponentsInChildren<SkinnedMeshRenderer>())
         {
-
-            //Spawn in random position
-            int rand = Random.Range(0, spawnPoints.Length);
-            player.transform.position = spawnPoints[rand].transform.position;
-            playerCam.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, playerCam.transform.position.z);
-
-            //Reset health and ranks
-            health = 100;
-            clientHealthBar.healthPercentage = 1;
-            rank = 0;
-            score = 0;
-
-            //Make visible after in position 
-            SkinnedMeshRenderer[] r = player.GetComponentsInChildren<SkinnedMeshRenderer>();
-
-            foreach (SkinnedMeshRenderer smr in r)
-            {
-                smr.enabled = true;
-            }
-
-            //Let the game loop re-commence
-            isDead = false;
-
-            //Stand the player back up
-            player.transform.rotation *= Quaternion.Euler(-90, 0, 0);
-
-            //disable colliders
-            player.GetComponent<Rigidbody>().detectCollisions = true;
-            player.GetComponent<BoxCollider>().enabled = true;
-
-            //Hide respawn button
-            respawnScreen.SetActive(false);
-            reset = false;
+            Debug.Log("howdy" + s.gameObject.transform.parent.name);
+            s.enabled = true;
+            s.GetComponent<SkinnedMeshRenderer>().enabled = true;
         }
+
+        //Let the game loop re-commence
+        isDead = false;
+
+        //Stand the player back up
+        player.transform.rotation *= Quaternion.Euler(-90, 0, 0);
+
+        //disable colliders
+        player.GetComponent<Rigidbody>().detectCollisions = true;
+        player.GetComponent<BoxCollider>().enabled = true;
+
+        //Hide respawn button
+        respawnScreen.SetActive(false);
+        reset = false;
+
+        //Reset Ammo
+        for (int i = 0; i < clientWeaponManager.clipSize.Length; i++)
+        {
+            clientWeaponManager.currentAmmo[i] = clientWeaponManager.clipSize[i];
+            clientWeaponManager.currentMaxAmmo[i] = clientWeaponManager.maxAmmo[i];
+        }
+
     }
 
     private void FixedUpdate()
     {
+
+        //Toggle mute audio for debug
+        if (Input.GetKeyDown("m"))
+        {
+            if(AudioListener.volume > 0)
+                AudioListener.volume = 0;
+            else
+                AudioListener.volume = 1;
+        }
+
+        //Toggle death for study purposes
+        if (Input.GetKeyDown("o") && isLocalPlayer)
+        {
+            isDead = true;
+            SetHealth(0);
+            Death();
+            if (!isServer)
+                CmdDeath();
+            else
+                RpcDeath();
+        }
+
         //Dont update if the game is over or paused
         if (hasLost || hasWon || Paused)
             return;
@@ -638,20 +671,21 @@ public class Client : NetworkBehaviour
     {
         if (!reset)
         {
-            //Player falls over
-            SkinnedMeshRenderer[] r = player.GetComponentsInChildren<SkinnedMeshRenderer>();
+            ////Hide character model
+            Debug.Log("set to false");
+            playerModel.enabled = false;
+            healthBarObject.SetActive(false);
 
-            foreach (SkinnedMeshRenderer smr in r)
+            foreach (SkinnedMeshRenderer s in player.GetComponentsInChildren<SkinnedMeshRenderer>())
             {
-                smr.enabled = false;
+                s.enabled = false;
             }
 
             //Spawn in random position
             int rand = Random.Range(0, spawnPoints.Length);
             player.transform.position = spawnPoints[rand].transform.position;
             playerCam.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, playerCam.transform.position.z);
-
-            //disable colliders
+            //Disable colliders
             player.GetComponent<Rigidbody>().detectCollisions = false;
             player.GetComponent<BoxCollider>().enabled = false;
 
@@ -819,6 +853,25 @@ public class Client : NetworkBehaviour
         kills += k;
     }
 
+    [Command]
+    public void CmdDeath()
+    {
+        RpcDeath();
+    }
+
+    [ClientRpc]
+    public void RpcDeath()
+    {
+        Debug.Log("set to false");
+        //Hide character model
+        playerModel.enabled = false;
+        healthBarObject.SetActive(false);
+
+        foreach (SkinnedMeshRenderer s in GetComponentsInChildren<SkinnedMeshRenderer>())
+        {
+            s.enabled = false;
+        }
+    }
     //For button control of the pause menu
     public void SetPaused(bool p)
     {

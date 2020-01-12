@@ -94,6 +94,8 @@ public class MainMenu : NetworkBehaviour {
             gameInfo.name = "gameInfo";
             gameInfo.GetComponent<GameInfo>().infoName = nameInputJoinStudy.text;
 
+            DeleteMapFinder();
+
             //Join local game as client
             networkManager.StartClient();
         }
@@ -110,7 +112,7 @@ public class MainMenu : NetworkBehaviour {
         gameInfo.GetComponent<GameInfo>().infoName = nameInputJoinStudy.text;
         gameInfo.GetComponent<GameInfo>().demoName = demoNameInput.text;
 
-        SceneManager.LoadScene(6);
+        SceneManager.LoadScene(4);
     }
     public void DisableErrorMessage()
     {
@@ -195,6 +197,8 @@ public class MainMenu : NetworkBehaviour {
             gameInfo.name = "gameInfo";
             gameInfo.GetComponent<GameInfo>().infoName = nameInputJoinMultiplayer.text;
 
+            DeleteMapFinder();
+
             //Join the match
             networkManager.matchMaker.ListMatches(0, 20, "", false, 0, 0, OnMatchList);
         }
@@ -240,6 +244,9 @@ public class MainMenu : NetworkBehaviour {
             gameInfo.AddComponent<GameInfo>();
             gameInfo.name = "gameInfo";
             gameInfo.GetComponent<GameInfo>().infoName = nameInputJoinLAN.text;
+            gameInfo.GetComponent<GameInfo>().isStudy = false;
+
+            DeleteMapFinder();
 
             //Join local game as client
             networkManager.StartClient();

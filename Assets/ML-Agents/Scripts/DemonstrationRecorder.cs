@@ -13,6 +13,7 @@ namespace MLAgents
         public string demonstrationName;
         private Agent recordingAgent;
         private string filePath;
+        public PathContainer paths;
         private DemonstrationStore demoStore;
         public const int MaxNameLength = 16;
 
@@ -37,8 +38,10 @@ namespace MLAgents
         /// </summary>
         private void InitializeDemoStore()
         {
+
             recordingAgent = GetComponent<Agent>();
             demoStore = new DemonstrationStore();
+            demoStore.paths = paths;
             demonstrationName = SanitizeName(demonstrationName, MaxNameLength);
             demoStore.Initialize(
                 demonstrationName, 

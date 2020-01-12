@@ -12,9 +12,9 @@ namespace MLAgents
     {
         public const int MetaDataBytes = 32; // Number of bytes allocated to metadata in demo file.
         private readonly IFileSystem fileSystem;
-        private const string DemoDirecory = "Builds/Demonstrations/";
+        private string DemoDirecory = " ";
         private const string ExtensionType = ".demo";
-
+        public PathContainer paths;
         private string filePath;
         private DemonstrationMetaData metaData;
         private Stream writer;
@@ -36,6 +36,7 @@ namespace MLAgents
         public void Initialize(
             string demonstrationName, BrainParameters brainParameters, string brainName)
         {
+            DemoDirecory = paths.buildPath + "/Demonstrations/";
             CreateDirectory();
             CreateDemonstrationFile(demonstrationName);
             WriteBrainParameters(brainName, brainParameters);
@@ -58,7 +59,6 @@ namespace MLAgents
         /// </summary>
         private void CreateDemonstrationFile(string demonstrationName)
         {
-            // Creates demonstration file.
             var literalName = demonstrationName;
             filePath = DemoDirecory + literalName + ExtensionType;
             var uniqueNameCounter = 0;

@@ -14,14 +14,16 @@ public class ClientWeaponManager : NetworkBehaviour {
     public GameObject studyBullet;
 
     //weapon clips
-    public int[] clipSize = { 16, 10, 30, 50, 1 };
-    public int[] currentAmmo = { 16, 10, 30, 50, 1 };
+    public int[] maxAmmo = { 54, 40, 120, 300, 15 };
+    public int[] currentMaxAmmo = { 54, 40, 120, 300, 15 };
+    public int[] clipSize = { 6, 10, 30, 50, 1 };
+    public int[] currentAmmo = { 6, 10, 30, 50, 1 };
 
     //weapon damage and fire rates
     public int[] damageAmounts = { 12, 15, 8, 6, 40 };
 
-    public float[] fireRates = { 0.75f, 1.8f, 0.25f, 0.35f, 2.0f };
-    public float[] currentFireRates = { 0.75f, 1.8f, 0.25f, 0.35f, 2.0f };
+    public float[] fireRates = { 1.55f, 1.8f, 0.25f, 0.35f, 2.0f };
+    public float[] currentFireRates = { 1.55f, 1.8f, 0.25f, 0.35f, 2.0f };
 
     public int currentFired = 0;
     public bool hasFired = false;
@@ -111,10 +113,11 @@ public class ClientWeaponManager : NetworkBehaviour {
         if (!Owner.hasWon && !Owner.hasLost && !Owner.Paused)
         {
             //If the player can and is shooting, create a bullet, decrement ammo and show a muzzle flash
-            if (Input.GetMouseButton(0) && currentAmmo[currentWeapon] > 0 && Owner.isLocal && fireRates[currentWeapon] == currentFireRates[currentWeapon] && !isReloading)
+            if (Input.GetMouseButton(0) && currentAmmo[currentWeapon] > 0 && Owner.isLocal &&
+                fireRates[currentWeapon] == currentFireRates[currentWeapon] && !isReloading)
             {
                 CmdSpawnBullet();
-                currentAmmo[currentWeapon]--;
+                currentAmmo[currentWeapon]--;               
                 currentFired = currentWeapon;
                 muzzleShot = true;
                 hasFired = true;
@@ -160,8 +163,34 @@ public class ClientWeaponManager : NetworkBehaviour {
             if (isReloading)
             {
                 if (reloadStartTime >= reloadTargetTime)
-                {
-                    currentAmmo[currentWeapon] = clipSize[currentWeapon];
+                {                    
+                    //get remaining bullets in the clip
+                    int remainingBullets = currentAmmo[currentWeapon];
+
+                    //If the clip isnt already full
+                    if (remainingBullets != clipSize[currentWeapon])
+                    {
+                        UnityEngine.Debug.Log(clipSize[currentWeapon] + remainingBullets);
+
+                        //Fill the clip back up
+                        if (currentMaxAmmo[currentWeapon] != 0)
+                        {
+                            if (currentMaxAmmo[currentWeapon] < clipSize[currentWeapon])
+                                currentAmmo[currentWeapon] = currentMaxAmmo[currentWeapon];
+                            else
+                                currentAmmo[currentWeapon] = clipSize[currentWeapon];
+
+                            //Remove the appropriate number of bullets from the max ammo
+                            currentMaxAmmo[currentWeapon] += -clipSize[currentWeapon] + remainingBullets;
+                        }
+                        else
+                            currentAmmo[currentWeapon] = remainingBullets;
+
+                    }
+
+                    if (currentMaxAmmo[currentWeapon] < 0)
+                        currentMaxAmmo[currentWeapon] = 0;
+
                     reloadStartTime = 0.0f;
                     isReloading = false;
                     initialReload = true;
@@ -180,8 +209,9 @@ public class ClientWeaponManager : NetworkBehaviour {
             }
 
             //Reloading
-            if (Input.GetKey("r") && initialReload == true || currentAmmo[currentWeapon] == 0 && initialReload == true || Input.GetKey("r") && isReloading == false)
+            if (Input.GetKey("r") && initialReload == true || currentAmmo[currentWeapon] == 0 && initialReload == true  && currentMaxAmmo[currentWeapon] > 0 || Input.GetKey("r") && isReloading == false)
             {
+                Debug.Log("calledhere");
                 reloadStartTime = Time.time;
                 reloadTargetTime = reloadStartTime + reloadTimer[currentWeapon];
                 isReloading = true;
