@@ -41,7 +41,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Training Scenes/DRL-IL/Training-DRL-IL-16.unity
     guid: cc1741a8acb75194b976194d92225551
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Training Scenes/DRL-NMLAI/Training-NMLAI-16-DRL.unity
     guid: 8e33a987bb446d14284c30771ef870ec
   - enabled: 0

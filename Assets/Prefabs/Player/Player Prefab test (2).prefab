@@ -6448,7 +6448,7 @@ MeshRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1554592227955842}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -9310,21 +9310,21 @@ MonoBehaviour:
   - {fileID: 1188676875090132}
   - {fileID: 1206345521048384}
   bullet: {fileID: 1437496455166464, guid: e5579f313ea97814d98a27fc045f5c15, type: 2}
-  studyBullet: {fileID: 1676356583381108, guid: 43b4f02872fd40d4cbc319864013f0ad,
+  studyBullet: {fileID: 1437496455166464, guid: e5579f313ea97814d98a27fc045f5c15,
     type: 2}
-  maxAmmo: 0c00000028000000780000002c0100000f000000
+  maxAmmo: c800000028000000780000002c0100000f000000
   currentMaxAmmo: 0c00000028000000780000002c0100000f000000
   clipSize: 060000000a0000001e0000003200000001000000
   currentAmmo: 060000000a0000001e0000003200000001000000
-  damageAmounts: 100000000f000000080000000600000028000000
+  damageAmounts: 320000000f000000080000000600000028000000
   fireRates:
-  - 1.55
+  - 0.5
   - 1.8
   - 0.25
   - 0.35
   - 2
   currentFireRates:
-  - 1.55
+  - 0.5
   - 1.8
   - 0.25
   - 0.35

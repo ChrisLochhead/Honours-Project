@@ -69,16 +69,20 @@ public class NMLAgent : MonoBehaviour {
 	void Start () {
 
         //Check if in a study session
-        if (GameObject.Find("Player Prefab test (2)(Clone)").GetComponent<Client>().isStudy)
+        if (GameObject.Find("Player Prefab test (2)(Clone)"))
         {
-            isStudy = true;
-            spawnPoints = GameObject.FindGameObjectsWithTag("SpawnPoint1");
-            agentTrainer = GameObject.Find("Player Prefab test (2)(Clone)");
-            target = agentTrainer;
-            pathGrid = GameObject.Find("PathGrid").GetComponent<PathGrid>();
-        }else
-        {
-            Destroy(GameObject.Find("PathGrid").GetComponent<PathGrid>());
+            if (GameObject.Find("Player Prefab test (2)(Clone)").GetComponent<Client>().isStudy)
+            {
+                isStudy = true;
+                spawnPoints = GameObject.FindGameObjectsWithTag("SpawnPoint1");
+                agentTrainer = GameObject.Find("Player Prefab test (2)(Clone)");
+                target = agentTrainer;
+                pathGrid = GameObject.Find("PathGrid").GetComponent<PathGrid>();
+            }
+            else
+            {
+                Destroy(GameObject.Find("PathGrid").GetComponent<PathGrid>());
+            }
         }
 
         //Initialise all booleans not set
@@ -330,10 +334,10 @@ public class NMLAgent : MonoBehaviour {
                 //Calculate the required rotation
                 float rotation = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
                 //Slerp at 0.1 to mimic smooth rotation from mouse
-                gameObject.transform.rotation = Quaternion.Slerp(gameObject.transform.rotation, Quaternion.Euler(0, 0, -rotation), 0.1f);
+                gameObject.transform.rotation = Quaternion.Slerp(gameObject.transform.rotation, Quaternion.Euler(0, 0, -rotation), 0.05f);
 
                 //If the agent is close enough, allow it to shoot
-                if (Vector3.Distance(gameObject.transform.position, targetPos) < 55)
+                if (Vector3.Distance(gameObject.transform.position, targetPos) < 25)
                     canShoot = true;
                 else
                     canShoot = false;

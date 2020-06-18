@@ -50,7 +50,7 @@ public class ClientScoreBoard : NetworkBehaviour {
             UpdateScoreBoard();
 
         //Check player hasn't already won or lost
-        if (Owner.hasWon == false && Owner.hasLost == false)
+        if (Owner.hasWon == false && Owner.hasLost == false && !Owner.isStudy)
         {
             CheckVictory();
         }

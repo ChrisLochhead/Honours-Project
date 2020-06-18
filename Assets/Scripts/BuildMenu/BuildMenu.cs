@@ -82,7 +82,7 @@ public class BuildMenu : MonoBehaviour {
         if (isDragging)
         {
             //Keep the object at a static height while having it follow the cursor
-            dragObjectModel.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x,Input.mousePosition.y, 145));
+            dragObjectModel.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x,Input.mousePosition.y, -Camera.main.transform.position.z));
             Vector3 p = dragObjectModel.transform.position;
             p.z = -5;
             dragObjectModel.transform.position = p;
