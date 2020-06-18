@@ -180,8 +180,8 @@ public class FileUtilities : MonoBehaviour {
                 "   summary_freq: 5000 \n" +
                 "   use_recurrent: false \n" +
                 "   vis_encode_type: simple \n";
-        if(!isImitation)
-            serialisedData += 
+        if (!isImitation)
+            serialisedData +=
                 "   reward_signals: \n" +
                 "       extrinsic: \n" +
                 "           strength: 1.0 \n" +

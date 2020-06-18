@@ -58,7 +58,11 @@ public class MainMenu : NetworkBehaviour {
     
     public void StudyButton()
     {
-        networkManager.matchMaker = null;
+        //Enable multiplayer
+        if (networkManager.matchMaker == null)
+        {
+            networkManager.StartMatchMaker();
+        }
 
         //Disable any error message if applicable
         errorMessage.gameObject.SetActive(false);
@@ -75,12 +79,17 @@ public class MainMenu : NetworkBehaviour {
         gameInfo.GetComponent<GameInfo>().timeLimit = getDropdownValue(false, timeLimitDropdownStudy.value);
 
         //Start a local game
-        networkManager.StartHost();
-
+        networkManager.matchMaker.CreateMatch(nameInputHostMultiplayer.text + "'s room", 4, true, "", "", "", 0, 0, networkManager.OnMatchCreate);
     }
 
     public void JoinStudyButton()
     {
+
+        //Enable multiplayer
+        if (networkManager.matchMaker == null)
+        {
+            networkManager.StartMatchMaker();
+        }
 
         //If the name isn't empty
         if (nameInputJoinStudy.text != "")
@@ -93,11 +102,11 @@ public class MainMenu : NetworkBehaviour {
             gameInfo.AddComponent<GameInfo>();
             gameInfo.name = "gameInfo";
             gameInfo.GetComponent<GameInfo>().infoName = nameInputJoinStudy.text;
-
+            gameInfo.GetComponent<GameInfo>().isStudy = true;
             DeleteMapFinder();
 
             //Join local game as client
-            networkManager.StartClient();
+            networkManager.matchMaker.ListMatches(0, 20, "", false, 0, 0, OnMatchList);
         }
         else
             errorMessage.gameObject.SetActive(true);
@@ -122,6 +131,7 @@ public class MainMenu : NetworkBehaviour {
     public void InitialiseMapFinder()
     {
         //Initialise prefab but dont add to network
+        if(!GameObject.Find("MapFinder(Clone)"))
         Instantiate(mapFinderPrefab);
     }
 
@@ -155,6 +165,7 @@ public class MainMenu : NetworkBehaviour {
 
     public void HostButton()
     {
+
         if (nameInputHostMultiplayer.text != "")
         {
             //Disable the error message if applicable

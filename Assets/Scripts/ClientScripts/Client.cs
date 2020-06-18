@@ -379,6 +379,7 @@ public class Client : NetworkBehaviour
 
         //Check for victory by updating the scoreboard
         clientScoreBoard.UpdateScores();
+        if(!isStudy)
         clientScoreBoard.CheckVictory();
 
         if (hasWon == true || hasLost == true)
@@ -390,6 +391,7 @@ public class Client : NetworkBehaviour
         //Check for life
         if (isDead)
         {
+            Death();
             if (!isServer)
                 CmdDeath();
             else
@@ -547,7 +549,6 @@ public class Client : NetworkBehaviour
 
         foreach (SkinnedMeshRenderer s in GetComponentsInChildren<SkinnedMeshRenderer>())
         {
-            Debug.Log("howdy" + s.gameObject.transform.parent.name);
             s.enabled = true;
             s.GetComponent<SkinnedMeshRenderer>().enabled = true;
         }
@@ -862,7 +863,6 @@ public class Client : NetworkBehaviour
     [ClientRpc]
     public void RpcDeath()
     {
-        Debug.Log("set to false");
         //Hide character model
         playerModel.enabled = false;
         healthBarObject.SetActive(false);

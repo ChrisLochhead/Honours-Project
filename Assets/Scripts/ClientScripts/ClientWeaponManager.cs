@@ -114,7 +114,7 @@ public class ClientWeaponManager : NetworkBehaviour {
         {
             //If the player can and is shooting, create a bullet, decrement ammo and show a muzzle flash
             if (Input.GetMouseButton(0) && currentAmmo[currentWeapon] > 0 && Owner.isLocal &&
-                fireRates[currentWeapon] == currentFireRates[currentWeapon] && !isReloading)
+                fireRates[currentWeapon] == currentFireRates[currentWeapon] && !isReloading && !Owner.isDead)
             {
                 CmdSpawnBullet();
                 currentAmmo[currentWeapon]--;               
@@ -211,7 +211,6 @@ public class ClientWeaponManager : NetworkBehaviour {
             //Reloading
             if (Input.GetKey("r") && initialReload == true || currentAmmo[currentWeapon] == 0 && initialReload == true  && currentMaxAmmo[currentWeapon] > 0 || Input.GetKey("r") && isReloading == false)
             {
-                Debug.Log("calledhere");
                 reloadStartTime = Time.time;
                 reloadTargetTime = reloadStartTime + reloadTimer[currentWeapon];
                 isReloading = true;
@@ -231,14 +230,13 @@ public class ClientWeaponManager : NetworkBehaviour {
         b.transform.rotation = rot;
 
         //calculate trajectory
-        b.GetComponent<Rigidbody>().velocity = b.transform.forward * 36.0f;
+        b.GetComponent<Rigidbody>().velocity = b.transform.forward * 100.0f;
 
         if (Owner.isStudy)
         {
             //add tag indicating whose bullet it is
-            b.GetComponent<TrainingBullet>().shooter = Owner.player;
-            //b.GetComponent<TrainingBullet>().isHost = Owner.isLocal;
-            b.GetComponent<TrainingBullet>().damageAmount = damageAmounts[currentWeapon];
+            b.GetComponent<Bullet>().shooter = Owner.player;
+            b.GetComponent<Bullet>().damageAmount = damageAmounts[currentWeapon];
         }
         else
         {

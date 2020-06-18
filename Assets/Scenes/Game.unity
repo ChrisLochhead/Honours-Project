@@ -214,8 +214,8 @@ Light:
   m_Enabled: 1
   serializedVersion: 8
   m_Type: 1
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1.46
+  m_Color: {r: 0.5566038, g: 0.5566038, b: 0.5566038, a: 1}
+  m_Intensity: 2.2
   m_Range: 10
   m_SpotAngle: 30
   m_CookieSize: 10
@@ -343,7 +343,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Enemies: 
-  respawnTimer: 15
+  respawnTimer: 5
   CurrentEnemy: {fileID: 0}
   enemyPrefabs:
   - {fileID: 1284210457633256, guid: 0b00a7fa179dbf54aae5bc00fbc8fc26, type: 2}

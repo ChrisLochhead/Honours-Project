@@ -7,7 +7,7 @@ public class StudyManager : NetworkBehaviour
     public List<int> Enemies;
 
     [SyncVar]
-    public float respawnTimer = 15.0f;
+    public float respawnTimer = 5.0f;
 
     bool isCompleted = false;
 
@@ -43,7 +43,7 @@ public class StudyManager : NetworkBehaviour
         p.transform.SetPositionAndRotation(new Vector3(-20, -55, 0), p.transform.rotation);
         p.GenerateGrid();
 
-        Enemies = new List<int>() { 0, 1, 2, 5};
+        Enemies = new List<int>() { 5, 0, 1, 2, 3, 4};
     }
 
     void ShrinkMap(GameObject wallParent)
@@ -78,7 +78,7 @@ public class StudyManager : NetworkBehaviour
         //Timer divided by three to account for the potential three times the respawn timer can
         //be called per frame, also only iterated on host so it is synced among clients.
         if(gameInitialised && isServer)
-        respawnTimer -= Time.deltaTime / 3.0f;
+        respawnTimer -= Time.deltaTime;
         else if (gameInitialised && !isServer)
         {
             respawnTimer = GameObject.Find("StudyManager").GetComponent<StudyManager>().respawnTimer;
@@ -91,26 +91,32 @@ public class StudyManager : NetworkBehaviour
         spawnPoints = GameObject.FindGameObjectsWithTag("SpawnPoint2");
         int rand = Random.Range(0, spawnPoints.Length);
         Vector3 spawn = spawnPoints[rand].transform.position;
-
-        if (Enemies[currentEnemyIndex] != 5)
-        {           
-            GameObject spawnObj = (GameObject)Instantiate(enemyPrefabs[currentEnemyIndex], new Vector3(spawn.x, spawn.y, -5), Quaternion.identity * Quaternion.Euler(0, 0, Random.Range(0, 360)));
-            NetworkServer.Spawn(spawnObj);
-            CurrentEnemy = spawnObj;
-
-            //Assign the player to the pathgrid incase it is an NMLAI
-            GameObject.Find("PathGrid").GetComponent<PathGrid>().player = CurrentEnemy;
-        }
-        else
+        if (currentEnemyIndex < 5)
         {
-            foreach (GameObject g in GameObject.FindGameObjectsWithTag("Client"))
+            if (Enemies[currentEnemyIndex] != 5)
             {
-                if (g.GetComponent<Client>().isOpponent)
+                GameObject spawnObj = (GameObject)Instantiate(enemyPrefabs[currentEnemyIndex], new Vector3(spawn.x, spawn.y, -5), Quaternion.identity * Quaternion.Euler(0, 0, Random.Range(0, 360)));
+                NetworkServer.Spawn(spawnObj);
+                CurrentEnemy = spawnObj;
+
+                //Assign the player to the pathgrid incase it is an NMLAI
+                GameObject.Find("PathGrid").GetComponent<PathGrid>().player = CurrentEnemy;
+            }
+            else
+            {
+                foreach (GameObject g in GameObject.FindGameObjectsWithTag("Client"))
                 {
-                    CurrentEnemy = g;
-                    break;
+                    if (g.GetComponent<Client>().isOpponent)
+                    {
+                        CurrentEnemy = g;
+                        break;
+                    }
                 }
             }
+        }else
+        {
+            isOver = true;
+            StudyOver();
         }
     }
 
@@ -148,7 +154,7 @@ public class StudyManager : NetworkBehaviour
         if (respawnTimer <= 0.0f && !CurrentEnemy && currentEnemyIndex <= Enemies.Count)
         {
             SpawnEnemy();
-            respawnTimer = 15.0f;
+            respawnTimer = 5.0f;
         }
 
             if (CurrentEnemy)
