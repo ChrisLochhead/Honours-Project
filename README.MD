@@ -33,4 +33,4 @@ implementing my learning AI into the game for training. The build system is a dr
 
 - AI
 
-The AI has not yet been implemented thus far, as the game still contains some bugs and necessary features yet to be implemented, such as setting up tensorflow for unity.
+The AI engine is a comphrehensive framework that implements DRL, IL, CL and EL which allows for extensive training, debugging and testing. This also includes a small game simulation designed for conducting studies on up to 5 different developed agents
