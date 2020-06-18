@@ -92,7 +92,7 @@ public class AIController : Agent {
         }
         else
         {
-            personalCamera.gameObject.SetActive(true);
+            //personalCamera.gameObject.SetActive(true);
 
             if (GameObject.Find("Main Camera"))
                 GameObject.Find("Main Camera").gameObject.SetActive(true);
