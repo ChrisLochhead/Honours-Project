@@ -9,6 +9,7 @@ public class ClientHUD : MonoBehaviour
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI ammoText;
     public TextMeshProUGUI healthText;
+    public TextMeshProUGUI timerText;
 
     public GameObject healthBar;
     public GameObject rankImage;
@@ -55,6 +56,8 @@ public class ClientHUD : MonoBehaviour
         healthBar.GetComponent<Slider>().maxValue = rankHealthValues[Owner.rank];
         healthBar.GetComponent<Slider>().value = Owner.health;
         healthText.text = Owner.health.ToString() + "/" + rankHealthValues[Owner.rank];
+        timerText.text = Mathf.Floor(Owner.timeLimit / 60) + ":" + Mathf.RoundToInt(Owner.timeLimit % 60);
+        
 
         //Score
         scoreText.text = Owner.score.ToString();

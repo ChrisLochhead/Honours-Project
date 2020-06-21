@@ -323,7 +323,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4404973374074674}
-  - component: {fileID: 114531296613221584}
+  - component: {fileID: 114355133084505666}
   m_Layer: 0
   m_Name: NMLAI-AgentPrefab
   m_TagString: Client
@@ -377,6 +377,7 @@ GameObject:
   - component: {fileID: 114885884795899624}
   - component: {fileID: 114992215040765738}
   - component: {fileID: 114778137434921778}
+  - component: {fileID: 114103133658783268}
   m_Layer: 9
   m_Name: Player1
   m_TagString: Player1
@@ -2086,6 +2087,38 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &114103133658783268
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1311086438782150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 11
+    i1: 0
+    i2: 167
+    i3: 250
+    i4: 23
+    i5: 157
+    i6: 191
+    i7: 84
+    i8: 170
+    i9: 229
+    i10: 188
+    i11: 0
+    i12: 251
+    i13: 200
+    i14: 252
+    i15: 38
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!114 &114329392848019388
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2100,7 +2133,7 @@ MonoBehaviour:
   panLimit: {x: 0, y: 0}
   zoomLimit: {x: 0, y: 0}
   canMove: 0
---- !u!114 &114531296613221584
+--- !u!114 &114355133084505666
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -2162,7 +2195,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1311086438782150}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 950ab521fe757bc4189c32f600d50948, type: 3}
   m_Name: 
@@ -2197,7 +2230,9 @@ MonoBehaviour:
   - {fileID: 1101738944924658}
   - {fileID: 1697460299906406}
   - {fileID: 1501384153319352}
-  bullet: {fileID: 1852059740708134, guid: be2a0ec30314ccb47a2c08a685c945d9, type: 2}
+  bullet: {fileID: 1438065414097192, guid: 37462c48092b399418e92a5211b4caa2, type: 2}
+  maxAmmo: 3600000028000000780000002c0100000f000000
+  currentMaxAmmo: 3600000028000000780000002c0100000f000000
   clipSize: 100000000a0000001e0000003200000001000000
   currentAmmo: 100000000a0000001e0000003200000001000000
   damageAmounts: 640000003c000000100000001800000055000000

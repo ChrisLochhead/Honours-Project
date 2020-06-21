@@ -2103,9 +2103,11 @@ MonoBehaviour:
   - {fileID: 1833419373477260}
   - {fileID: 1336233762340748}
   bullet: {fileID: 1438065414097192, guid: 37462c48092b399418e92a5211b4caa2, type: 2}
+  maxAmmo: 3600000028000000780000002c0100000f000000
+  currentMaxAmmo: 3600000028000000780000002c0100000f000000
   clipSize: 100000000a0000001e0000003200000001000000
   currentAmmo: 100000000a0000001e0000003200000001000000
-  damageAmounts: 0c0000000f000000080000000600000028000000
+  damageAmounts: 640000000f000000080000000600000028000000
   fireRates:
   - 0.75
   - 1.8
@@ -2147,6 +2149,9 @@ MonoBehaviour:
   weaponManager: {fileID: 114248775670654972}
   kills: 0
   deaths: 0
+  recordingKillCounter: {fileID: 0}
+  recordingDeathCounter: {fileID: 0}
+  isRecording: 0
 --- !u!114 &114646647557683360
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2171,12 +2176,19 @@ MonoBehaviour:
   resetParams:
     resetParameters: []
   trainingAgents: []
-  checkCanShoot: 0
   visiblePlayers: []
   previousPosition: {x: 0, y: 0, z: 0}
   personalCamera: {fileID: 0}
   walls: []
   worldPosition: {fileID: 0}
+  isLearning: 0
+  killReward: 0
+  deathPenalty: 0
+  collisionPenalty: 0
+  camerasActive: 0
+  killtext: {fileID: 0}
+  deathtext: {fileID: 0}
+  isStudy: 0
 --- !u!114 &114820476114516358
 MonoBehaviour:
   m_ObjectHideFlags: 1

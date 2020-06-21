@@ -99,13 +99,11 @@ public class ClientScoreBoard : NetworkBehaviour {
             {
                 Owner.hasWon = true;
                 UpdateScoreBoard();
-               // Owner.team = 3;
             }
             if (team2ScoreNo >= Owner.killLimit && Owner.killLimit != 0)
             {
                 Owner.hasLost = true;
                 UpdateScoreBoard();
-               // Owner.team = 3;
             }
         }
         else
@@ -114,14 +112,23 @@ public class ClientScoreBoard : NetworkBehaviour {
             {
                 Owner.hasLost = true;
                 UpdateScoreBoard();
-                //Owner.team = 3;
             }
             if (team2ScoreNo >= Owner.killLimit && Owner.killLimit != 0)
             {
                 Owner.hasWon = true;
                 UpdateScoreBoard();
-               // Owner.team = 3;
             }
+        }
+        //Check if time limit has ran out
+        if(Owner.timeLimit <= 0)
+        {
+            Owner.timeLimit = 0;
+            if (team1ScoreNo > team2ScoreNo && Owner.team == 0)
+                Owner.hasWon = true;
+            else
+                Owner.hasLost = true;
+
+            UpdateScoreBoard();
         }
     }
 

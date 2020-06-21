@@ -302,6 +302,7 @@ GameObject:
   - component: {fileID: 114216540766483568}
   - component: {fileID: 114369066316729576}
   - component: {fileID: 114486686460588120}
+  - component: {fileID: 114130578217186810}
   m_Layer: 9
   m_Name: Player1
   m_TagString: Player1
@@ -2086,6 +2087,38 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &114130578217186810
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1343247662269738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 227
+    i1: 238
+    i2: 71
+    i3: 51
+    i4: 210
+    i5: 235
+    i6: 56
+    i7: 100
+    i8: 74
+    i9: 75
+    i10: 38
+    i11: 66
+    i12: 92
+    i13: 88
+    i14: 127
+    i15: 168
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!114 &114216540766483568
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2127,7 +2160,9 @@ MonoBehaviour:
   - {fileID: 1810393810686158}
   - {fileID: 1653013004889910}
   - {fileID: 1235115241954116}
-  bullet: {fileID: 1852059740708134, guid: be2a0ec30314ccb47a2c08a685c945d9, type: 2}
+  bullet: {fileID: 1438065414097192, guid: 37462c48092b399418e92a5211b4caa2, type: 2}
+  maxAmmo: 3600000028000000780000002c0100000f000000
+  currentMaxAmmo: 3600000028000000780000002c0100000f000000
   clipSize: 100000000a0000001e0000003200000001000000
   currentAmmo: 100000000a0000001e0000003200000001000000
   damageAmounts: 0c0000000f000000080000000600000028000000

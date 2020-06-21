@@ -11,16 +11,14 @@ public class TrainingBullet : MonoBehaviour
 
     private void Update()
     {
-        //ignore collisions from other bullets
+        //Ignore collisions from other bullets
         Physics.IgnoreLayerCollision(10, 10);
 
-        if (Vector3.Distance(this.gameObject.transform.position, shooter.transform.position) > 80 && shooter.GetComponent<AIController>())
+        //Maximum shot distance before bullet dissapears
+        if (Vector3.Distance(this.gameObject.transform.position, shooter.transform.position) > 50)
         {
-            Destroy(this.gameObject);
+            //Destroy(this.gameObject);
         }
-        else if (Vector3.Distance(this.gameObject.transform.position, shooter.transform.position) > 10050)
-            Destroy(this.gameObject);
-
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -81,7 +79,7 @@ public class TrainingBullet : MonoBehaviour
             Destroy(this.gameObject);
         }
 
-        //Bullet code for AI training (small arena)
+        //Bullet code for AI training
         //For player hitting enemy
         if (collision.transform.GetComponent<NMLAgentTrainer>() && shooter.transform.GetComponent<AIController>())
         {
@@ -91,6 +89,9 @@ public class TrainingBullet : MonoBehaviour
             {
                 collision.transform.GetComponent<NMLAgentTrainer>().isAlive = false;
                 shooter.GetComponent<AIController>().GainedKill();
+            }else
+            {
+                shooter.GetComponent<AIController>().InflictedDamage();
             }
             Destroy(this.gameObject);
         }

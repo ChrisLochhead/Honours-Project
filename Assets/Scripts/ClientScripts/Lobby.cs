@@ -89,14 +89,14 @@ public class Lobby : NetworkBehaviour
             Owner.CmdSetName(gameInfo.GetComponent<GameInfo>().infoName);
             if (gameInfo.GetComponent<GameInfo>().killLimit != 0 && gameInfo.GetComponent<GameInfo>().timeLimit != 0)
             {
-                Owner.killLimit = 1;// gameInfo.GetComponent<GameInfo>().killLimit;
-                Owner.timeLimit = gameInfo.GetComponent<GameInfo>().timeLimit;
+                Owner.killLimit = gameInfo.GetComponent<GameInfo>().killLimit;
+                Owner.timeLimit = gameInfo.GetComponent<GameInfo>().timeLimit * 60;
             }
             else
             {
                 //Find the host and use his instead
                 Owner.killLimit = GameObject.FindGameObjectsWithTag("Client")[0].GetComponent<Client>().killLimit;
-                Owner.timeLimit = GameObject.FindGameObjectsWithTag("Client")[0].GetComponent<Client>().timeLimit;
+                Owner.timeLimit = GameObject.FindGameObjectsWithTag("Client")[0].GetComponent<Client>().timeLimit * 60;
             }
 
             Destroy(gameInfo);
@@ -137,7 +137,7 @@ public class Lobby : NetworkBehaviour
                 if (currentNumberOfPlayers >= MinNumOfPlayers)
                 {
                     if (isServer)
-                        timeTillGameStart -= Time.deltaTime;///3;
+                        timeTillGameStart -= Time.deltaTime/3;
                     else
                     {
                         //Find the first gameobject to copy the timer from as this will

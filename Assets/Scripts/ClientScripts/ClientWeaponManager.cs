@@ -236,9 +236,9 @@ public class ClientWeaponManager : NetworkBehaviour {
         if (Owner.isStudy)
         {
             //add tag indicating whose bullet it is
-            b.GetComponent<TrainingBullet>().shooter = Owner.player;
+            b.GetComponent<Bullet>().shooter = Owner.player;
             //b.GetComponent<TrainingBullet>().isHost = Owner.isLocal;
-            b.GetComponent<TrainingBullet>().damageAmount = damageAmounts[currentWeapon];
+            b.GetComponent<Bullet>().damageAmount = damageAmounts[currentWeapon];
         }
         else
         {

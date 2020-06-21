@@ -333,6 +333,7 @@ GameObject:
   - component: {fileID: 114512543515508538}
   - component: {fileID: 114010737064785452}
   - component: {fileID: 114801753775597102}
+  - component: {fileID: 114869268993427284}
   m_Layer: 9
   m_Name: Player1
   m_TagString: Player1
@@ -2104,7 +2105,9 @@ MonoBehaviour:
   - {fileID: 1133148498174650}
   - {fileID: 1973650347333514}
   - {fileID: 1859733411107878}
-  bullet: {fileID: 1852059740708134, guid: be2a0ec30314ccb47a2c08a685c945d9, type: 2}
+  bullet: {fileID: 1438065414097192, guid: 37462c48092b399418e92a5211b4caa2, type: 2}
+  maxAmmo: 3600000028000000780000002c0100000f000000
+  currentMaxAmmo: 3600000028000000780000002c0100000f000000
   clipSize: 100000000a0000001e0000003200000001000000
   currentAmmo: 100000000a0000001e0000003200000001000000
   damageAmounts: 0c0000000f000000080000000600000028000000
@@ -2246,6 +2249,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb172294dbbcc408286b156a2c4b553c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114869268993427284
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1278017355256146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 11
+    i1: 59
+    i2: 100
+    i3: 3
+    i4: 140
+    i5: 48
+    i6: 82
+    i7: 52
+    i8: 11
+    i9: 0
+    i10: 46
+    i11: 28
+    i12: 85
+    i13: 139
+    i14: 121
+    i15: 91
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!124 &124733445705182286
 Behaviour:
   m_ObjectHideFlags: 1

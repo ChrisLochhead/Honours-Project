@@ -7,7 +7,7 @@ public class StudyManager : NetworkBehaviour
     public List<int> Enemies;
 
     [SyncVar]
-    public float respawnTimer = 15.0f;
+    public float respawnTimer = 5.0f;
 
     bool isCompleted = false;
 
@@ -43,7 +43,7 @@ public class StudyManager : NetworkBehaviour
         p.transform.SetPositionAndRotation(new Vector3(-20, -55, 0), p.transform.rotation);
         p.GenerateGrid();
 
-        Enemies = new List<int>() { 0, 1, 2, 5};
+        Enemies = new List<int>() { 0, 1, 5};
     }
 
     void ShrinkMap(GameObject wallParent)
@@ -148,7 +148,7 @@ public class StudyManager : NetworkBehaviour
         if (respawnTimer <= 0.0f && !CurrentEnemy && currentEnemyIndex <= Enemies.Count)
         {
             SpawnEnemy();
-            respawnTimer = 15.0f;
+            respawnTimer = 5.0f;
         }
 
             if (CurrentEnemy)

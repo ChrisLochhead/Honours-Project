@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
-public class EnemyAgentWeaponManager : MonoBehaviour
+using UnityEngine.Networking;
+public class EnemyAgentWeaponManager : NetworkBehaviour
 {
 
     //Weapons
@@ -62,7 +63,8 @@ public class EnemyAgentWeaponManager : MonoBehaviour
     }
 
     public void Shoot(float action)
-    {       
+    {
+
         //If the player can and is shooting, create a bullet, decrement ammo and show a muzzle flash
         if (currentAmmo[currentWeapon] > 0 && fireRates[currentWeapon] == currentFireRates[currentWeapon] && 
             action == 1 && isReloading == false && currentMaxAmmo[currentWeapon] > 0)
@@ -178,6 +180,7 @@ public class EnemyAgentWeaponManager : MonoBehaviour
         }      
     }
 
+
     public void SpawnBullet()
     {
         GameObject b = (GameObject)Instantiate(bullet, new Vector3(crosshairMarker.transform.position.x, crosshairMarker.transform.position.y, -4.5f), Quaternion.identity);
@@ -193,9 +196,16 @@ public class EnemyAgentWeaponManager : MonoBehaviour
         b.GetComponent<Rigidbody>().velocity = b.transform.forward * 300.0f;
 
         //add tag indicating whose bullet it is
-        b.GetComponent<TrainingBullet>().shooter = gameObject;
+        b.GetComponent<Bullet>().shooter = gameObject;
+        //RpcSetShooter(b);
 
         //give agent more damaging bullets than enemies
-        b.GetComponent<TrainingBullet>().damageAmount = damageAmounts[currentWeapon];
+        b.GetComponent<Bullet>().damageAmount = damageAmounts[currentWeapon];
+    }
+
+    [ClientRpc]
+    void RpcSetShooter(GameObject b)
+    {
+        b.GetComponent<TrainingBullet>().shooter = gameObject;
     }
 }

@@ -180,9 +180,13 @@ public class AIController : Agent {
             if(controller.isRecording)
                 controller.recordingKillCounter.text = deaths.ToString();
 
-            AddReward(deathPenalty);
+            //AddReward(deathPenalty);
             Done();
+        }else
+        {
+            AddReward(0.0001f);
         }
+
     }
 
     private void OnCollisionStay(Collision collision)
@@ -203,6 +207,11 @@ public class AIController : Agent {
         if (controller.isRecording)
             controller.recordingKillCounter.text = kills.ToString();
         AddReward(killReward);
+    }
+
+    public void InflictedDamage()
+    {
+        AddReward(0.01f);
     }
 
     public override void InitializeAgent()

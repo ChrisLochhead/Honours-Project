@@ -85,6 +85,8 @@ public class Client : NetworkBehaviour
     //For visible name
     [SyncVar]
     public string playerName;
+    [SyncVar]
+    public int killLimit;
 
     //For recording kills and deaths over network
     public bool needsUpdate = false;
@@ -133,7 +135,7 @@ public class Client : NetworkBehaviour
 
     //For managing the game locally
     [SyncVar]
-    public int killLimit;
+    public int globalKillLimit;
     [SyncVar]
     public float timeLimit;
 
@@ -338,6 +340,17 @@ public class Client : NetworkBehaviour
 
     public void Update()
     {
+
+        //Update game timer
+        if (isServer && GameStarted && timeLimit > 0 && !hasWon && !hasLost)
+            timeLimit -= Time.deltaTime/3;
+        else
+        if(GameStarted && timeLimit > 0)
+        {
+            timeLimit = GameObject.FindGameObjectWithTag("Client").GetComponent<Client>().timeLimit;
+        }
+
+
         //Update team texture information
         if (teamMaterial == 0)
             characterModel.GetComponent<SkinnedMeshRenderer>().material = RedTeamMaterial;
@@ -390,6 +403,7 @@ public class Client : NetworkBehaviour
         //Check for life
         if (isDead)
         {
+            Death();
             if (!isServer)
                 CmdDeath();
             else
@@ -482,9 +496,10 @@ public class Client : NetworkBehaviour
     public void RpcRespawn()
     {
 
+        isDead = false;
+
         //Spawn in random position
         int rand = Random.Range(0, spawnPoints.Length);
-        Debug.Log(rand);
         player.transform.position = spawnPoints[rand].transform.position;
         playerCam.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, playerCam.transform.position.z);
 
@@ -501,6 +516,7 @@ public class Client : NetworkBehaviour
         foreach (SkinnedMeshRenderer s in GetComponentsInChildren<SkinnedMeshRenderer>())
         {
             s.enabled = true;
+            Debug.Log("called this");
         }
     }
     
@@ -547,7 +563,6 @@ public class Client : NetworkBehaviour
 
         foreach (SkinnedMeshRenderer s in GetComponentsInChildren<SkinnedMeshRenderer>())
         {
-            Debug.Log("howdy" + s.gameObject.transform.parent.name);
             s.enabled = true;
             s.GetComponent<SkinnedMeshRenderer>().enabled = true;
         }
@@ -671,14 +686,14 @@ public class Client : NetworkBehaviour
     {
         if (!reset)
         {
-            ////Hide character model
-            Debug.Log("set to false");
+            ////Hide character 
             playerModel.enabled = false;
             healthBarObject.SetActive(false);
 
             foreach (SkinnedMeshRenderer s in player.GetComponentsInChildren<SkinnedMeshRenderer>())
             {
-                s.enabled = false;
+                Debug.Log("set to false");
+               // s.enabled = false;
             }
 
             //Spawn in random position
@@ -717,6 +732,7 @@ public class Client : NetworkBehaviour
     //Utility function for bullet to update the players kills remotely
     public void UpdateKills(int k)
     {
+        if(!isOpponent)
         CmdUpdateKills(k);
     }
 
@@ -862,15 +878,12 @@ public class Client : NetworkBehaviour
     [ClientRpc]
     public void RpcDeath()
     {
-        Debug.Log("set to false");
-        //Hide character model
-        playerModel.enabled = false;
-        healthBarObject.SetActive(false);
+            //Hide character model
+            playerModel.enabled = false;
+            healthBarObject.SetActive(false);
 
-        foreach (SkinnedMeshRenderer s in GetComponentsInChildren<SkinnedMeshRenderer>())
-        {
-            s.enabled = false;
-        }
+            foreach (SkinnedMeshRenderer s in GetComponentsInChildren<SkinnedMeshRenderer>())
+                s.enabled = false;
     }
     //For button control of the pause menu
     public void SetPaused(bool p)

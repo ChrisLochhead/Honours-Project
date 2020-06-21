@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 //Gonna need to probably split this class into bullet and training-bullet
-public class Bullet : NetworkBehaviour {
+public class Bullet : NetworkBehaviour
+{
 
     //Reference to the client who shot this bullet
     public GameObject shooter;
@@ -14,7 +15,8 @@ public class Bullet : NetworkBehaviour {
     public int damageAmount;
 
 
-	void Start () {
+    void Start()
+    {
         //Set the objects scale as prefab doesn't keep it static
         transform.localScale = new Vector3(8.1f, 8.1f, 23.1f);
     }
@@ -24,12 +26,13 @@ public class Bullet : NetworkBehaviour {
         //Optional distance drop off for bullets (training-only)
         if (shooter)
         {
-            if (Vector3.Distance(this.gameObject.transform.position, shooter.transform.position) > 40)
+            if (Vector3.Distance(this.gameObject.transform.position, shooter.transform.position) > 100)
             {
                 Destroy(this.gameObject);
             }
         }
     }
+
     private void OnCollisionEnter(Collision collision)
     {
 
@@ -42,86 +45,118 @@ public class Bullet : NetworkBehaviour {
 
         //Training function for AI agents, commented out during study
         //Check if it has hit an enemyplayer
-        if (collision.transform.GetComponent<EnemyAgentController>())
-        {
-            CheckEnemyCollision(collision);
-            Destroy(this.gameObject);
-            return;
-        }
+        CheckEnemyCollision(collision);
 
-        //Check if its hit a friendly, or another bullet
-        if (collision.gameObject.tag == "Bullet" || collision.gameObject.transform.parent.GetComponent<Client>().team == shooter.transform.parent.GetComponent<Client>().team || collision.gameObject.GetComponent<Coin>())
+        //Check if its hit a coin, or another bullet
+        if (collision.gameObject.tag == "Bullet" || collision.gameObject.GetComponent<Coin>())
         {
             Physics.IgnoreCollision(collision.collider, GetComponent<Collider>());
-            if(!collision.gameObject.GetComponent<Coin>())
-            Destroy(this.gameObject);
+            if (!collision.gameObject.GetComponent<Coin>())  
+                Destroy(this.gameObject); 
             return;
         }
 
-        //Check if it has hit an enemyplayer
-        if (collision.transform.parent.GetComponent<Client>().team != shooter.transform.parent.GetComponent<Client>().team)
+        //Check for friendly fire
+        if (collision.gameObject.transform.parent.GetComponent<Client>() && shooter.transform.parent.GetComponent<Client>())
         {
-            CheckEnemyCollision(collision);
-            Destroy(this.gameObject);
-            return;
+            if (collision.gameObject.transform.parent.GetComponent<Client>().team == shooter.transform.parent.GetComponent<Client>().team)
+            {
+                Physics.IgnoreCollision(collision.collider, GetComponent<Collider>());
+                Destroy(this.gameObject);
+                return;
+            }
         }
     }
 
     void CheckEnemyCollision(Collision collision)
     {
-
-        //This applies damage differently depending on whose bullet fired it
-        //because of network latency. If a client shoots a kill shot it will not
-        //register until the next shot, so it calculates it before the damage is applied
-        //to circumvent this.
-        if (isServer && isHost)
+        //AI Vs AI (Bot shooting)
+        if (collision.gameObject.GetComponent<EnemyAgentController>() && shooter.transform.GetComponent<NMLAgentTrainer>())
         {
-            //Apply damage
-            collision.gameObject.transform.parent.GetComponent<Client>().Hit(damageAmount);
-
-            //Check if opponent is dead and apply points and kills appropriately
-            if (collision.transform.parent.GetComponent<Client>().isDead)
+            if (collision.transform.GetComponent<EnemyAgentController>().health - damageAmount <= 0)
             {
-                shooter.transform.parent.GetComponent<Client>().UpdateScore(100);
-                shooter.transform.parent.GetComponent<Client>().UpdateKills(1);
+                collision.gameObject.GetComponent<EnemyAgentController>().health -= damageAmount;
+                collision.gameObject.GetComponent<EnemyAgentController>().isAlive = false;
+                collision.transform.GetComponent<EnemyAgentController>().deaths++;
             }
             else
-            {
-                shooter.transform.parent.GetComponent<Client>().UpdateScore(10);
-            }
+                collision.gameObject.GetComponent<EnemyAgentController>().health -= damageAmount;
+
+            Destroy(this.gameObject);
         }
-        else
-        {
 
-            //Bullet code for AI training
-            if (collision.transform.GetComponent<AIController>())
+        //AI Vs AI (AI shooting)
+        if (collision.gameObject.GetComponent<NMLAgentTrainer>() && shooter.transform.GetComponent<EnemyAgentController>())
+        {
+            if (collision.transform.GetComponent<NMLAgentTrainer>().health - damageAmount <= 0)
             {
-                if (collision.transform.GetComponent<EnemyAgentController>().isAlive == false)
-                {
-                    if (shooter.GetComponent<AIController>())
-                    {
-                        shooter.GetComponent<AIController>().GainedKill();
-                    }
-                }
+                collision.gameObject.GetComponent<NMLAgentTrainer>().health -= damageAmount;
+                collision.gameObject.GetComponent<NMLAgentTrainer>().isAlive = false;
+                shooter.transform.GetComponent<AIController>().GainedKill();
             }
             else
             {
-                //Apply damage
-                collision.gameObject.transform.parent.GetComponent<Client>().Hit(damageAmount);
+                collision.gameObject.GetComponent<NMLAgentTrainer>().health -= damageAmount;
+                shooter.GetComponent<AIController>().InflictedDamage();
+            }
 
-                //Check (if client) if the opponent WILL die before the shot has hit
-                //then update kills and score as normal
-                if (collision.transform.parent.GetComponent<Client>().health - damageAmount <= 0)
+            Destroy(this.gameObject);
+        }
+
+
+        // Player VS Player
+        if (collision.transform.parent && shooter.transform.parent)
+        {
+            if (collision.gameObject.transform.parent.GetComponent<Client>() && shooter.transform.parent.GetComponent<Client>())
+            {
+                //Check if opponent is dead and apply points and kills appropriately
+                if (collision.transform.parent.GetComponent<Client>().health <= damageAmount)
                 {
+                    collision.gameObject.transform.parent.GetComponent<Client>().Hit(damageAmount);
                     shooter.transform.parent.GetComponent<Client>().UpdateScore(100);
                     shooter.transform.parent.GetComponent<Client>().UpdateKills(1);
                 }
                 else
                 {
+                    collision.gameObject.transform.parent.GetComponent<Client>().Hit(damageAmount);
                     shooter.transform.parent.GetComponent<Client>().UpdateScore(10);
                 }
+                Destroy(this.gameObject);
             }
         }
 
+        //NMLAI Vs Player
+        if (collision.transform.parent)
+        {
+            if (collision.gameObject.transform.parent.GetComponent<Client>() && shooter.transform.GetComponent<EnemyAgentController>())
+            {
+                collision.gameObject.transform.parent.GetComponent<Client>().Hit(damageAmount);
+                Destroy(this.gameObject);
+            }
+        }
+
+        if (shooter.transform.parent)
+        {
+            //Player Vs NMLAI
+            if (collision.gameObject.GetComponent<EnemyAgentController>() && shooter.transform.parent.GetComponent<Client>())
+            {
+                if (collision.transform.GetComponent<EnemyAgentController>().health - damageAmount <= 0)
+                {
+                    collision.gameObject.GetComponent<EnemyAgentController>().health -= damageAmount;
+                    if (shooter.transform.parent.GetComponent<Client>())
+                    {
+                        shooter.transform.parent.GetComponent<Client>().UpdateScore(100);
+                        collision.gameObject.GetComponent<EnemyAgentController>().isAlive = false;
+                    }
+                }
+                else
+                {
+                    collision.gameObject.GetComponent<EnemyAgentController>().health -= damageAmount;
+                    if (shooter.transform.parent.GetComponent<Client>())
+                        shooter.transform.parent.GetComponent<Client>().UpdateScore(10);
+                }
+                Destroy(this.gameObject);
+            }
+        }
     }
 }

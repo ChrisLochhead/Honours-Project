@@ -52,7 +52,7 @@ public class EnemyAgentController : MonoBehaviour {
     {
         //Move at a fixed velocity
         if (actions.x == 1)
-            gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, transform.up + gameObject.transform.position, 0.9f);
+            gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, transform.up + gameObject.transform.position, 0.3f);
 
         //Update the rotation
         //rotate left
