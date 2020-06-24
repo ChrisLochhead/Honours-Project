@@ -59,14 +59,26 @@ public class Lobby : NetworkBehaviour
         }
     }
 
+    [Command]
+    public void CmdKillandTimeLimit(int k, float t)
+    {
+        RpcKillandTimeLimit(k, t);
+    }
+
+    [ClientRpc]
+    public void RpcKillandTimeLimit(int k, float t)
+    {
+        Owner.killLimit = k;
+        Owner.timeLimit = t;
+    }
 
     private void Init()
     {
 
-        if(Owner.isStudy)
-        {
+        if (Owner.isStudy)
             MinNumOfPlayers = 2;
-        }
+        else
+            MinNumOfPlayers = 3;
 
         currentMapValue = GameObject.Find("MapFinder(Clone)").GetComponent<MapFinder>().mapNumber;
 
@@ -91,12 +103,17 @@ public class Lobby : NetworkBehaviour
             {
                 Owner.killLimit = gameInfo.GetComponent<GameInfo>().killLimit;
                 Owner.timeLimit = gameInfo.GetComponent<GameInfo>().timeLimit * 60;
+                RpcKillandTimeLimit(Owner.killLimit, Owner.timeLimit);
+                Debug.Log("found first" + Owner.timeLimit);
             }
             else
             {
                 //Find the host and use his instead
                 Owner.killLimit = GameObject.FindGameObjectsWithTag("Client")[0].GetComponent<Client>().killLimit;
-                Owner.timeLimit = GameObject.FindGameObjectsWithTag("Client")[0].GetComponent<Client>().timeLimit * 60;
+                Owner.timeLimit = GameObject.FindGameObjectsWithTag("Client")[0].GetComponent<Client>().timeLimit;
+                Debug.Log("found second" + Owner.timeLimit);
+                CmdKillandTimeLimit(GameObject.FindGameObjectsWithTag("Client")[0].GetComponent<Client>().killLimit,
+                    GameObject.FindGameObjectsWithTag("Client")[0].GetComponent<Client>().timeLimit);
             }
 
             Destroy(gameInfo);

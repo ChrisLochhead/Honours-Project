@@ -122,6 +122,7 @@ public class ClientScoreBoard : NetworkBehaviour {
         //Check if time limit has ran out
         if(Owner.timeLimit <= 0)
         {
+            Debug.Log("time limit: " + Owner.timeLimit);
             Owner.timeLimit = 0;
             if (team1ScoreNo > team2ScoreNo && Owner.team == 0)
                 Owner.hasWon = true;
