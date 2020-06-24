@@ -137,7 +137,7 @@ public class Lobby : NetworkBehaviour
                 if (currentNumberOfPlayers >= MinNumOfPlayers)
                 {
                     if (isServer)
-                        timeTillGameStart -= Time.deltaTime/3;
+                        timeTillGameStart -= Time.deltaTime;///3;
                     else
                     {
                         //Find the first gameobject to copy the timer from as this will

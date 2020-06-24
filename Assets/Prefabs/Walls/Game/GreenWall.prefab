@@ -22,8 +22,8 @@ GameObject:
   - component: {fileID: 33875928745842400}
   - component: {fileID: 23958897449158514}
   - component: {fileID: 65918413214660192}
-  - component: {fileID: 114513143765125520}
-  - component: {fileID: 114890835148637896}
+  - component: {fileID: 114289692482768836}
+  - component: {fileID: 114927911050046780}
   m_Layer: 0
   m_Name: GreenWall
   m_TagString: Obstacle
@@ -98,7 +98,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.020000005, y: 0.020000005, z: 0.02}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &114513143765125520
+--- !u!114 &114289692482768836
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -130,7 +130,7 @@ MonoBehaviour:
     i15: 213
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
---- !u!114 &114890835148637896
+--- !u!114 &114927911050046780
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}

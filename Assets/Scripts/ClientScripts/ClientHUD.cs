@@ -56,8 +56,18 @@ public class ClientHUD : MonoBehaviour
         healthBar.GetComponent<Slider>().maxValue = rankHealthValues[Owner.rank];
         healthBar.GetComponent<Slider>().value = Owner.health;
         healthText.text = Owner.health.ToString() + "/" + rankHealthValues[Owner.rank];
-        timerText.text = Mathf.Floor(Owner.timeLimit / 60) + ":" + Mathf.RoundToInt(Owner.timeLimit % 60);
-        
+
+        string minutes = " ", seconds = " ";
+        if (Mathf.RoundToInt(Owner.timeLimit / 60) < 100)
+            minutes = "0" + Mathf.Floor(Owner.timeLimit / 60);
+        else
+            minutes = (Mathf.Floor(Owner.timeLimit / 60)).ToString();
+        if (Mathf.RoundToInt(Owner.timeLimit % 60) < 10)
+            seconds =":0" + Mathf.RoundToInt(Owner.timeLimit % 60);
+        else
+            seconds = ":" + (Mathf.RoundToInt(Owner.timeLimit % 60)).ToString();
+
+        timerText.text = minutes + seconds;
 
         //Score
         scoreText.text = Owner.score.ToString();

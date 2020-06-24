@@ -64,8 +64,6 @@ public class MainMenu : NetworkBehaviour {
             networkManager.StartMatchMaker();
         }
 
-        networkManager.matchMaker = null;
-
         //Disable any error message if applicable
         errorMessage.gameObject.SetActive(false);
 

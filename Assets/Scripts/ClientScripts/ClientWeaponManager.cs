@@ -114,7 +114,7 @@ public class ClientWeaponManager : NetworkBehaviour {
         {
             //If the player can and is shooting, create a bullet, decrement ammo and show a muzzle flash
             if (Input.GetMouseButton(0) && currentAmmo[currentWeapon] > 0 && Owner.isLocal &&
-                fireRates[currentWeapon] == currentFireRates[currentWeapon] && !isReloading)
+                fireRates[currentWeapon] == currentFireRates[currentWeapon] && !isReloading && !Owner.isDead)
             {
                 CmdSpawnBullet();
                 currentAmmo[currentWeapon]--;               
@@ -223,7 +223,7 @@ public class ClientWeaponManager : NetworkBehaviour {
     public void CmdSpawnBullet()
     {
         GameObject b = (GameObject)Instantiate(bullet, new Vector3(Owner.crosshairMarker.transform.position.x, Owner.crosshairMarker.transform.position.y, -4.5f), Quaternion.identity);
-
+        NetworkServer.Spawn(b);
         //calculate rotation
         Quaternion rot = b.transform.rotation;
         rot = Owner.player.transform.rotation;
@@ -231,28 +231,24 @@ public class ClientWeaponManager : NetworkBehaviour {
         b.transform.rotation = rot;
 
         //calculate trajectory
-        b.GetComponent<Rigidbody>().velocity = b.transform.forward * 36.0f;
+        b.GetComponent<Rigidbody>().velocity = b.transform.forward * 1.0f;
+        b.GetComponent<Bullet>().shooter = Owner.player;
+        b.GetComponent<Bullet>().shooterID = 16;
+        //RpcSpawnBullet(b);
 
-        if (Owner.isStudy)
-        {
-            //add tag indicating whose bullet it is
-            b.GetComponent<Bullet>().shooter = Owner.player;
-            //b.GetComponent<TrainingBullet>().isHost = Owner.isLocal;
-            b.GetComponent<Bullet>().damageAmount = damageAmounts[currentWeapon];
-        }
-        else
-        {
-            //add tag indicating whose bullet it is
-            b.GetComponent<Bullet>().shooter = Owner.player;
-            b.GetComponent<Bullet>().isHost = Owner.isLocal;
-            b.GetComponent<Bullet>().damageAmount = damageAmounts[currentWeapon];
-        }
-        NetworkServer.Spawn(b);
+        b.GetComponent<Bullet>().damageAmount = damageAmounts[currentWeapon];
+
+       // NetworkServer.Spawn(b);
 
         MuzzleFlash(true);
         RpcMuzzleFlash(true);
     }
 
+    [ClientRpc]
+    public void RpcSpawnBullet(GameObject b)
+    {
+        b.GetComponent<Bullet>().shooter = Owner.player;
+    }
     [Command]
     public void CmdRemoveFlash()
     {

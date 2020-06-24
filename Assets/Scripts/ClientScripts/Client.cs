@@ -289,6 +289,7 @@ public class Client : NetworkBehaviour
 
     public void Hit(int damage)
     {
+        Debug.Log("hit!");
         CmdTakeDamage(damage);
     }
 
@@ -404,10 +405,8 @@ public class Client : NetworkBehaviour
         if (isDead)
         {
             Death();
-            if (!isServer)
-                CmdDeath();
-            else
-                RpcDeath();
+            if (isServer)
+               RpcDeath();
         }
 
         if (hasLost == true || hasWon == true)
@@ -478,10 +477,10 @@ public class Client : NetworkBehaviour
     public void OnRespawnClicked()
     {
         Respawn();
-        if (!isServer)
+       // if (!isServer)
             CmdRespawn();
-        else
-            RpcRespawn();
+      //  else
+      //      RpcRespawn();
 
         clientHealthBar.CmdRespawn();
     }
@@ -509,6 +508,10 @@ public class Client : NetworkBehaviour
         rank = 0;
         score = 0;
 
+        //enable colliders
+        player.GetComponent<Rigidbody>().detectCollisions = true;
+        player.GetComponent<BoxCollider>().enabled = true;
+
         //Show character model
         playerModel.enabled = true;
         healthBarObject.SetActive(true);
@@ -516,7 +519,6 @@ public class Client : NetworkBehaviour
         foreach (SkinnedMeshRenderer s in GetComponentsInChildren<SkinnedMeshRenderer>())
         {
             s.enabled = true;
-            Debug.Log("called this");
         }
     }
     
@@ -545,7 +547,6 @@ public class Client : NetworkBehaviour
 
     public void Respawn()
     {
-
         //Spawn in random position
         int rand = Random.Range(0, spawnPoints.Length);
         player.transform.position = spawnPoints[rand].transform.position;
@@ -690,23 +691,23 @@ public class Client : NetworkBehaviour
             playerModel.enabled = false;
             healthBarObject.SetActive(false);
 
-            foreach (SkinnedMeshRenderer s in player.GetComponentsInChildren<SkinnedMeshRenderer>())
+            foreach (SkinnedMeshRenderer s in GetComponentsInChildren<SkinnedMeshRenderer>())
             {
-                Debug.Log("set to false");
-               // s.enabled = false;
+                s.enabled = false;
             }
 
             //Spawn in random position
             int rand = Random.Range(0, spawnPoints.Length);
             player.transform.position = spawnPoints[rand].transform.position;
             playerCam.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, playerCam.transform.position.z);
+            
             //Disable colliders
             player.GetComponent<Rigidbody>().detectCollisions = false;
             player.GetComponent<BoxCollider>().enabled = false;
 
             //Respawn screen shows
             respawnScreen.SetActive(true);
-            if (isLocalPlayer)
+           if (isLocalPlayer)
                 CmdSetDeath();
 
             reset = true;
@@ -732,8 +733,15 @@ public class Client : NetworkBehaviour
     //Utility function for bullet to update the players kills remotely
     public void UpdateKills(int k)
     {
-        if(!isOpponent)
-        CmdUpdateKills(k);
+        if (!isOpponent)
+        {
+            if (!isServer)
+            {
+                CmdUpdateKills(k);
+            }
+            else
+                RpcAddKills(k);
+        }
     }
 
     public void GainScore(int s)

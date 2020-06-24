@@ -5,6 +5,10 @@ public class Bullet : NetworkBehaviour
 {
 
     //Reference to the client who shot this bullet
+    [SerializeField]
+    public int shooterID;
+
+
     public GameObject shooter;
 
     //Check if host, because this causes bullets to behave differently
@@ -120,7 +124,9 @@ public class Bullet : NetworkBehaviour
                 {
                     collision.gameObject.transform.parent.GetComponent<Client>().Hit(damageAmount);
                     shooter.transform.parent.GetComponent<Client>().UpdateScore(10);
+                    
                 }
+             
                 Destroy(this.gameObject);
             }
         }
