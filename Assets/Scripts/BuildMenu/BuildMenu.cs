@@ -39,6 +39,11 @@ public class BuildMenu : MonoBehaviour {
     public BuildMenuMapLoader buildMenuMapLoader;
     public BuildMenuCamera buildMenuCamera;
 
+    public Sprite ScaleButton;
+    public Sprite ScaleButtonPressed;
+    public GameObject [] ScaleButtons;
+    int currentScale = 1;
+
     PathContainer paths;
 
     // Use this for initialization
@@ -49,7 +54,36 @@ public class BuildMenu : MonoBehaviour {
         paths = GameObject.Find("SessionManager").GetComponent<PathContainer>();
     }
 
-	void Update () {
+    int Snap(int value)
+    {
+            // Smaller multiple 
+            int a = (value / currentScale) * currentScale;
+
+            // Larger multiple 
+            int b = a + currentScale;
+
+            // Return of closest of two 
+            return (value - a > b - value) ? b : a;
+    }
+
+    public void UpdateSnapSelection(int newValue)
+    {
+        //Update scale
+        if (newValue == 0) currentScale = 1;
+        else if (newValue == 1) currentScale = 10;
+        else currentScale = 50;
+
+        //Update scale button images
+        for (int i = 0; i < ScaleButtons.Length; i++)
+        {
+            if(i == newValue)          
+                ScaleButtons[i].GetComponent<Image>().sprite = ScaleButtonPressed;
+            else
+                ScaleButtons[i].GetComponent<Image>().sprite = ScaleButton;
+        }
+    }
+
+    void Update () {
 
         //If clicking down
         if (Input.GetMouseButtonDown(0))
@@ -82,7 +116,10 @@ public class BuildMenu : MonoBehaviour {
         if (isDragging)
         {
             //Keep the object at a static height while having it follow the cursor
-            dragObjectModel.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x,Input.mousePosition.y, 145));
+            //Compute snapping mechanism
+            int snappedXValue = Snap((int)Input.mousePosition.x);
+            int snappedYValue = Snap((int)Input.mousePosition.y);
+            dragObjectModel.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(snappedXValue, snappedYValue, 145));       
             Vector3 p = dragObjectModel.transform.position;
             p.z = -5;
             dragObjectModel.transform.position = p;
