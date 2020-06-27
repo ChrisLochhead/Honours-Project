@@ -61,7 +61,7 @@ public class CameraMovement : MonoBehaviour {
 
             //Get zoom level via scrollwheel
             float scrollButton = Input.GetAxis("Mouse ScrollWheel");
-            pos.z += scrollButton * scrollRate * 100.0f * Time.deltaTime;
+            pos.z += scrollButton * scrollRate * 200.0f * Time.deltaTime;
 
             //Check if a zoom limit has been assigned and apply it
             if (zoomLimit.x != 0 && zoomLimit.y != 0)

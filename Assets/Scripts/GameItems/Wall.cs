@@ -10,6 +10,9 @@ public class Wall : NetworkBehaviour {
     //Represents the type of wall
     public int type;
 
+    public int wallScaleX = 1;
+    public int wallScaleY = 1;
+
     //reference to texture for changing alpha
     Material wallMaterial;
 

@@ -119,7 +119,7 @@ public class BuildMenu : MonoBehaviour {
             //Compute snapping mechanism
             int snappedXValue = Snap((int)Input.mousePosition.x);
             int snappedYValue = Snap((int)Input.mousePosition.y);
-            dragObjectModel.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(snappedXValue, snappedYValue, 145));       
+            dragObjectModel.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(snappedXValue, snappedYValue, -(Camera.main.transform.position.z + (-5))));    
             Vector3 p = dragObjectModel.transform.position;
             p.z = -5;
             dragObjectModel.transform.position = p;
@@ -132,11 +132,59 @@ public class BuildMenu : MonoBehaviour {
             //Delete the object
             if (Input.GetKeyDown("t"))
             {
-                mapItems.RemoveAt(dragObjectModel.GetComponent<MapItem>().listPlace);
+                Debug.Log("Number of items : " + mapItems.Count + "  " +  dragObjectModel.GetComponent<MapItem>().listPlace);
+                //mapItems.RemoveAt(dragObjectModel.GetComponent<MapItem>().listPlace);
+                mapItems[dragObjectModel.GetComponent<MapItem>().listPlace] = null;
                 Destroy(dragObjectModel);
                 dragObjectModel = null;
                 objectToDrag = null;
                 isDragging = false;
+            }
+            //Scale the object (x)
+            if(Input.GetKeyDown("1"))
+            {
+                for (int i = 1; i < 4; i++)
+                {
+                    if (dragObjectModel.GetComponent<Wall>().wallScaleX == i && i != 3)
+                    {
+                        dragObjectModel.GetComponent<Wall>().wallScaleX += 1;
+                        dragObjectModel.transform.localScale = new Vector3((int)dragObjectModel.transform.localScale.x * dragObjectModel.GetComponent<Wall>().wallScaleX,
+                                                                            dragObjectModel.transform.localScale.y,
+                                                                            dragObjectModel.transform.localScale.z);
+                        break;
+                    }else if(dragObjectModel.GetComponent<Wall>().wallScaleX == i && i == 3)
+                    {
+                        dragObjectModel.GetComponent<Wall>().wallScaleX = 1;
+                        dragObjectModel.transform.localScale = new Vector3((int)(dragObjectModel.transform.localScale.x / 3) / 2,
+                                                                            dragObjectModel.transform.localScale.y,
+                                                                            dragObjectModel.transform.localScale.z);
+                        break;
+                    }
+                }
+            }
+
+            //Scale the object (y)
+            if (Input.GetKeyDown("2"))
+            {
+                for (int i = 1; i < 4; i++)
+                {
+                    if (dragObjectModel.GetComponent<Wall>().wallScaleY == i && i != 3)
+                    {
+                        dragObjectModel.GetComponent<Wall>().wallScaleY += 1;
+                        dragObjectModel.transform.localScale = new Vector3((int)dragObjectModel.transform.localScale.x,
+                                                                            dragObjectModel.transform.localScale.y * dragObjectModel.GetComponent<Wall>().wallScaleY,
+                                                                            dragObjectModel.transform.localScale.z);
+                        break;
+                    }
+                    else if (dragObjectModel.GetComponent<Wall>().wallScaleY == i && i == 3)
+                    {
+                        dragObjectModel.GetComponent<Wall>().wallScaleY = 1;
+                        dragObjectModel.transform.localScale = new Vector3(dragObjectModel.transform.localScale.x,
+                                                                           (int)(dragObjectModel.transform.localScale.y / 3) / 2,
+                                                                            dragObjectModel.transform.localScale.z);
+                        break;
+                    }
+                }
             }
         }
         //Reset and let go of object if left mouse is released
