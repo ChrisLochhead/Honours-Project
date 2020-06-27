@@ -38,11 +38,16 @@ public class BuildMenu : MonoBehaviour {
     //Reference to map loader and camera
     public BuildMenuMapLoader buildMenuMapLoader;
     public BuildMenuCamera buildMenuCamera;
-
+    
+    //Item scaling
     public Sprite ScaleButton;
     public Sprite ScaleButtonPressed;
     public GameObject [] ScaleButtons;
     int currentScale = 1;
+
+    //Environment scaling
+    public GameObject ground;
+    public GameObject[] mapScaleButtons;
 
     PathContainer paths;
 
@@ -83,8 +88,31 @@ public class BuildMenu : MonoBehaviour {
         }
     }
 
+    public void UpdateMapScale(int newScale)
+    {
+        if (newScale == 0)
+            ground.transform.localScale = new Vector3(2500, 2500, 100);
+        else if (newScale == 1)
+            ground.transform.localScale = new Vector3(5000, 5000, 100);
+        else
+            ground.transform.localScale = new Vector3(10000, 10000, 100);
+
+        //Update scale button images
+        for (int i = 0; i < mapScaleButtons.Length; i++)
+        {
+            if (i == newScale)
+                mapScaleButtons[i].GetComponent<Image>().sprite = ScaleButtonPressed;
+            else
+                mapScaleButtons[i].GetComponent<Image>().sprite = ScaleButton;
+        }
+    }
     void Update () {
 
+        //Resize the entire environment
+        if(Input.GetKeyDown("3"))
+        {
+            ground.transform.localScale = new Vector3(5000, 5000, 100);
+        }
         //If clicking down
         if (Input.GetMouseButtonDown(0))
         {
