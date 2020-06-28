@@ -39,9 +39,21 @@ public class MainMenu : NetworkBehaviour {
     AudioSource audioSource;
     public AudioClip buttonClick;
 
+    //Introduction menu
     bool startingAnimation = false;
     public GameObject buttonContainer;
     public GameObject leftBar, rightBar;
+
+    //Background reference
+    public Image backgroundImage;
+    bool backgroundIsChanging = false;
+    Color targetColor;
+    float lerpTime = 0.0f;
+
+    //Scene changing transition variables
+    bool sceneIsChanging = false;
+    public Transform canvas;
+    float sceneChangeTimer = 5.0f;
 
     private void Start()
     {
@@ -56,6 +68,16 @@ public class MainMenu : NetworkBehaviour {
 
     }
 
+    public void ChangeBackground(string newValue)
+    {
+        ColorUtility.TryParseHtmlString(newValue, out targetColor);
+        backgroundIsChanging = true;
+    }
+
+    public void ChangeSceneTransition()
+    {
+        sceneIsChanging = true;
+    }
     public void PlayClickAudio()
     {
         audioSource.PlayOneShot(buttonClick, 0.3f);
@@ -319,6 +341,7 @@ public class MainMenu : NetworkBehaviour {
 
     private void Update()
     {
+        //For starting animation
         if(!startingAnimation && buttonContainer.transform.parent.gameObject.active == true)
         {
             //Menu side bar transition
@@ -341,6 +364,70 @@ public class MainMenu : NetworkBehaviour {
             if (leftBar.transform.localPosition.x == -370 && rightBar.transform.localPosition.x == 370 && buttonContainer.transform.localPosition.y == 0)
                 startingAnimation = true;
         }
+
+        //For background transitioning
+        if(backgroundIsChanging)
+        {
+            backgroundImage.color = Color.Lerp(backgroundImage.color, targetColor, lerpTime);
+            lerpTime += Time.deltaTime;
+            if (backgroundImage.color == targetColor)
+            {
+                backgroundIsChanging = false;
+                lerpTime = 0.0f;
+            }
+        }
+
+        if (sceneChangeTimer <= 0.0f)
+            sceneIsChanging = false;
+        else
+            sceneChangeTimer -= Time.deltaTime;
+
+        //For scene transition
+        if (sceneIsChanging)
+        {
+            int counter = 0;
+            for(int i = 0; i < canvas.transform.childCount; i++)
+            {
+                if(canvas.GetChild(i).transform.childCount >0 && i != 0)
+                {
+                    for(int j = 0; j < canvas.GetChild(i).transform.childCount; j++)
+                    {
+
+                        if (canvas.GetChild(i).GetChild(j).transform.childCount > 0)
+                        {
+                            for (int k = 0; k < canvas.GetChild(i).GetChild(j).transform.childCount; k++)
+                            {
+                                Transform gj = canvas.GetChild(i).GetChild(j).GetChild(k);
+                                if (counter % 2 == 0)
+                                    gj.transform.localPosition = new Vector3(gj.transform.localPosition.x + 10, gj.transform.localPosition.y, gj.transform.localPosition.z);
+                                else
+                                    gj.transform.localPosition = new Vector3(gj.transform.localPosition.x - 10, gj.transform.localPosition.y, gj.transform.localPosition.z);
+                                counter++;
+                            }
+                        }
+                        else
+                        {
+                            Transform gi = canvas.GetChild(i).GetChild(j);
+                            if (counter % 2 == 0)
+                                gi.transform.localPosition = new Vector3(gi.transform.localPosition.x + 10, gi.transform.localPosition.y, gi.transform.localPosition.z);
+                            else
+                                gi.transform.localPosition = new Vector3(gi.transform.localPosition.x - 10, gi.transform.localPosition.y, gi.transform.localPosition.z);
+                            counter++;
+                        }
+                    }
+                }else if (counter != 0)
+                {
+                    Transform g = canvas.GetChild(i);
+                    if (counter % 2 == 0)
+                        g.transform.localPosition = new Vector3(g.transform.localPosition.x + 10, g.transform.localPosition.y, g.transform.localPosition.z);
+                    else
+                        g.transform.localPosition = new Vector3(g.transform.localPosition.x - 10, g.transform.localPosition.y, g.transform.localPosition.z);
+                    counter++;
+                }else
+                counter++;
+            }
+        }
+
     }
 
 }
