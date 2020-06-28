@@ -39,6 +39,10 @@ public class MainMenu : NetworkBehaviour {
     AudioSource audioSource;
     public AudioClip buttonClick;
 
+    bool startingAnimation = false;
+    public GameObject buttonContainer;
+    public GameObject leftBar, rightBar;
+
     private void Start()
     {
         //Get the attached AudioSource
@@ -49,6 +53,7 @@ public class MainMenu : NetworkBehaviour {
 
         //Set up networking
         networkManager = NetworkManager.singleton;
+
     }
 
     public void PlayClickAudio()
@@ -310,6 +315,32 @@ public class MainMenu : NetworkBehaviour {
     {
         //Close the application
         Application.Quit();
+    }
+
+    private void Update()
+    {
+        if(!startingAnimation && buttonContainer.transform.parent.gameObject.active == true)
+        {
+            //Menu side bar transition
+            if (leftBar.transform.localPosition.x < -370)
+                leftBar.transform.localPosition = new Vector3(leftBar.transform.localPosition.x + 5.5f, 0, 0);
+            else
+                leftBar.transform.localPosition = new Vector3(-370, 0, 0);
+
+            if (rightBar.transform.localPosition.x > 370)
+                rightBar.transform.localPosition = new Vector3(rightBar.transform.localPosition.x - 5.5f, 0, 0);
+            else
+                rightBar.transform.localPosition = new Vector3(370, 0, 0);
+
+            //Menu buttons transition
+            if (buttonContainer.transform.localPosition.y > 0)           
+                buttonContainer.transform.localPosition = new Vector3(0, buttonContainer.transform.localPosition.y - 5.5f, 0);   
+            else
+                buttonContainer.transform.localPosition = Vector3.zero;
+
+            if (leftBar.transform.localPosition.x == -370 && rightBar.transform.localPosition.x == 370 && buttonContainer.transform.localPosition.y == 0)
+                startingAnimation = true;
+        }
     }
 
 }
