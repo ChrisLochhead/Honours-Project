@@ -53,7 +53,11 @@ public class MainMenu : NetworkBehaviour {
     //Scene changing transition variables
     bool sceneIsChanging = false;
     public Transform canvas;
-    float sceneChangeTimer = 5.0f;
+    float sceneChangeTimer = 1.5f;
+    int nextScene = -1;
+    GameObject lastMenu;
+    public GameObject[] transitionSubMenus;
+    public Image crossFadeImage;
 
     private void Start()
     {
@@ -68,16 +72,51 @@ public class MainMenu : NetworkBehaviour {
 
     }
 
-    public void ChangeBackground(string newValue)
+    private void TransitionMenu(GameObject p)
+    {
+        int offset = 10;
+        //Get rid of side bars
+        for (int i = 2; i < 4; i++)
+        {
+            offset = 10;
+            if (i % 2 == 0) offset = -10;
+            canvas.transform.GetChild(i).transform.localPosition = new Vector3(canvas.transform.GetChild(i).transform.localPosition.x + offset,
+                                                                          canvas.transform.GetChild(i).transform.localPosition.y,
+                                                                          canvas.transform.GetChild(i).transform.localPosition.z);
+        }
+        //get rid of current menu
+        for (int i = 0; i < p.transform.childCount; i++)
+        {
+            offset = 10;
+            if (i % 2 == 0)
+                offset = -10; 
+
+            p.transform.GetChild(i).transform.localPosition = new Vector3(p.transform.GetChild(i).transform.localPosition.x + offset,
+                                                                          p.transform.GetChild(i).transform.localPosition.y,
+                                                                          p.transform.GetChild(i).transform.localPosition.z);
+        }
+        //Fade to black
+        if(sceneChangeTimer <= 1.75f)
+        {
+            Color tmp = crossFadeImage.color;
+            tmp.a += 0.01f;
+            crossFadeImage.color = tmp;
+        }
+    }
+
+public void ChangeBackground(string newValue)
     {
         ColorUtility.TryParseHtmlString(newValue, out targetColor);
         backgroundIsChanging = true;
     }
 
-    public void ChangeSceneTransition()
+    public void ChangeSceneTransition(int ns)
     {
         sceneIsChanging = true;
+        nextScene = ns;
+        lastMenu = transitionSubMenus[ns];
     }
+
     public void PlayClickAudio()
     {
         audioSource.PlayOneShot(buttonClick, 0.3f);
@@ -377,57 +416,25 @@ public class MainMenu : NetworkBehaviour {
             }
         }
 
-        if (sceneChangeTimer <= 0.0f)
+        if (sceneChangeTimer <= 0.0f && nextScene >= 0)
+        {
             sceneIsChanging = false;
-        else
+            if (nextScene == 0) HostButton();
+            if (nextScene == 1) JoinButton();
+            if (nextScene == 2) HostButtonLAN();
+            if (nextScene == 3) JoinButtonLAN();
+            if (nextScene == 4) StudyButton(); 
+            if (nextScene == 5) JoinStudyButton();
+            nextScene = -1;
+        }
+        else if(nextScene != -1)
             sceneChangeTimer -= Time.deltaTime;
 
         //For scene transition
         if (sceneIsChanging)
         {
-            int counter = 0;
-            for(int i = 0; i < canvas.transform.childCount; i++)
-            {
-                if(canvas.GetChild(i).transform.childCount >0 && i != 0)
-                {
-                    for(int j = 0; j < canvas.GetChild(i).transform.childCount; j++)
-                    {
-
-                        if (canvas.GetChild(i).GetChild(j).transform.childCount > 0)
-                        {
-                            for (int k = 0; k < canvas.GetChild(i).GetChild(j).transform.childCount; k++)
-                            {
-                                Transform gj = canvas.GetChild(i).GetChild(j).GetChild(k);
-                                if (counter % 2 == 0)
-                                    gj.transform.localPosition = new Vector3(gj.transform.localPosition.x + 10, gj.transform.localPosition.y, gj.transform.localPosition.z);
-                                else
-                                    gj.transform.localPosition = new Vector3(gj.transform.localPosition.x - 10, gj.transform.localPosition.y, gj.transform.localPosition.z);
-                                counter++;
-                            }
-                        }
-                        else
-                        {
-                            Transform gi = canvas.GetChild(i).GetChild(j);
-                            if (counter % 2 == 0)
-                                gi.transform.localPosition = new Vector3(gi.transform.localPosition.x + 10, gi.transform.localPosition.y, gi.transform.localPosition.z);
-                            else
-                                gi.transform.localPosition = new Vector3(gi.transform.localPosition.x - 10, gi.transform.localPosition.y, gi.transform.localPosition.z);
-                            counter++;
-                        }
-                    }
-                }else if (counter != 0)
-                {
-                    Transform g = canvas.GetChild(i);
-                    if (counter % 2 == 0)
-                        g.transform.localPosition = new Vector3(g.transform.localPosition.x + 10, g.transform.localPosition.y, g.transform.localPosition.z);
-                    else
-                        g.transform.localPosition = new Vector3(g.transform.localPosition.x - 10, g.transform.localPosition.y, g.transform.localPosition.z);
-                    counter++;
-                }else
-                counter++;
-            }
+            TransitionMenu(lastMenu);
         }
-
     }
 
 }

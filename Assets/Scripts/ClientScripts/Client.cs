@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Networking.Match;
+using TMPro;
 
 public class Client : NetworkBehaviour
 {
@@ -144,6 +145,11 @@ public class Client : NetworkBehaviour
     public bool isStudy = false;
 
     public bool isOpponent = false;
+
+    //For point gaining visual effect
+    public TextMeshPro pointIndicator;
+    bool pointsGained = false;
+    float pointsEffectTimer = 3.5f;
 
     // Use this for initialization
     void Start()
@@ -300,6 +306,17 @@ public class Client : NetworkBehaviour
         RpcTakeDamage(damage);
     }
 
+    public void PointGainEffect(int p)
+    {
+        pointIndicator.gameObject.SetActive(true);
+        pointIndicator.text = p.ToString();
+        if (p < 100) pointIndicator.color = Color.white;
+        else pointIndicator.color = Color.red;
+
+        pointsGained = true;
+
+    }
+
     [ClientRpc]
     public void RpcTakeDamage(int damage)
     {
@@ -342,6 +359,11 @@ public class Client : NetworkBehaviour
     public void Update()
     {
 
+        if(Input.GetKeyDown("j"))
+        {
+            Debug.Log("called j");
+            PointGainEffect(30);
+        }
         //Update game timer
         if (isServer && GameStarted && timeLimit > 0 && !hasWon && !hasLost)
             timeLimit -= Time.deltaTime/3;
@@ -349,6 +371,22 @@ public class Client : NetworkBehaviour
         if(GameStarted && timeLimit > 0)
         {
             timeLimit = GameObject.FindGameObjectWithTag("Client").GetComponent<Client>().timeLimit;
+        }
+
+        //Update point gain effect if applicable
+        if (pointsGained)
+        {
+            pointsEffectTimer -= Time.deltaTime;
+            Vector3 tmp = pointIndicator.transform.position;
+            tmp.y -= 0.010f;
+            pointIndicator.transform.position = tmp;
+            if (pointsEffectTimer <= 0.0f)
+            {
+                pointsEffectTimer = 3.5f;
+                pointsGained = false;
+                pointIndicator.gameObject.SetActive(false);
+            }
+
         }
 
 

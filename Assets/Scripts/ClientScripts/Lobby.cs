@@ -36,6 +36,10 @@ public class Lobby : NetworkBehaviour
 
     int currentMapValue = 0;
 
+    //Transition variables
+    bool isFadingIn = false;
+    public Image crossFadeImage;
+
     private void RefreshLobby()
     {
         //Reset player count
@@ -74,11 +78,12 @@ public class Lobby : NetworkBehaviour
 
     private void Init()
     {
+        isFadingIn = true;
 
         if (Owner.isStudy)
             MinNumOfPlayers = 2;
         else
-            MinNumOfPlayers = 3;
+            MinNumOfPlayers = 2;
 
         currentMapValue = GameObject.Find("MapFinder(Clone)").GetComponent<MapFinder>().mapNumber;
 
@@ -104,14 +109,12 @@ public class Lobby : NetworkBehaviour
                 Owner.killLimit = gameInfo.GetComponent<GameInfo>().killLimit;
                 Owner.timeLimit = gameInfo.GetComponent<GameInfo>().timeLimit * 60;
                 RpcKillandTimeLimit(Owner.killLimit, Owner.timeLimit);
-                Debug.Log("found first" + Owner.timeLimit);
             }
             else
             {
                 //Find the host and use his instead
                 Owner.killLimit = GameObject.FindGameObjectsWithTag("Client")[0].GetComponent<Client>().killLimit;
                 Owner.timeLimit = GameObject.FindGameObjectsWithTag("Client")[0].GetComponent<Client>().timeLimit;
-                Debug.Log("found second" + Owner.timeLimit);
                 CmdKillandTimeLimit(GameObject.FindGameObjectsWithTag("Client")[0].GetComponent<Client>().killLimit,
                     GameObject.FindGameObjectsWithTag("Client")[0].GetComponent<Client>().timeLimit);
             }
@@ -129,9 +132,19 @@ public class Lobby : NetworkBehaviour
 
     private void Update()
     {
+        if (isFadingIn)
+        {
+            Color tmp = crossFadeImage.color;
+            tmp.a -= 0.01f;
+            crossFadeImage.color = tmp;
+
+            if (tmp.a <= 0.0f)
+                isFadingIn = false;
+        }
+
         //Dont update if game has begun
         if (initialised && lobbyFinished)
-            return;
+        return;
 
         //Check for initialisation
         if (GameObject.Find("MapFinder(Clone)") && initialised == false)
