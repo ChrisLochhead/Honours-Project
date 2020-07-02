@@ -147,9 +147,9 @@ public class Client : NetworkBehaviour
     public bool isOpponent = false;
 
     //For point gaining visual effect
-    public TextMeshPro pointIndicator;
-    bool pointsGained = false;
-    float pointsEffectTimer = 3.5f;
+    public GameObject pointIndicatorPrefab;
+    public GameObject xpDropMarker;
+    List<GameObject> xpDrops = new List<GameObject>();
 
     // Use this for initialization
     void Start()
@@ -195,6 +195,7 @@ public class Client : NetworkBehaviour
         {
             isLocal = true;
         }
+
 
         //Find team numbers
         int temp1 = 0;
@@ -295,7 +296,6 @@ public class Client : NetworkBehaviour
 
     public void Hit(int damage)
     {
-        Debug.Log("hit!");
         CmdTakeDamage(damage);
     }
 
@@ -306,17 +306,43 @@ public class Client : NetworkBehaviour
         RpcTakeDamage(damage);
     }
 
-    public void PointGainEffect(int p)
+    [Command]
+    public void CmdPointGainEffect(int p)
     {
-        pointIndicator.gameObject.SetActive(true);
-        pointIndicator.text = p.ToString();
-        if (p < 100) pointIndicator.color = Color.white;
-        else pointIndicator.color = Color.red;
-
-        pointsGained = true;
-
+        if (isLocalPlayer)
+        {
+            PointGainEffect(p);
+        }
     }
 
+    public void PointGainEffect(int p)
+    {
+
+        GameObject t = (GameObject)Instantiate(pointIndicatorPrefab, xpDropMarker.transform.position ,Quaternion.Euler(0,0,0),healthBarObject.transform);
+        Debug.Log("pos " + t.GetComponent<RectTransform>().anchoredPosition);
+        Debug.Log(xpDropMarker.transform.position);
+        xpDrops.Add(t);
+        xpDrops.Add(t);
+        if (p < 100) pointIndicatorPrefab.GetComponent<TextMeshPro>().color = Color.white;
+        else pointIndicatorPrefab.GetComponent<TextMeshPro>().color = Color.red;
+
+        pointIndicatorPrefab.GetComponent<TextMeshPro>().text = p.ToString();
+
+
+    }
+    [ClientRpc]
+    public void RpcPointGainEffect(int p)
+    {
+
+        GameObject t = (GameObject)Instantiate(pointIndicatorPrefab, healthBarObject.transform);
+        xpDrops.Add(t);
+        xpDrops.Add(t);
+        //originalPositionPI = pointIndicatorPrefab.transform.position;
+        if (p < 100) pointIndicatorPrefab.GetComponent<TextMeshPro>().color = Color.white;
+        else pointIndicatorPrefab.GetComponent<TextMeshPro>().color = Color.red;
+
+
+    }
     [ClientRpc]
     public void RpcTakeDamage(int damage)
     {
@@ -355,40 +381,90 @@ public class Client : NetworkBehaviour
             }
         }
     }
+    [Command]
+    void CmdDestroyXPDrop()
+    {
+        DestroyXPDrop();
+        RpcDestroyXPDrop();
+    }
 
+    void DestroyXPDrop()
+    {
+        //remove earliest xp drop
+        GameObject tmp = xpDrops[0];
+        xpDrops.RemoveAt(0);
+        Destroy(tmp.gameObject);
+
+    }
+    [ClientRpc]
+    void RpcDestroyXPDrop()
+    {
+        //remove earliest xp drop
+        GameObject tmp = xpDrops[0];
+        xpDrops.RemoveAt(0);
+        Destroy(tmp.gameObject);
+    }
+
+    [Command]
+    void CmdUpdateXPDrop()
+    {
+        UpdateXPDrop();
+       // RpcUpdateXPDrop();
+    }
+
+    void UpdateXPDrop()
+    {
+        for (int i = 0; i < xpDrops.Count; i++)
+        {
+            if (xpDrops[i] == null)
+                xpDrops.RemoveAt(i);
+            else
+            {
+                xpDrops[i].transform.position = new Vector3(player.transform.position.x + 4.0f, player.transform.position.y + xpDrops[i].GetComponent<xpDrop>().offset + (i * 0.4f), player.transform.position.z);
+                xpDrops[i].GetComponent<xpDrop>().offset += 0.01f;
+                xpDrops[i].GetComponent<xpDrop>().lifeTime -= Time.deltaTime;
+            }
+        }
+    }
+    [ClientRpc]
+    void RpcUpdateXPDrop()
+    {
+        for (int i = 0; i < xpDrops.Count; i++)
+        {
+            //this bit need to be a command too
+            xpDrops[i].transform.position = new Vector3(player.transform.position.x + 4.0f, player.transform.position.y + xpDrops[i].GetComponent<xpDrop>().offset + (i * 0.4f), player.transform.position.z);
+        }
+
+    }
     public void Update()
     {
 
-        if(Input.GetKeyDown("j"))
+        if (Input.GetKeyDown("j"))
         {
-            Debug.Log("called j");
-            PointGainEffect(30);
+            CmdPointGainEffect(30);
         }
         //Update game timer
         if (isServer && GameStarted && timeLimit > 0 && !hasWon && !hasLost)
-            timeLimit -= Time.deltaTime/3;
+            timeLimit -= Time.deltaTime / 3;
         else
-        if(GameStarted && timeLimit > 0)
+        if (GameStarted && timeLimit > 0)
         {
             timeLimit = GameObject.FindGameObjectWithTag("Client").GetComponent<Client>().timeLimit;
         }
 
         //Update point gain effect if applicable
-        if (pointsGained)
+        if (xpDrops.Count > 0)
         {
-            pointsEffectTimer -= Time.deltaTime;
-            Vector3 tmp = pointIndicator.transform.position;
-            tmp.y -= 0.010f;
-            pointIndicator.transform.position = tmp;
-            if (pointsEffectTimer <= 0.0f)
+            if (xpDrops[0] != null)
             {
-                pointsEffectTimer = 3.5f;
-                pointsGained = false;
-                pointIndicator.gameObject.SetActive(false);
+
+                CmdUpdateXPDrop();
+
+                if (xpDrops[0].GetComponent<xpDrop>().lifeTime <= 0.0f)
+                    CmdDestroyXPDrop();
+
             }
-
         }
-
 
         //Update team texture information
         if (teamMaterial == 0)
@@ -936,6 +1012,7 @@ public class Client : NetworkBehaviour
     {
         Paused = p;
     }
+
 }
 
 

@@ -25,6 +25,8 @@ public class ClientHealthBar : NetworkBehaviour {
         floatingHealthBar.transform.position = new Vector3(Owner.player.transform.position.x, Owner.player.transform.position.y + 7.5f, Owner.player.transform.position.z);
         floatingRankIcon.transform.position = new Vector3(Owner.player.transform.position.x - 5.8f, Owner.player.transform.position.y + 7.75f, Owner.player.transform.position.z);
         floatingName.transform.position = new Vector3(Owner.player.transform.position.x, Owner.player.transform.position.y + 8.5f, Owner.player.transform.position.z);
+   //     Owner.pointIndicatorObject.transform.position = new Vector3(Owner.player.transform.position.x + 4.0f, Owner.player.transform.position.y, Owner.player.transform.position.z);
+
     }
 
     [Command]
@@ -95,7 +97,7 @@ public class ClientHealthBar : NetworkBehaviour {
         floatingName.transform.position = new Vector3(Owner.player.transform.position.x, Owner.player.transform.position.y + 8.5f, Owner.player.transform.position.z);
         floatingHealthBar.transform.position = new Vector3(Owner.player.transform.position.x, Owner.player.transform.position.y + 7.5f, Owner.player.transform.position.z);
         floatingRankIcon.transform.position = new Vector3(Owner.player.transform.position.x - 5.8f, Owner.player.transform.position.y + 7.75f, Owner.player.transform.position.z);
-    }
+   }
 
     [ClientRpc]
     public void RpcUpdateHealth()
@@ -169,10 +171,12 @@ public class ClientHealthBar : NetworkBehaviour {
         floatingName.transform.position = new Vector3(Owner.player.transform.position.x, Owner.player.transform.position.y + 8.5f, Owner.player.transform.position.z);
         floatingHealthBar.transform.position = new Vector3(Owner.player.transform.position.x, Owner.player.transform.position.y + 7.5f, Owner.player.transform.position.z);
         floatingRankIcon.transform.position = new Vector3(Owner.player.transform.position.x - 5.8f, Owner.player.transform.position.y + 7.75f, Owner.player.transform.position.z);
-
+       // Owner.pointIndicatorObject.transform.position = new Vector3(Owner.player.transform.position.x + 4.0f, Owner.player.transform.position.y + Owner.pointsEffectOffset, Owner.player.transform.position.z);
     }
 
     void Update () {
+
+       // Owner.pointIndicatorObject.transform.position = new Vector3(Owner.player.transform.position.x + 4.0f, Owner.player.transform.position.y + Owner.pointsEffectOffset, Owner.player.transform.position.z);
 
         //Update everything
         CmdUpdateHealth();
