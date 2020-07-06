@@ -306,43 +306,16 @@ public class Client : NetworkBehaviour
         RpcTakeDamage(damage);
     }
 
-    [Command]
-    public void CmdPointGainEffect(int p)
-    {
-        if (isLocalPlayer)
-        {
-            PointGainEffect(p);
-        }
-    }
-
     public void PointGainEffect(int p)
     {
-
         GameObject t = (GameObject)Instantiate(pointIndicatorPrefab, xpDropMarker.transform.position ,Quaternion.Euler(0,0,0),healthBarObject.transform);
-        Debug.Log("pos " + t.GetComponent<RectTransform>().anchoredPosition);
-        Debug.Log(xpDropMarker.transform.position);
-        xpDrops.Add(t);
         xpDrops.Add(t);
         if (p < 100) pointIndicatorPrefab.GetComponent<TextMeshPro>().color = Color.white;
         else pointIndicatorPrefab.GetComponent<TextMeshPro>().color = Color.red;
 
         pointIndicatorPrefab.GetComponent<TextMeshPro>().text = p.ToString();
-
-
     }
-    [ClientRpc]
-    public void RpcPointGainEffect(int p)
-    {
 
-        GameObject t = (GameObject)Instantiate(pointIndicatorPrefab, healthBarObject.transform);
-        xpDrops.Add(t);
-        xpDrops.Add(t);
-        //originalPositionPI = pointIndicatorPrefab.transform.position;
-        if (p < 100) pointIndicatorPrefab.GetComponent<TextMeshPro>().color = Color.white;
-        else pointIndicatorPrefab.GetComponent<TextMeshPro>().color = Color.red;
-
-
-    }
     [ClientRpc]
     public void RpcTakeDamage(int damage)
     {
@@ -381,12 +354,7 @@ public class Client : NetworkBehaviour
             }
         }
     }
-    [Command]
-    void CmdDestroyXPDrop()
-    {
-        DestroyXPDrop();
-        RpcDestroyXPDrop();
-    }
+
 
     void DestroyXPDrop()
     {
@@ -395,21 +363,6 @@ public class Client : NetworkBehaviour
         xpDrops.RemoveAt(0);
         Destroy(tmp.gameObject);
 
-    }
-    [ClientRpc]
-    void RpcDestroyXPDrop()
-    {
-        //remove earliest xp drop
-        GameObject tmp = xpDrops[0];
-        xpDrops.RemoveAt(0);
-        Destroy(tmp.gameObject);
-    }
-
-    [Command]
-    void CmdUpdateXPDrop()
-    {
-        UpdateXPDrop();
-       // RpcUpdateXPDrop();
     }
 
     void UpdateXPDrop()
@@ -426,22 +379,14 @@ public class Client : NetworkBehaviour
             }
         }
     }
-    [ClientRpc]
-    void RpcUpdateXPDrop()
-    {
-        for (int i = 0; i < xpDrops.Count; i++)
-        {
-            //this bit need to be a command too
-            xpDrops[i].transform.position = new Vector3(player.transform.position.x + 4.0f, player.transform.position.y + xpDrops[i].GetComponent<xpDrop>().offset + (i * 0.4f), player.transform.position.z);
-        }
 
-    }
     public void Update()
     {
 
         if (Input.GetKeyDown("j"))
         {
-            CmdPointGainEffect(30);
+          if(isLocalPlayer)
+            PointGainEffect(30);
         }
         //Update game timer
         if (isServer && GameStarted && timeLimit > 0 && !hasWon && !hasLost)
@@ -457,12 +402,9 @@ public class Client : NetworkBehaviour
         {
             if (xpDrops[0] != null)
             {
-
-                CmdUpdateXPDrop();
-
+                UpdateXPDrop();
                 if (xpDrops[0].GetComponent<xpDrop>().lifeTime <= 0.0f)
-                    CmdDestroyXPDrop();
-
+                    DestroyXPDrop();
             }
         }
 
@@ -591,11 +533,7 @@ public class Client : NetworkBehaviour
     public void OnRespawnClicked()
     {
         Respawn();
-       // if (!isServer)
-            CmdRespawn();
-      //  else
-      //      RpcRespawn();
-
+        CmdRespawn();
         clientHealthBar.CmdRespawn();
     }
 
