@@ -150,6 +150,7 @@ public class Client : NetworkBehaviour
     public GameObject pointIndicatorPrefab;
     public GameObject xpDropMarker;
     List<GameObject> xpDrops = new List<GameObject>();
+    public bool gainedPoints = false;
 
     // Use this for initialization
     void Start()
@@ -383,10 +384,12 @@ public class Client : NetworkBehaviour
     public void Update()
     {
 
-        if (Input.GetKeyDown("j"))
+        if(gainedPoints == true)
         {
-          if(isLocalPlayer)
-            PointGainEffect(30);
+            if(isLocalPlayer)
+            PointGainEffect(10);
+
+            gainedPoints = false;
         }
         //Update game timer
         if (isServer && GameStarted && timeLimit > 0 && !hasWon && !hasLost)
@@ -800,6 +803,8 @@ public class Client : NetworkBehaviour
     {
         if (isServer)
         {
+            gainedPoints = true;
+
             //Increment score
             score += s;
             int tmpRank = rank;
@@ -829,6 +834,7 @@ public class Client : NetworkBehaviour
     [Command]
     public void CmdGainScore(int s)
     {
+
         GainScore(s);
         RpcGainScore(s);
     }
@@ -844,6 +850,8 @@ public class Client : NetworkBehaviour
     {
         if (!isServer)
         {
+            gainedPoints = true;
+
             //Increment score
             score += s;
             int tmpRank = rank;

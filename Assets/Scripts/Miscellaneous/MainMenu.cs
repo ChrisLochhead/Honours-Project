@@ -52,6 +52,7 @@ public class MainMenu : NetworkBehaviour {
 
     //Scene changing transition variables
     bool sceneIsChanging = false;
+    bool gameFound = false;
     public Transform canvas;
     float sceneChangeTimer = 1.5f;
     int nextScene = -1;
@@ -230,6 +231,7 @@ public void ChangeBackground(string newValue)
 
     public void HostButton()
     {
+        
         if (nameInputHostMultiplayer.text != "")
         {
             //Disable the error message if applicable
@@ -275,7 +277,9 @@ public void ChangeBackground(string newValue)
             DeleteMapFinder();
 
             //Join the match
+            nextScene = 1;
             networkManager.matchMaker.ListMatches(0, 20, "", false, 0, 0, OnMatchList);
+
         }
         else
             errorMessage.gameObject.SetActive(true);
@@ -351,6 +355,8 @@ public void ChangeBackground(string newValue)
 
     public void OnMatchList(bool success, string extendedInfo, List<MatchInfoSnapshot> matches)
     {
+        gameFound = true;
+
         MatchInfoSnapshot priorityMatch = new MatchInfoSnapshot();
 
         //Find match closest to being full
@@ -416,25 +422,29 @@ public void ChangeBackground(string newValue)
             }
         }
 
-        if (sceneChangeTimer <= 0.0f && nextScene >= 0)
+        if (sceneChangeTimer <= 0.0f && nextScene == 0 || nextScene == 2 || nextScene == 4)
         {
             sceneIsChanging = false;
             if (nextScene == 0) HostButton();
-            if (nextScene == 1) JoinButton();
             if (nextScene == 2) HostButtonLAN();
-            if (nextScene == 3) JoinButtonLAN();
             if (nextScene == 4) StudyButton(); 
-            if (nextScene == 5) JoinStudyButton();
             nextScene = -1;
         }
-        else if(nextScene != -1)
+        else if(nextScene % 2 == 0 && nextScene >= 0)
+            sceneChangeTimer -= Time.deltaTime;
+        else if(nextScene % 2 != 0)
+        {
+            if (nextScene == 1) JoinButton();
+            if (nextScene == 5) JoinStudyButton();
+            if (nextScene == 3) JoinButtonLAN();
+        }
+
+        if(nextScene == 1 && gameFound)
             sceneChangeTimer -= Time.deltaTime;
 
         //For scene transition
-        if (sceneIsChanging)
-        {
+        if (sceneIsChanging && gameFound || sceneIsChanging && nextScene % 2 == 0)
             TransitionMenu(lastMenu);
-        }
     }
 
 }

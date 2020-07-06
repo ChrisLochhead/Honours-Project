@@ -123,7 +123,7 @@ public class Bullet : NetworkBehaviour
                 else
                 {
                     collision.gameObject.transform.parent.GetComponent<Client>().Hit(damageAmount);
-                    shooter.transform.parent.GetComponent<Client>().UpdateScore(10);
+                    shooter.transform.parent.GetComponent<Client>().UpdateScore(damageAmount);
                     
                 }
              
@@ -159,7 +159,7 @@ public class Bullet : NetworkBehaviour
                 {
                     collision.gameObject.GetComponent<EnemyAgentController>().health -= damageAmount;
                     if (shooter.transform.parent.GetComponent<Client>())
-                        shooter.transform.parent.GetComponent<Client>().UpdateScore(10);
+                        shooter.transform.parent.GetComponent<Client>().UpdateScore(damageAmount);
                 }
                 Destroy(this.gameObject);
             }
