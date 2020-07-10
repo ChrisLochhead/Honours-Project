@@ -156,6 +156,7 @@ public class Client : NetworkBehaviour
     //Damage effect
     bool damageEffectActive = false;
     float damageTimer = 0.5f;
+    Color damageTintColor;
 
     // Use this for initialization
     void Start()
@@ -242,6 +243,7 @@ public class Client : NetworkBehaviour
             CmdSetTeam(0);
         else if(isStudy && temp1 != temp2)
             CmdSetTeam(1);
+
     }
 
     [Command]
@@ -328,7 +330,10 @@ public class Client : NetworkBehaviour
         //Apply damage effect
         if (damage > 0)
         {
-            player.GetComponentInChildren<SkinnedMeshRenderer>().material.SetColor("_Color", new Color(1.0f, 0.08f, 0.09f));
+            if (team != 0)
+                characterModel.GetComponent<SkinnedMeshRenderer>().material = RedTeamMaterial;
+
+            player.GetComponentInChildren<SkinnedMeshRenderer>().material.SetColor("_Color", Color.red);
             damageEffectActive = true;
         }
         //Decrement players health and kill him if his health is 0
@@ -361,7 +366,11 @@ public class Client : NetworkBehaviour
                 //Apply damage effect
                 if (damage > 0)
                 {
-                    player.GetComponentInChildren<SkinnedMeshRenderer>().material.SetColor("_Color", new Color(1.0f, 0.08f, 0.09f));
+                    if (team != 0)
+                        characterModel.GetComponent<SkinnedMeshRenderer>().material = RedTeamMaterial;
+
+                    player.GetComponentInChildren<SkinnedMeshRenderer>().material.SetColor("_Color", Color.red);
+          
                     damageEffectActive = true;
                 }
 
@@ -384,6 +393,8 @@ public class Client : NetworkBehaviour
     [ClientRpc]
     void RpcEndDamageEffect()
     {
+        if (team != 0)
+            characterModel.GetComponent<SkinnedMeshRenderer>().material = BlueTeamMaterial;
         player.GetComponentInChildren<SkinnedMeshRenderer>().material.SetColor("_Color", new Color(0.481f, 0.481f, 0.481f));
         damageEffectActive = false;
     }
@@ -392,6 +403,8 @@ public class Client : NetworkBehaviour
     {
         if (!isLocalPlayer)
         {
+            if (team != 0)
+                characterModel.GetComponent<SkinnedMeshRenderer>().material = BlueTeamMaterial;
             player.GetComponentInChildren<SkinnedMeshRenderer>().material.SetColor("_Color", new Color(0.481f, 0.481f, 0.481f));
             damageEffectActive = false;
         }
