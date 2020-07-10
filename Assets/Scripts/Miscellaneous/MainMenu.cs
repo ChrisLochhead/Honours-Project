@@ -387,7 +387,7 @@ public void ChangeBackground(string newValue)
     private void Update()
     {
         //For starting animation
-        if(!startingAnimation && buttonContainer.transform.parent.gameObject.active == true)
+        if (!startingAnimation && buttonContainer.transform.parent.gameObject.active == true)
         {
             //Menu side bar transition
             if (leftBar.transform.localPosition.x < -370)
@@ -401,8 +401,8 @@ public void ChangeBackground(string newValue)
                 rightBar.transform.localPosition = new Vector3(370, 0, 0);
 
             //Menu buttons transition
-            if (buttonContainer.transform.localPosition.y > 0)           
-                buttonContainer.transform.localPosition = new Vector3(0, buttonContainer.transform.localPosition.y - 5.5f, 0);   
+            if (buttonContainer.transform.localPosition.y > 0)
+                buttonContainer.transform.localPosition = new Vector3(0, buttonContainer.transform.localPosition.y - 5.5f, 0);
             else
                 buttonContainer.transform.localPosition = Vector3.zero;
 
@@ -411,8 +411,9 @@ public void ChangeBackground(string newValue)
         }
 
         //For background transitioning
-        if(backgroundIsChanging)
+        if (backgroundIsChanging)
         {
+            Debug.Log("changing");
             backgroundImage.color = Color.Lerp(backgroundImage.color, targetColor, lerpTime);
             lerpTime += Time.deltaTime;
             if (backgroundImage.color == targetColor)
@@ -422,24 +423,25 @@ public void ChangeBackground(string newValue)
             }
         }
 
-        if (sceneChangeTimer <= 0.0f && nextScene == 0 || nextScene == 2 || nextScene == 4)
+        if (sceneChangeTimer <= 0.0f && nextScene == 0 || sceneChangeTimer <= 0.0f && nextScene == 2 || sceneChangeTimer <= 0.0f && nextScene == 4)
         {
             sceneIsChanging = false;
             if (nextScene == 0) HostButton();
             if (nextScene == 2) HostButtonLAN();
-            if (nextScene == 4) StudyButton(); 
+            if (nextScene == 4) StudyButton();
             nextScene = -1;
         }
-        else if(nextScene % 2 == 0 && nextScene >= 0)
+        else if (nextScene % 2 == 0 && nextScene >= 0)
             sceneChangeTimer -= Time.deltaTime;
-        else if(nextScene % 2 != 0)
+        else if (nextScene % 2 != 0)
         {
             if (nextScene == 1) JoinButton();
             if (nextScene == 5) JoinStudyButton();
             if (nextScene == 3) JoinButtonLAN();
+            nextScene = -1;
         }
 
-        if(nextScene == 1 && gameFound)
+        if (nextScene == 1 && gameFound)
             sceneChangeTimer -= Time.deltaTime;
 
         //For scene transition

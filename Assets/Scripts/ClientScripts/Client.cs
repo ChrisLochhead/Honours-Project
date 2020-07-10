@@ -114,6 +114,7 @@ public class Client : NetworkBehaviour
     //Accompanying textures
     public Material BlueTeamMaterial;
     public Material RedTeamMaterial;
+    bool teamSet = false;
 
     [SyncVar]
     public int teamMaterial = 0;
@@ -151,6 +152,10 @@ public class Client : NetworkBehaviour
     public GameObject xpDropMarker;
     List<GameObject> xpDrops = new List<GameObject>();
     public bool gainedPoints = false;
+
+    //Damage effect
+    bool damageEffectActive = false;
+    float damageTimer = 0.5f;
 
     // Use this for initialization
     void Start()
@@ -320,6 +325,12 @@ public class Client : NetworkBehaviour
     [ClientRpc]
     public void RpcTakeDamage(int damage)
     {
+        //Apply damage effect
+        if (damage > 0)
+        {
+            player.GetComponentInChildren<SkinnedMeshRenderer>().material.SetColor("_Color", new Color(1.0f, 0.08f, 0.09f));
+            damageEffectActive = true;
+        }
         //Decrement players health and kill him if his health is 0
         if (isLocalPlayer)
         {
@@ -347,6 +358,13 @@ public class Client : NetworkBehaviour
                 health -= damage;
                 clientHealthBar.healthPercentage = (float)health / (float)totalHealth;
 
+                //Apply damage effect
+                if (damage > 0)
+                {
+                    player.GetComponentInChildren<SkinnedMeshRenderer>().material.SetColor("_Color", new Color(1.0f, 0.08f, 0.09f));
+                    damageEffectActive = true;
+                }
+
                 if (health <= 0)
                 {
                     isDead = true;
@@ -356,6 +374,28 @@ public class Client : NetworkBehaviour
         }
     }
 
+    [Command]
+    void CmdEndDamageEffect()
+    {
+        EndDamageEffect();
+        RpcEndDamageEffect();
+    }
+
+    [ClientRpc]
+    void RpcEndDamageEffect()
+    {
+        player.GetComponentInChildren<SkinnedMeshRenderer>().material.SetColor("_Color", new Color(0.481f, 0.481f, 0.481f));
+        damageEffectActive = false;
+    }
+
+    void EndDamageEffect()
+    {
+        if (!isLocalPlayer)
+        {
+            player.GetComponentInChildren<SkinnedMeshRenderer>().material.SetColor("_Color", new Color(0.481f, 0.481f, 0.481f));
+            damageEffectActive = false;
+        }
+    }
 
     void DestroyXPDrop()
     {
@@ -383,13 +423,22 @@ public class Client : NetworkBehaviour
 
     public void Update()
     {
-
-        if(gainedPoints == true)
+        if(Input.GetKeyDown("j"))
         {
-            if(isLocalPlayer)
-            PointGainEffect(10);
+            //player.GetComponentInChildren<SkinnedMeshRenderer>().material.SetColor("_Color", new Color(1.0f, 0.08f, 0.09f));
+            //damageEffectActive = true;
+            CmdTakeDamage(5);
+        }
 
-            gainedPoints = false;
+        if (damageEffectActive)
+            damageTimer -= Time.deltaTime;
+
+        if (damageTimer <= 0.0f)
+        {
+            damageTimer = 0.5f;
+            CmdEndDamageEffect();
+            //damageEffectActive = false;
+            //player.GetComponentInChildren<SkinnedMeshRenderer>().material.color = new Color(0.481f, 0.481f, 0.481f);
         }
         //Update game timer
         if (isServer && GameStarted && timeLimit > 0 && !hasWon && !hasLost)
@@ -398,6 +447,15 @@ public class Client : NetworkBehaviour
         if (GameStarted && timeLimit > 0)
         {
             timeLimit = GameObject.FindGameObjectWithTag("Client").GetComponent<Client>().timeLimit;
+        }
+
+        //Apply point gain if applicable
+        if (gainedPoints == true)
+        {
+            if (isLocalPlayer)
+                PointGainEffect(10);
+
+            gainedPoints = false;
         }
 
         //Update point gain effect if applicable
@@ -412,10 +470,14 @@ public class Client : NetworkBehaviour
         }
 
         //Update team texture information
-        if (teamMaterial == 0)
-            characterModel.GetComponent<SkinnedMeshRenderer>().material = RedTeamMaterial;
-        else
-            characterModel.GetComponent<SkinnedMeshRenderer>().material = BlueTeamMaterial;
+        if (!teamSet)
+        {
+            if (teamMaterial == 0)
+                characterModel.GetComponent<SkinnedMeshRenderer>().material = RedTeamMaterial;
+            else
+                characterModel.GetComponent<SkinnedMeshRenderer>().material = BlueTeamMaterial;
+            teamSet = true;
+        }
 
         //Toggle pause menu
         if (Input.GetKeyDown("p") && Paused == false)

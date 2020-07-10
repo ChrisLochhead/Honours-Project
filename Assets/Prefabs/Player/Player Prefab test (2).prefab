@@ -13026,7 +13026,7 @@ MonoBehaviour:
   pointIndicatorPrefab: {fileID: 1696370769180442, guid: 74a58810aeb850743846b57c5ffc8d87,
     type: 2}
   xpDropMarker: {fileID: 1532848563261216}
-  pointsEffectOffset: 0
+  gainedPoints: 0
 --- !u!114 &114648519415994528
 MonoBehaviour:
   m_ObjectHideFlags: 1
