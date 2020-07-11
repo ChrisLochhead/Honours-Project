@@ -47,7 +47,9 @@ public class ClientWeaponManager : NetworkBehaviour {
     public AudioClip[] gunSounds;
     public Client Owner;
 
-	
+    public GameObject grenadePrefab;
+    GameObject grenade;
+
     public void InitialiseWeapons()
     {
         //check if a study
@@ -109,9 +111,19 @@ public class ClientWeaponManager : NetworkBehaviour {
 
     void Update () {
 
+        //Checks for a grenade throw
+        if (Input.GetKeyDown("g"))
+        {
+            Debug.Log("called");
+            grenade = (GameObject)Instantiate(grenadePrefab, new Vector3(0,0,0), Quaternion.Euler(0,0,0), Owner.player.transform);
+            NetworkServer.Spawn(grenade);
+            grenade.GetComponent<Rigidbody>().velocity = grenade.transform.forward * 1.0f;
+        }
+
         //Game is not over, and player has set his name (and therefore has joined the game)
         if (!Owner.hasWon && !Owner.hasLost && !Owner.Paused)
         {
+
             //If the player can and is shooting, create a bullet, decrement ammo and show a muzzle flash
             if (Input.GetMouseButton(0) && currentAmmo[currentWeapon] > 0 && Owner.isLocal &&
                 fireRates[currentWeapon] == currentFireRates[currentWeapon] && !isReloading && !Owner.isDead)

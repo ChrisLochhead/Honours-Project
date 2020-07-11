@@ -413,7 +413,6 @@ public void ChangeBackground(string newValue)
         //For background transitioning
         if (backgroundIsChanging)
         {
-            Debug.Log("changing");
             backgroundImage.color = Color.Lerp(backgroundImage.color, targetColor, lerpTime);
             lerpTime += Time.deltaTime;
             if (backgroundImage.color == targetColor)

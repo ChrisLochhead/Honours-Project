@@ -9342,6 +9342,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: fa2398a25de95f54785f1a269f781e13, type: 3}
   - {fileID: 8300000, guid: e45403211c65696458617c71fae1a0d8, type: 3}
   Owner: {fileID: 114648311287741478}
+  grenadePrefab: {fileID: 1373931402136566, guid: 0b62bb7eff9b7654cb32dfbe987c5f3e,
+    type: 2}
 --- !u!114 &114218839899229240
 MonoBehaviour:
   m_ObjectHideFlags: 1

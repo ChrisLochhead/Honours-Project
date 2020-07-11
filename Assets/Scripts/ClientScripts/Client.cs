@@ -427,7 +427,9 @@ public class Client : NetworkBehaviour
                 xpDrops.RemoveAt(i);
             else
             {
-                xpDrops[i].transform.position = new Vector3(player.transform.position.x + 4.0f, player.transform.position.y + xpDrops[i].GetComponent<xpDrop>().offset + (i * 0.4f), player.transform.position.z);
+                xpDrops[i].transform.position = new Vector3(player.transform.position.x + 4.0f,
+                    player.transform.position.y + xpDrops[i].GetComponent<xpDrop>().offset + (i * 0.4f),
+                    player.transform.position.z);
                 xpDrops[i].GetComponent<xpDrop>().offset += 0.01f;
                 xpDrops[i].GetComponent<xpDrop>().lifeTime -= Time.deltaTime;
             }
