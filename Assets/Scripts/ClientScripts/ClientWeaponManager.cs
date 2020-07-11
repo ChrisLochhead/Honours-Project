@@ -48,7 +48,9 @@ public class ClientWeaponManager : NetworkBehaviour {
     public Client Owner;
 
     public GameObject grenadePrefab;
+    [SerializeField]
     GameObject grenade;
+    public int numGrenades = 1;
 
     public void InitialiseWeapons()
     {
@@ -108,17 +110,28 @@ public class ClientWeaponManager : NetworkBehaviour {
                 guns[i].SetActive(false);
         }
     }
+    [Command]
+    void CmdSpawnGrenade()
+    {
+        grenade = (GameObject)Instantiate(grenadePrefab, new Vector3(Owner.crosshairMarker.transform.position.x, Owner.crosshairMarker.transform.position.y, -4.5f), Quaternion.identity);
+        NetworkServer.Spawn(grenade);
 
+        //calculate rotation
+        Quaternion rot = grenade.transform.rotation;
+        rot = Owner.player.transform.rotation;
+        rot *= Quaternion.Euler(-90, 0, 0);
+        grenade.transform.rotation = rot;
+
+        grenade.GetComponent<Grenade>().team = Owner.team;
+        grenade.GetComponent<Rigidbody>().velocity = grenade.transform.forward * 1.0f;
+
+        numGrenades -= 1;
+    }
     void Update () {
 
         //Checks for a grenade throw
-        if (Input.GetKeyDown("g"))
-        {
-            Debug.Log("called");
-            grenade = (GameObject)Instantiate(grenadePrefab, new Vector3(0,0,0), Quaternion.Euler(0,0,0), Owner.player.transform);
-            NetworkServer.Spawn(grenade);
-            grenade.GetComponent<Rigidbody>().velocity = grenade.transform.forward * 1.0f;
-        }
+        if (Input.GetKeyDown("g") && Owner.isLocal && numGrenades > 0 && grenade == null)
+            CmdSpawnGrenade();
 
         //Game is not over, and player has set his name (and therefore has joined the game)
         if (!Owner.hasWon && !Owner.hasLost && !Owner.Paused)
@@ -223,7 +236,6 @@ public class ClientWeaponManager : NetworkBehaviour {
             //Reloading
             if (Input.GetKey("r") && initialReload == true || currentAmmo[currentWeapon] == 0 && initialReload == true  && currentMaxAmmo[currentWeapon] > 0 || Input.GetKey("r") && isReloading == false)
             {
-                Debug.Log("calledhere");
                 reloadStartTime = Time.time;
                 reloadTargetTime = reloadStartTime + reloadTimer[currentWeapon];
                 isReloading = true;
@@ -246,11 +258,8 @@ public class ClientWeaponManager : NetworkBehaviour {
         b.GetComponent<Rigidbody>().velocity = b.transform.forward * 1.0f;
         b.GetComponent<Bullet>().shooter = Owner.player;
         b.GetComponent<Bullet>().shooterID = 16;
-        //RpcSpawnBullet(b);
 
         b.GetComponent<Bullet>().damageAmount = damageAmounts[currentWeapon];
-
-       // NetworkServer.Spawn(b);
 
         MuzzleFlash(true);
         RpcMuzzleFlash(true);
