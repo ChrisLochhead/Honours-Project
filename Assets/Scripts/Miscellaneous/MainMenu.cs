@@ -115,6 +115,9 @@ public void ChangeBackground(string newValue)
     {
         sceneIsChanging = true;
         nextScene = ns;
+        //To keep joinLAN an even number
+        if (ns == 6)
+            ns = 3;
         lastMenu = transitionSubMenus[ns];
     }
 
@@ -422,25 +425,27 @@ public void ChangeBackground(string newValue)
             }
         }
 
-        if (sceneChangeTimer <= 0.0f && nextScene == 0 || sceneChangeTimer <= 0.0f && nextScene == 2 || sceneChangeTimer <= 0.0f && nextScene == 4)
+        if (sceneChangeTimer <= 0.0f && nextScene % 2 == 0)
         {
             sceneIsChanging = false;
             if (nextScene == 0) HostButton();
             if (nextScene == 2) HostButtonLAN();
             if (nextScene == 4) StudyButton();
+            if (nextScene == 6) JoinButtonLAN();
             nextScene = -1;
         }
         else if (nextScene % 2 == 0 && nextScene >= 0)
+        {
             sceneChangeTimer -= Time.deltaTime;
-        else if (nextScene % 2 != 0)
+        }
+        else if (sceneChangeTimer <= 0.0f && nextScene % 2 != 0)
         {
             if (nextScene == 1) JoinButton();
             if (nextScene == 5) JoinStudyButton();
-            if (nextScene == 3) JoinButtonLAN();
             nextScene = -1;
         }
 
-        if (nextScene == 1 && gameFound)
+        if (nextScene % 2 != 0 && gameFound)
             sceneChangeTimer -= Time.deltaTime;
 
         //For scene transition

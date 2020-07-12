@@ -124,14 +124,15 @@ public class ClientWeaponManager : NetworkBehaviour {
 
         grenade.GetComponent<Grenade>().team = Owner.team;
         grenade.GetComponent<Rigidbody>().velocity = grenade.transform.forward * 1.0f;
-
-        numGrenades -= 1;
     }
     void Update () {
 
         //Checks for a grenade throw
         if (Input.GetKeyDown("g") && Owner.isLocal && numGrenades > 0 && grenade == null)
+        {
             CmdSpawnGrenade();
+            numGrenades -= 1;
+        }
 
         //Game is not over, and player has set his name (and therefore has joined the game)
         if (!Owner.hasWon && !Owner.hasLost && !Owner.Paused)

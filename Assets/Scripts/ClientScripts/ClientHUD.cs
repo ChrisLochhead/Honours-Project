@@ -10,6 +10,7 @@ public class ClientHUD : MonoBehaviour
     public TextMeshProUGUI ammoText;
     public TextMeshProUGUI healthText;
     public TextMeshProUGUI timerText;
+    public TextMeshProUGUI grenadeText;
 
     public GameObject healthBar;
     public GameObject rankImage;
@@ -77,6 +78,9 @@ public class ClientHUD : MonoBehaviour
 
         //Rank
         rankImage.GetComponent<Image>().sprite = rankIcons[Owner.rank];
+
+        //Grenades     
+        grenadeText.text = Owner.clientWeaponManager.numGrenades.ToString();
 
     }
 
