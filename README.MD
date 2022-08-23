@@ -1,8 +1,7 @@
 # Honours Project
 
-Game is currently in an intermediate stage, being developed in Unity using C#. 
 
-My Honours project will be carried out on this game of my design: WarZone.
+My Honours project will be carried out on this game of my design: WarZone. This game and the platform it is built within is designed to be an educational platform in which lay-men to programming or AI can develop, implement and experiment with AI model training and testing using a variety of AI methodologies focussing primarily on deep reinforcement learning.
 
 ## WarZone
 
@@ -18,19 +17,17 @@ the health and weapons bonus a fully ranked player will have, it will take a num
 
 The weapon system is likewise accessed by ranking up. There are five weapons in the game currently. The starting pistol, the shotgun, uzi, LMG and finally a bolt action sniper rifle. with 
 each weapon more devastating than the last. This makes a fully ranked up player truly dangerous. The problem is, once a player dies, they return to rank 1 and loose all their health/weapons
-priveledges.
+priveledges. This is designed to introduce the concept of self-preservation and deeper strategy for potential AI agents.
 
 - Multiplayer
 
-The multiplayer capabilities of this game are currently entirely LAN based. In the next month of writing this I will expand the game to include a fully networked multiplayer lobby system
-to allow anyone to play this game anywhere. Depending on time restraints, I may also publish this game on a free hosting site to try and drum up some attention to attract play testers.
+The multiplayer capabilities of this game include both LAN and networked online multiplayer. This was implemented for ease of the study phase of this project in which participants of varying computational competency were to play the game with the researcher in another room, fighting enemies as the progressively spawn, and then later deciding which one(s) they thought were real humans and which were AI.
 
-
-- Build
+- Build mode
 
 WarZone comes complete with a dedicated build system, which not only has the benefit of letting players build there own unique maps, but also will allow me to create multiple maps when
 implementing my learning AI into the game for training. The build system is a drag and drop system that saves map information to text files for later reading.
 
 - AI
 
-The AI has not yet been implemented thus far, as the game still contains some bugs and necessary features yet to be implemented, such as setting up tensorflow for unity.
+The AI was implemented using a Tensorflow application written in python and encapsulated in a C# wrapper allowing it to be used as part of a Unity-based framework.
